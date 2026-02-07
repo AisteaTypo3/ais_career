@@ -1,0 +1,69 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Default" />
+
+<f:section name="Main">
+  <div class="aiscareer">
+    <div class="aiscareer-container">
+      <div class="aiscareer-detail">
+        <div class="aiscareer-section">
+          <h1>{job.title}</h1>
+          <div class="aiscareer-meta">
+            <f:if condition="{job.reference}">Ref: {job.reference}</f:if>
+            <f:if condition="{job.locationLabel}"> | {job.locationLabel}</f:if>
+            <f:if condition="{job.contractType}"> | {job.contractType}</f:if>
+            <f:if condition="{job.remotePossible}"> | Remote possible</f:if>
+          </div>
+        </div>
+
+        <f:if condition="{job.description}">
+          <div class="aiscareer-section">
+            <h2>Description</h2>
+            <f:format.html>{job.description}</f:format.html>
+          </div>
+        </f:if>
+
+        <f:if condition="{job.responsibilities}">
+          <div class="aiscareer-section">
+            <h2>Responsibilities</h2>
+            <f:format.html>{job.responsibilities}</f:format.html>
+          </div>
+        </f:if>
+
+        <f:if condition="{job.qualifications}">
+          <div class="aiscareer-section">
+            <h2>Qualifications</h2>
+            <f:format.html>{job.qualifications}</f:format.html>
+          </div>
+        </f:if>
+
+        <f:if condition="{job.benefits}">
+          <div class="aiscareer-section">
+            <h2>Benefits</h2>
+            <f:format.html>{job.benefits}</f:format.html>
+          </div>
+        </f:if>
+
+        <f:if condition="{job.attachments}">
+          <div class="aiscareer-section">
+            <h2>Attachments</h2>
+            <ul>
+              <f:for each="{job.attachments}" as="file">
+                <li>
+                  <f:link.typolink parameter="{file.originalResource.publicUrl}" target="_blank">{file.originalResource.name}</f:link.typolink>
+                </li>
+              </f:for>
+            </ul>
+          </div>
+        </f:if>
+
+        <f:if condition="{settings.applicationEnabled}">
+          <div class="aiscareer-section">
+            <h2>Apply now</h2>
+            <f:render partial="Job/ApplicationForm" arguments="{job: job, application: application, applicationErrors: applicationErrors, settings: settings}" />
+          </div>
+        </f:if>
+      </div>
+    </div>
+  </div>
+</f:section>
+</html>

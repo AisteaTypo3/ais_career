@@ -1,0 +1,61 @@
+<?php
+
+declare(strict_types=1);
+
+use TYPO3\CMS\Core\Imaging\IconRegistry;
+use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+defined('TYPO3') || die();
+
+call_user_func(static function (): void {
+    ExtensionUtility::configurePlugin(
+        'AisCareer',
+        'JobList',
+        [
+            Aistea\AisCareer\Controller\JobController::class => 'list',
+        ],
+        [
+            Aistea\AisCareer\Controller\JobController::class => 'list',
+        ]
+    );
+
+    ExtensionUtility::configurePlugin(
+        'AisCareer',
+        'JobDetail',
+        [
+            Aistea\AisCareer\Controller\JobController::class => 'show,apply',
+        ],
+        [
+            Aistea\AisCareer\Controller\JobController::class => 'apply',
+        ]
+    );
+
+    $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
+    $iconRegistry->registerIcon(
+        'aiscareer-extension',
+        SvgIconProvider::class,
+        ['source' => 'EXT:ais_career/Resources/Public/Icons/Extension.svg']
+    );
+    $iconRegistry->registerIcon(
+        'aiscareer-plugin-list',
+        SvgIconProvider::class,
+        ['source' => 'EXT:ais_career/Resources/Public/Icons/PluginList.svg']
+    );
+    $iconRegistry->registerIcon(
+        'aiscareer-plugin-detail',
+        SvgIconProvider::class,
+        ['source' => 'EXT:ais_career/Resources/Public/Icons/PluginDetail.svg']
+    );
+    $iconRegistry->registerIcon(
+        'aiscareer-record-job',
+        SvgIconProvider::class,
+        ['source' => 'EXT:ais_career/Resources/Public/Icons/RecordJob.svg']
+    );
+    $iconRegistry->registerIcon(
+        'aiscareer-record-application',
+        SvgIconProvider::class,
+        ['source' => 'EXT:ais_career/Resources/Public/Icons/RecordApplication.svg']
+    );
+});

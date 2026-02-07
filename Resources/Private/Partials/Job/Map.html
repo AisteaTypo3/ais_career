@@ -1,0 +1,8 @@
+<div class="aiscareer-map" data-available-countries="{availableCountries -> f:format.json()}">
+  <f:form action="list" pageUid="{listPid}" class="aiscareer-map-form">
+    <f:form.hidden id="aiscareer-country-hidden" name="filter[country]" value="" />
+  </f:form>
+  <object data="{f:uri.resource(path: 'Images/worldmap.svg', extensionName: 'AisCareer')}" type="image/svg+xml">
+    <img src="{f:uri.resource(path: 'Images/worldmap.svg', extensionName: 'AisCareer')}" alt="World map" />
+  </object>
+</div>

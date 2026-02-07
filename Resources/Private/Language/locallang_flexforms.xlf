@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="messages" date="2026-02-07T00:00:00Z">
+    <header/>
+    <body>
+      <trans-unit id="joblist.itemsPerPage">
+        <source>Items per page</source>
+      </trans-unit>
+      <trans-unit id="joblist.sheetGeneral">
+        <source>General</source>
+      </trans-unit>
+      <trans-unit id="joblist.sheetFilters">
+        <source>Filters</source>
+      </trans-unit>
+      <trans-unit id="joblist.detailPid">
+        <source>Detail page UID</source>
+      </trans-unit>
+      <trans-unit id="joblist.listPid">
+        <source>List page UID</source>
+      </trans-unit>
+      <trans-unit id="joblist.mapEnabled">
+        <source>Enable world map</source>
+      </trans-unit>
+      <trans-unit id="joblist.enableFilters">
+        <source>Enable filters</source>
+      </trans-unit>
+      <trans-unit id="joblist.filterCountry">
+        <source>Filter: Country</source>
+      </trans-unit>
+      <trans-unit id="joblist.filterDepartment">
+        <source>Filter: Department</source>
+      </trans-unit>
+      <trans-unit id="joblist.filterContractType">
+        <source>Filter: Contract type</source>
+      </trans-unit>
+      <trans-unit id="joblist.filterRemotePossible">
+        <source>Filter: Remote possible</source>
+      </trans-unit>
+      <trans-unit id="joblist.filterCategory">
+        <source>Filter: Category</source>
+      </trans-unit>
+
+      <trans-unit id="jobdetail.applicationEnabled">
+        <source>Enable application form</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.sheetGeneral">
+        <source>General</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.applicationSave">
+        <source>Save application in database</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.applicationToEmail">
+        <source>Application recipient email</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.applicationFromEmail">
+        <source>Application sender email</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.allowedExtensions">
+        <source>Allowed extensions</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.maxUploadSizeMB">
+        <source>Max upload size (MB)</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.privacyPageUid">
+        <source>Privacy page UID</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

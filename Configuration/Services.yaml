@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Aistea\AisCareer\:
+    resource: '../Classes/*'
+
+  Aistea\AisCareer\Controller\JobController:
+    public: true
+    tags: ['controller.service_arguments']

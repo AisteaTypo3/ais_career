@@ -1,0 +1,16 @@
+routeEnhancers:
+  AisCareerJobDetail:
+    type: Extbase
+    extension: AisCareer
+    plugin: JobDetail
+    routes:
+      - routePath: '/jobs/{job-slug}'
+        _controller: 'Job::show'
+        _arguments:
+          job-slug: job
+    defaultController: 'Job::show'
+    aspects:
+      job-slug:
+        type: PersistedAliasMapper
+        tableName: tx_aiscareer_domain_model_job
+        routeFieldName: slug

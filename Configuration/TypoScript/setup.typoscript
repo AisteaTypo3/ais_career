@@ -1,0 +1,31 @@
+plugin.tx_aiscareer {
+  view {
+    templateRootPath = EXT:ais_career/Resources/Private/Templates/
+    partialRootPath = EXT:ais_career/Resources/Private/Partials/
+    layoutRootPath = EXT:ais_career/Resources/Private/Layouts/
+  }
+  settings {
+    itemsPerPage = {$plugin.tx_aiscareer.settings.itemsPerPage}
+    listPid = {$plugin.tx_aiscareer.settings.listPid}
+    detailPid = {$plugin.tx_aiscareer.settings.detailPid}
+    enableFilters = {$plugin.tx_aiscareer.settings.enableFilters}
+    filterCountry = {$plugin.tx_aiscareer.settings.filterCountry}
+    filterDepartment = {$plugin.tx_aiscareer.settings.filterDepartment}
+    filterContractType = {$plugin.tx_aiscareer.settings.filterContractType}
+    filterRemotePossible = {$plugin.tx_aiscareer.settings.filterRemotePossible}
+    filterCategory = {$plugin.tx_aiscareer.settings.filterCategory}
+    mapEnabled = {$plugin.tx_aiscareer.settings.mapEnabled}
+
+    applicationEnabled = {$plugin.tx_aiscareer.settings.applicationEnabled}
+    applicationToEmail = {$plugin.tx_aiscareer.settings.applicationToEmail}
+    applicationFromEmail = {$plugin.tx_aiscareer.settings.applicationFromEmail}
+    applicationSave = {$plugin.tx_aiscareer.settings.applicationSave}
+    maxUploadSizeMB = {$plugin.tx_aiscareer.settings.maxUploadSizeMB}
+    allowedExtensions = {$plugin.tx_aiscareer.settings.allowedExtensions}
+    privacyPageUid = {$plugin.tx_aiscareer.settings.privacyPageUid}
+  }
+}
+
+page.includeCSS.aiscareer = EXT:ais_career/Resources/Public/Css/aiscareer.css
+page.includeJSFooter.aiscareer = EXT:ais_career/Resources/Public/JavaScript/aiscareer.js
+page.includeJSFooter.aiscareer.defer = 1

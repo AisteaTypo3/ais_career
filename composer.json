@@ -1,0 +1,19 @@
+{
+  "name": "aistea/ais-career",
+  "type": "typo3-cms-extension",
+  "description": "AIS Career - Jobs listing and application for TYPO3 v13",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "typo3/cms-core": "^13.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Aistea\\AisCareer\\": "Classes/"
+    }
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "ais_career"
+    }
+  }
+}

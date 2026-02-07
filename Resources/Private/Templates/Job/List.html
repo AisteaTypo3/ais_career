@@ -1,0 +1,47 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Default" />
+
+<f:section name="Main">
+  <div class="aiscareer">
+    <div class="aiscareer-container">
+      <div class="aiscareer-header">
+        <f:if condition="{settings.mapEnabled}">
+          <f:render partial="Job/Map" arguments="{listPid: listPid, availableCountries: availableCountries}" />
+        </f:if>
+        <f:if condition="{settings.enableFilters}">
+          <f:render partial="Job/Filters" arguments="{filters: filters, filterOptions: filterOptions, settings: settings, listPid: listPid}" />
+        </f:if>
+      </div>
+
+      <div class="aiscareer-results" data-list-url="{f:uri.action(action: 'list', pageUid: listPid)}">
+        <div class="aiscareer-list">
+          <f:for each="{jobs}" as="job">
+            <f:render partial="Job/JobCard" arguments="{job: job, detailPid: detailPid}" />
+          </f:for>
+        </div>
+
+        <f:if condition="{paginator.numberOfPages} > 1">
+          <div class="aiscareer-pagination">
+            <f:if condition="{pagination.previousPageNumber}">
+              <f:link.action action="list" arguments="{page: pagination.previousPageNumber, filter: filters}">Prev</f:link.action>
+            </f:if>
+            <f:for each="{pagination.allPageNumbers}" as="pageNumber">
+              <f:if condition="{pageNumber} == {paginator.currentPageNumber}">
+                <f:then>
+                  <span class="current">{pageNumber}</span>
+                </f:then>
+                <f:else>
+                  <f:link.action action="list" arguments="{page: pageNumber, filter: filters}">{pageNumber}</f:link.action>
+                </f:else>
+              </f:if>
+            </f:for>
+            <f:if condition="{pagination.nextPageNumber}">
+              <f:link.action action="list" arguments="{page: pagination.nextPageNumber, filter: filters}">Next</f:link.action>
+            </f:if>
+          </div>
+        </f:if>
+      </div>
+    </div>
+  </div>
+</f:section>
+</html>

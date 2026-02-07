@@ -1,0 +1,22 @@
+<div class="aiscareer-card">
+  <h3>
+    <f:link.action action="show" arguments="{job: job}" pageUid="{detailPid}">{job.title}</f:link.action>
+  </h3>
+  <div class="aiscareer-meta">
+    <f:if condition="{job.locationLabel}">
+      {job.locationLabel}
+      <f:else>
+        <f:if condition="{job.city}">{job.city}</f:if>
+        <f:if condition="{job.country}">, {job.country}</f:if>
+      </f:else>
+    </f:if>
+  </div>
+  <div class="aiscareer-meta">
+    <f:if condition="{job.department}">{job.department}</f:if>
+    <f:if condition="{job.contractType}"> | {job.contractType}</f:if>
+    <f:if condition="{job.remotePossible}"> | Remote</f:if>
+  </div>
+  <div>
+    <f:link.action action="show" class="aiscareer-button" arguments="{job: job}" pageUid="{detailPid}">View details</f:link.action>
+  </div>
+</div>

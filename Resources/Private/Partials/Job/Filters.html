@@ -1,0 +1,38 @@
+<div class="aiscareer-filters">
+  <f:form action="list" method="post" pageUid="{listPid}">
+    <f:if condition="{settings.filterCountry}">
+      <div>
+        <label for="aiscareer-country">Country</label>
+        <f:form.select id="aiscareer-country" name="filter[country]" class="aiscareer-select" value="{filters.country}" options="{filterOptions.countries}" prependOptionLabel="All" prependOptionValue="" />
+      </div>
+    </f:if>
+    <f:if condition="{settings.filterDepartment}">
+      <div>
+        <label for="aiscareer-department">Department</label>
+        <f:form.select id="aiscareer-department" name="filter[department]" class="aiscareer-select" value="{filters.department}" options="{filterOptions.departments}" prependOptionLabel="All" prependOptionValue="" />
+      </div>
+    </f:if>
+    <f:if condition="{settings.filterContractType}">
+      <div>
+        <label for="aiscareer-contract">Contract type</label>
+        <f:form.select id="aiscareer-contract" name="filter[contractType]" class="aiscareer-select" value="{filters.contractType}" options="{filterOptions.contractTypes}" prependOptionLabel="All" prependOptionValue="" />
+      </div>
+    </f:if>
+    <f:if condition="{settings.filterRemotePossible}">
+      <div>
+        <label for="aiscareer-remote">Remote</label>
+        <f:form.select id="aiscareer-remote" name="filter[remotePossible]" class="aiscareer-select" value="{filters.remotePossible}" options="{0: 'On-site', 1: 'Remote'}" prependOptionLabel="Any" prependOptionValue="" />
+      </div>
+    </f:if>
+    <f:if condition="{settings.filterCategory}">
+      <div>
+        <label for="aiscareer-category">Category</label>
+        <f:form.select id="aiscareer-category" name="filter[category]" class="aiscareer-select" value="{filters.category}" options="{filterOptions.categories}" prependOptionLabel="All" prependOptionValue="" />
+      </div>
+    </f:if>
+    <div class="aiscareer-actions">
+      <button type="submit" class="aiscareer-button">Filter</button>
+      <f:link.action action="list" class="aiscareer-button secondary">Reset</f:link.action>
+    </div>
+  </f:form>
+</div>

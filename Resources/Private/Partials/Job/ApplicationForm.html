@@ -1,0 +1,53 @@
+<div class="aiscareer-application">
+  <f:if condition="{applicationErrors}">
+    <ul class="aiscareer-meta">
+      <f:for each="{applicationErrors}" as="message">
+        <li>{message}</li>
+      </f:for>
+    </ul>
+  </f:if>
+
+  <f:form action="apply" name="application" object="{application}" arguments="{job: job}" enctype="multipart/form-data" class="aiscareer-form">
+    <div class="row">
+      <div>
+        <label for="aiscareer-firstname">First name *</label>
+        <f:form.textfield id="aiscareer-firstname" property="firstName" class="aiscareer-input" required="required" />
+      </div>
+      <div>
+        <label for="aiscareer-lastname">Last name *</label>
+        <f:form.textfield id="aiscareer-lastname" property="lastName" class="aiscareer-input" required="required" />
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="aiscareer-email">Email *</label>
+        <f:form.textfield id="aiscareer-email" property="email" class="aiscareer-input" type="email" required="required" />
+      </div>
+      <div>
+        <label for="aiscareer-phone">Phone</label>
+        <f:form.textfield id="aiscareer-phone" property="phone" class="aiscareer-input" />
+      </div>
+    </div>
+    <div>
+      <label for="aiscareer-message">Message</label>
+      <f:form.textarea id="aiscareer-message" property="message" class="aiscareer-input" rows="5" />
+    </div>
+    <div>
+      <label for="aiscareer-cv">CV upload</label>
+      <f:form.upload id="aiscareer-cv" property="cvFile" class="aiscareer-input" />
+      <div class="aiscareer-meta">Allowed: {settings.allowedExtensions}, max {settings.maxUploadSizeMB} MB</div>
+    </div>
+    <div>
+      <label>
+        <f:form.checkbox property="consentPrivacy" value="1" />
+        I accept the privacy policy
+        <f:if condition="{settings.privacyPageUid}">
+          (<f:link.page pageUid="{settings.privacyPageUid}" target="_blank">View</f:link.page>)
+        </f:if>
+      </label>
+    </div>
+    <div>
+      <button type="submit" class="aiscareer-button">Send application</button>
+    </div>
+  </f:form>
+</div>

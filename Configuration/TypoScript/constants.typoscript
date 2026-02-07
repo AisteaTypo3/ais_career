@@ -1,0 +1,27 @@
+plugin.tx_aiscareer {
+  view {
+    templateRootPath = EXT:ais_career/Resources/Private/Templates/
+    partialRootPath = EXT:ais_career/Resources/Private/Partials/
+    layoutRootPath = EXT:ais_career/Resources/Private/Layouts/
+  }
+  settings {
+    itemsPerPage = 10
+    listPid = 0
+    detailPid = 0
+    enableFilters = 1
+    filterCountry = 1
+    filterDepartment = 1
+    filterContractType = 1
+    filterRemotePossible = 1
+    filterCategory = 1
+    mapEnabled = 1
+
+    applicationEnabled = 1
+    applicationToEmail = hr@example.com
+    applicationFromEmail = no-reply@example.com
+    applicationSave = 1
+    maxUploadSizeMB = 5
+    allowedExtensions = pdf,doc,docx
+    privacyPageUid = 0
+  }
+}
