@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.0">
+  <file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2026-02-07T00:00:00Z">
+    <header/>
+    <body>
+      <trans-unit id="success.applicationSent">
+        <source>Thank you! Your application has been sent successfully.</source>
+        <target>Vielen Dank! Ihre Bewerbung wurde erfolgreich gesendet.</target>
+      </trans-unit>
+      <trans-unit id="job.meta.reference">
+        <source>Ref:</source>
+        <target>Ref.:</target>
+      </trans-unit>
+      <trans-unit id="job.meta.remotePossible">
+        <source>Remote possible</source>
+        <target>Remote möglich</target>
+      </trans-unit>
+      <trans-unit id="job.meta.remote">
+        <source>Remote</source>
+        <target>Remote</target>
+      </trans-unit>
+      <trans-unit id="job.section.description">
+        <source>Description</source>
+        <target>Beschreibung</target>
+      </trans-unit>
+      <trans-unit id="job.section.responsibilities">
+        <source>Responsibilities</source>
+        <target>Aufgaben</target>
+      </trans-unit>
+      <trans-unit id="job.section.qualifications">
+        <source>Qualifications</source>
+        <target>Qualifikationen</target>
+      </trans-unit>
+      <trans-unit id="job.section.benefits">
+        <source>Benefits</source>
+        <target>Vorteile</target>
+      </trans-unit>
+      <trans-unit id="job.section.attachments">
+        <source>Attachments</source>
+        <target>Anhänge</target>
+      </trans-unit>
+      <trans-unit id="job.section.applyNow">
+        <source>Apply now</source>
+        <target>Jetzt bewerben</target>
+      </trans-unit>
+      <trans-unit id="job.button.viewDetails">
+        <source>View details</source>
+        <target>Details ansehen</target>
+      </trans-unit>
+      <trans-unit id="job.pagination.prev">
+        <source>Prev</source>
+        <target>Zurück</target>
+      </trans-unit>
+      <trans-unit id="job.pagination.next">
+        <source>Next</source>
+        <target>Weiter</target>
+      </trans-unit>
+      <trans-unit id="filter.country">
+        <source>Country</source>
+        <target>Land</target>
+      </trans-unit>
+      <trans-unit id="filter.department">
+        <source>Department</source>
+        <target>Abteilung</target>
+      </trans-unit>
+      <trans-unit id="filter.contractType">
+        <source>Contract type</source>
+        <target>Vertragsart</target>
+      </trans-unit>
+      <trans-unit id="filter.remote">
+        <source>Remote</source>
+        <target>Remote</target>
+      </trans-unit>
+      <trans-unit id="filter.category">
+        <source>Category</source>
+        <target>Kategorie</target>
+      </trans-unit>
+      <trans-unit id="filter.option.all">
+        <source>All</source>
+        <target>Alle</target>
+      </trans-unit>
+      <trans-unit id="filter.option.any">
+        <source>Any</source>
+        <target>Beliebig</target>
+      </trans-unit>
+      <trans-unit id="filter.option.onSite">
+        <source>On-site</source>
+        <target>Vor Ort</target>
+      </trans-unit>
+      <trans-unit id="filter.option.remote">
+        <source>Remote</source>
+        <target>Remote</target>
+      </trans-unit>
+      <trans-unit id="filter.button.apply">
+        <source>Filter</source>
+        <target>Filtern</target>
+      </trans-unit>
+      <trans-unit id="filter.button.reset">
+        <source>Reset</source>
+        <target>Zurücksetzen</target>
+      </trans-unit>
+      <trans-unit id="form.firstName">
+        <source>First name *</source>
+        <target>Vorname *</target>
+      </trans-unit>
+      <trans-unit id="form.lastName">
+        <source>Last name *</source>
+        <target>Nachname *</target>
+      </trans-unit>
+      <trans-unit id="form.email">
+        <source>Email *</source>
+        <target>E-Mail *</target>
+      </trans-unit>
+      <trans-unit id="form.phone">
+        <source>Phone</source>
+        <target>Telefon</target>
+      </trans-unit>
+      <trans-unit id="form.message">
+        <source>Message</source>
+        <target>Nachricht</target>
+      </trans-unit>
+      <trans-unit id="form.cvUpload">
+        <source>CV upload</source>
+        <target>Lebenslauf hochladen</target>
+      </trans-unit>
+      <trans-unit id="form.allowed">
+        <source>Allowed:</source>
+        <target>Erlaubt:</target>
+      </trans-unit>
+      <trans-unit id="form.maxUpload">
+        <source>max</source>
+        <target>max</target>
+      </trans-unit>
+      <trans-unit id="form.privacyConsent">
+        <source>I accept the privacy policy</source>
+        <target>Ich akzeptiere die Datenschutzerklärung</target>
+      </trans-unit>
+      <trans-unit id="form.privacyView">
+        <source>View</source>
+        <target>Ansehen</target>
+      </trans-unit>
+      <trans-unit id="form.submit">
+        <source>Send application</source>
+        <target>Bewerbung senden</target>
+      </trans-unit>
+      <trans-unit id="map.alt">
+        <source>World map</source>
+        <target>Weltkarte</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

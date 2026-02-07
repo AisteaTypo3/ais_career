@@ -2,37 +2,49 @@
   <f:form action="list" method="post" pageUid="{listPid}">
     <f:if condition="{settings.filterCountry}">
       <div>
-        <label for="aiscareer-country">Country</label>
-        <f:form.select id="aiscareer-country" name="filter[country]" class="aiscareer-select" value="{filters.country}" options="{filterOptions.countries}" prependOptionLabel="All" prependOptionValue="" />
+        <label for="aiscareer-country"><f:translate key="filter.country" extensionName="AisCareer" /></label>
+        <f:form.select id="aiscareer-country" name="filter[country]" class="aiscareer-select" value="{filters.country}" options="{filterOptions.countries}" prependOptionLabel="{f:translate(key: 'filter.option.all', extensionName: 'AisCareer')}" prependOptionValue="" />
       </div>
     </f:if>
     <f:if condition="{settings.filterDepartment}">
       <div>
-        <label for="aiscareer-department">Department</label>
-        <f:form.select id="aiscareer-department" name="filter[department]" class="aiscareer-select" value="{filters.department}" options="{filterOptions.departments}" prependOptionLabel="All" prependOptionValue="" />
+        <label for="aiscareer-department"><f:translate key="filter.department" extensionName="AisCareer" /></label>
+        <f:form.select id="aiscareer-department" name="filter[department]" class="aiscareer-select" value="{filters.department}" options="{filterOptions.departments}" prependOptionLabel="{f:translate(key: 'filter.option.all', extensionName: 'AisCareer')}" prependOptionValue="" />
       </div>
     </f:if>
     <f:if condition="{settings.filterContractType}">
       <div>
-        <label for="aiscareer-contract">Contract type</label>
-        <f:form.select id="aiscareer-contract" name="filter[contractType]" class="aiscareer-select" value="{filters.contractType}" options="{filterOptions.contractTypes}" prependOptionLabel="All" prependOptionValue="" />
+        <label for="aiscareer-contract"><f:translate key="filter.contractType" extensionName="AisCareer" /></label>
+        <f:form.select id="aiscareer-contract" name="filter[contractType]" class="aiscareer-select" value="{filters.contractType}" options="{filterOptions.contractTypes}" prependOptionLabel="{f:translate(key: 'filter.option.all', extensionName: 'AisCareer')}" prependOptionValue="" />
       </div>
     </f:if>
     <f:if condition="{settings.filterRemotePossible}">
       <div>
-        <label for="aiscareer-remote">Remote</label>
-        <f:form.select id="aiscareer-remote" name="filter[remotePossible]" class="aiscareer-select" value="{filters.remotePossible}" options="{0: 'On-site', 1: 'Remote'}" prependOptionLabel="Any" prependOptionValue="" />
+        <label for="aiscareer-remote"><f:translate key="filter.remote" extensionName="AisCareer" /></label>
+        <f:form.select id="aiscareer-remote" name="filter[remotePossible]" class="aiscareer-select" value="{filters.remotePossible}">
+          <f:form.select.option value="">
+            <f:translate key="filter.option.any" extensionName="AisCareer" />
+          </f:form.select.option>
+          <f:form.select.option value="0">
+            <f:translate key="filter.option.onSite" extensionName="AisCareer" />
+          </f:form.select.option>
+          <f:form.select.option value="1">
+            <f:translate key="filter.option.remote" extensionName="AisCareer" />
+          </f:form.select.option>
+        </f:form.select>
       </div>
     </f:if>
     <f:if condition="{settings.filterCategory}">
       <div>
-        <label for="aiscareer-category">Category</label>
-        <f:form.select id="aiscareer-category" name="filter[category]" class="aiscareer-select" value="{filters.category}" options="{filterOptions.categories}" prependOptionLabel="All" prependOptionValue="" />
+        <label for="aiscareer-category"><f:translate key="filter.category" extensionName="AisCareer" /></label>
+        <f:form.select id="aiscareer-category" name="filter[category]" class="aiscareer-select" value="{filters.category}" options="{filterOptions.categories}" prependOptionLabel="{f:translate(key: 'filter.option.all', extensionName: 'AisCareer')}" prependOptionValue="" />
       </div>
     </f:if>
     <div class="aiscareer-actions">
-      <button type="submit" class="aiscareer-button">Filter</button>
-      <f:link.action action="list" class="aiscareer-button secondary">Reset</f:link.action>
+      <button type="submit" class="aiscareer-button"><f:translate key="filter.button.apply" extensionName="AisCareer" /></button>
+      <f:link.action action="list" class="aiscareer-button secondary">
+        <f:translate key="filter.button.reset" extensionName="AisCareer" />
+      </f:link.action>
     </div>
   </f:form>
 </div>

@@ -115,17 +115,46 @@ class JobRepository extends Repository
 
     private function findJobUidsForCategory(int $categoryUid): array
     {
+        $storagePids = $this->createQuery()->getQuerySettings()->getStoragePageIds();
+        $nowTs = (int)(new \DateTime())->format('U');
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('sys_category_record_mm');
+        $queryBuilder->getRestrictions()->removeAll();
+
+        $constraints = [
+            $queryBuilder->expr()->eq('mm.uid_foreign', $queryBuilder->createNamedParameter($categoryUid, \PDO::PARAM_INT)),
+            $queryBuilder->expr()->eq('mm.tablenames', $queryBuilder->createNamedParameter('tx_aiscareer_domain_model_job')),
+            $queryBuilder->expr()->eq('mm.fieldname', $queryBuilder->createNamedParameter('categories')),
+            $queryBuilder->expr()->eq('j.deleted', 0),
+            $queryBuilder->expr()->eq('j.hidden', 0),
+            $queryBuilder->expr()->eq('j.is_active', 1),
+            $queryBuilder->expr()->or(
+                $queryBuilder->expr()->lte('j.published_from', $queryBuilder->createNamedParameter($nowTs, \PDO::PARAM_INT)),
+                $queryBuilder->expr()->eq('j.published_from', 0)
+            ),
+            $queryBuilder->expr()->or(
+                $queryBuilder->expr()->gte('j.published_to', $queryBuilder->createNamedParameter($nowTs, \PDO::PARAM_INT)),
+                $queryBuilder->expr()->eq('j.published_to', 0)
+            ),
+        ];
+
+        if ($storagePids !== []) {
+            $constraints[] = $queryBuilder->expr()->in(
+                'j.pid',
+                $queryBuilder->createNamedParameter($storagePids, \TYPO3\CMS\Core\Database\Connection::PARAM_INT_ARRAY)
+            );
+        }
 
         $rows = $queryBuilder
             ->select('uid_local')
-            ->from('sys_category_record_mm')
-            ->where(
-                $queryBuilder->expr()->eq('uid_foreign', $queryBuilder->createNamedParameter($categoryUid, \PDO::PARAM_INT)),
-                $queryBuilder->expr()->eq('tablenames', $queryBuilder->createNamedParameter('tx_aiscareer_domain_model_job')),
-                $queryBuilder->expr()->eq('fieldname', $queryBuilder->createNamedParameter('categories'))
+            ->from('sys_category_record_mm', 'mm')
+            ->innerJoin(
+                'mm',
+                'tx_aiscareer_domain_model_job',
+                'j',
+                $queryBuilder->expr()->eq('mm.uid_local', $queryBuilder->quoteIdentifier('j.uid'))
             )
+            ->where(...$constraints)
             ->executeQuery()
             ->fetchAllAssociative();
 

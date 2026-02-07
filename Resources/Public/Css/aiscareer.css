@@ -153,6 +153,15 @@
   box-shadow: var(--aiscareer-shadow);
 }
 
+.aiscareer .aiscareer-success {
+  background: #ecfdf3;
+  border: 1px solid #86efac;
+  color: #166534;
+  padding: 14px 16px;
+  border-radius: 16px;
+  font-weight: 600;
+}
+
 .aiscareer .aiscareer-form {
   display: grid;
   gap: 12px;
@@ -186,5 +195,4 @@
   color: #fff;
   border-color: transparent;
 }
-
 

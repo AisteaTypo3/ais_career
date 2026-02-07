@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.0">
+  <file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2026-02-07T00:00:00Z">
+    <header/>
+    <body>
+      <trans-unit id="joblist.itemsPerPage">
+        <source>Items per page</source>
+        <target>Einträge pro Seite</target>
+      </trans-unit>
+      <trans-unit id="joblist.sheetGeneral">
+        <source>General</source>
+        <target>Allgemein</target>
+      </trans-unit>
+      <trans-unit id="joblist.sheetFilters">
+        <source>Filters</source>
+        <target>Filter</target>
+      </trans-unit>
+      <trans-unit id="joblist.detailPid">
+        <source>Detail page UID</source>
+        <target>Detailseiten-UID</target>
+      </trans-unit>
+      <trans-unit id="joblist.listPid">
+        <source>List page UID</source>
+        <target>Listenseiten-UID</target>
+      </trans-unit>
+      <trans-unit id="joblist.mapEnabled">
+        <source>Enable world map</source>
+        <target>Weltkarte aktivieren</target>
+      </trans-unit>
+      <trans-unit id="joblist.enableFilters">
+        <source>Enable filters</source>
+        <target>Filter aktivieren</target>
+      </trans-unit>
+      <trans-unit id="joblist.filterCountry">
+        <source>Filter: Country</source>
+        <target>Filter: Land</target>
+      </trans-unit>
+      <trans-unit id="joblist.filterDepartment">
+        <source>Filter: Department</source>
+        <target>Filter: Abteilung</target>
+      </trans-unit>
+      <trans-unit id="joblist.filterContractType">
+        <source>Filter: Contract type</source>
+        <target>Filter: Vertragsart</target>
+      </trans-unit>
+      <trans-unit id="joblist.filterRemotePossible">
+        <source>Filter: Remote possible</source>
+        <target>Filter: Remote möglich</target>
+      </trans-unit>
+      <trans-unit id="joblist.filterCategory">
+        <source>Filter: Category</source>
+        <target>Filter: Kategorie</target>
+      </trans-unit>
+
+      <trans-unit id="jobdetail.applicationEnabled">
+        <source>Enable application form</source>
+        <target>Bewerbungsformular aktivieren</target>
+      </trans-unit>
+      <trans-unit id="jobdetail.sheetGeneral">
+        <source>General</source>
+        <target>Allgemein</target>
+      </trans-unit>
+      <trans-unit id="jobdetail.applicationSave">
+        <source>Save application in database</source>
+        <target>Bewerbung in Datenbank speichern</target>
+      </trans-unit>
+      <trans-unit id="jobdetail.applicationToEmail">
+        <source>Application recipient email</source>
+        <target>Empfänger-E-Mail</target>
+      </trans-unit>
+      <trans-unit id="jobdetail.applicationFromEmail">
+        <source>Application sender email</source>
+        <target>Absender-E-Mail</target>
+      </trans-unit>
+      <trans-unit id="jobdetail.allowedExtensions">
+        <source>Allowed extensions</source>
+        <target>Erlaubte Dateiendungen</target>
+      </trans-unit>
+      <trans-unit id="jobdetail.maxUploadSizeMB">
+        <source>Max upload size (MB)</source>
+        <target>Maximale Uploadgröße (MB)</target>
+      </trans-unit>
+      <trans-unit id="jobdetail.privacyPageUid">
+        <source>Privacy page UID</source>
+        <target>Datenschutzseiten-UID</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

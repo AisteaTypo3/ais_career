@@ -23,7 +23,9 @@
         <f:if condition="{paginator.numberOfPages} > 1">
           <div class="aiscareer-pagination">
             <f:if condition="{pagination.previousPageNumber}">
-              <f:link.action action="list" arguments="{page: pagination.previousPageNumber, filter: filters}">Prev</f:link.action>
+              <f:link.action action="list" arguments="{page: pagination.previousPageNumber, filter: filters}">
+                <f:translate key="job.pagination.prev" extensionName="AisCareer" />
+              </f:link.action>
             </f:if>
             <f:for each="{pagination.allPageNumbers}" as="pageNumber">
               <f:if condition="{pageNumber} == {paginator.currentPageNumber}">
@@ -36,7 +38,9 @@
               </f:if>
             </f:for>
             <f:if condition="{pagination.nextPageNumber}">
-              <f:link.action action="list" arguments="{page: pagination.nextPageNumber, filter: filters}">Next</f:link.action>
+              <f:link.action action="list" arguments="{page: pagination.nextPageNumber, filter: filters}">
+                <f:translate key="job.pagination.next" extensionName="AisCareer" />
+              </f:link.action>
             </f:if>
           </div>
         </f:if>

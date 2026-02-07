@@ -3,10 +3,11 @@
 TYPO3 v13 LTS Extbase/Fluid extension for job listings and applications.
 
 ## Features
-- Job list with filters and world map
+- Job list with filters and interactive world map
 - Job detail with optional application form
 - Email notifications and optional application persistence
 - Clean routing with slug-based URLs
+- AJAX filtering without page reload
 
 ## Installation
 1. Add the package to your project (local path or VCS):
@@ -46,6 +47,8 @@ plugin.tx_aiscareer.settings {
   itemsPerPage = 12
   enableFilters = 1
   mapEnabled = 1
+  listPid = 123
+  detailPid = 124
   applicationEnabled = 1
   applicationToEmail = hr@example.com
   applicationFromEmail = no-reply@example.com
@@ -58,8 +61,24 @@ page.includeCSS.aiscareer = EXT:ais_career/Resources/Public/Css/aiscareer.css
 page.includeJSFooter.aiscareer = EXT:ais_career/Resources/Public/JavaScript/aiscareer.js
 ```
 
+## FlexForms
+**Job List**
+- `itemsPerPage`
+- `listPid` (list page UID)
+- `detailPid` (detail page UID)
+- `mapEnabled`
+- `enableFilters` + individual filter toggles
+
+**Job Detail**
+- `applicationEnabled`
+- `applicationToEmail`
+- `applicationFromEmail`
+- `maxUploadSizeMB`
+- `allowedExtensions`
+- `privacyPageUid`
+
 ## World Map
-`Resources/Public/Images/worldmap.svg` is bundled. Add `data-country` attributes to SVG paths for clickable filters, e.g. `data-country="DE"`.
+`Resources/Public/Images/worldmap.svg` is bundled and rendered via `<object>`. Countries are highlighted and clickable if their ISO‑2 code (e.g. `DE`) exists as an `id` on a `<g>` (or `<path>`) inside the SVG. Jobs should store ISO‑2 codes in the `country` field.
 
 ## Backend
 - Records are managed in the List module.

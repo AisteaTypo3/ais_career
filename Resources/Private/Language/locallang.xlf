@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="messages" date="2026-02-07T00:00:00Z">
+    <header/>
+    <body>
+      <trans-unit id="success.applicationSent">
+        <source>Thank you! Your application has been sent successfully.</source>
+      </trans-unit>
+      <trans-unit id="job.meta.reference">
+        <source>Ref:</source>
+      </trans-unit>
+      <trans-unit id="job.meta.remotePossible">
+        <source>Remote possible</source>
+      </trans-unit>
+      <trans-unit id="job.meta.remote">
+        <source>Remote</source>
+      </trans-unit>
+      <trans-unit id="job.section.description">
+        <source>Description</source>
+      </trans-unit>
+      <trans-unit id="job.section.responsibilities">
+        <source>Responsibilities</source>
+      </trans-unit>
+      <trans-unit id="job.section.qualifications">
+        <source>Qualifications</source>
+      </trans-unit>
+      <trans-unit id="job.section.benefits">
+        <source>Benefits</source>
+      </trans-unit>
+      <trans-unit id="job.section.attachments">
+        <source>Attachments</source>
+      </trans-unit>
+      <trans-unit id="job.section.applyNow">
+        <source>Apply now</source>
+      </trans-unit>
+      <trans-unit id="job.button.viewDetails">
+        <source>View details</source>
+      </trans-unit>
+      <trans-unit id="job.pagination.prev">
+        <source>Prev</source>
+      </trans-unit>
+      <trans-unit id="job.pagination.next">
+        <source>Next</source>
+      </trans-unit>
+      <trans-unit id="filter.country">
+        <source>Country</source>
+      </trans-unit>
+      <trans-unit id="filter.department">
+        <source>Department</source>
+      </trans-unit>
+      <trans-unit id="filter.contractType">
+        <source>Contract type</source>
+      </trans-unit>
+      <trans-unit id="filter.remote">
+        <source>Remote</source>
+      </trans-unit>
+      <trans-unit id="filter.category">
+        <source>Category</source>
+      </trans-unit>
+      <trans-unit id="filter.option.all">
+        <source>All</source>
+      </trans-unit>
+      <trans-unit id="filter.option.any">
+        <source>Any</source>
+      </trans-unit>
+      <trans-unit id="filter.option.onSite">
+        <source>On-site</source>
+      </trans-unit>
+      <trans-unit id="filter.option.remote">
+        <source>Remote</source>
+      </trans-unit>
+      <trans-unit id="filter.button.apply">
+        <source>Filter</source>
+      </trans-unit>
+      <trans-unit id="filter.button.reset">
+        <source>Reset</source>
+      </trans-unit>
+      <trans-unit id="form.firstName">
+        <source>First name *</source>
+      </trans-unit>
+      <trans-unit id="form.lastName">
+        <source>Last name *</source>
+      </trans-unit>
+      <trans-unit id="form.email">
+        <source>Email *</source>
+      </trans-unit>
+      <trans-unit id="form.phone">
+        <source>Phone</source>
+      </trans-unit>
+      <trans-unit id="form.message">
+        <source>Message</source>
+      </trans-unit>
+      <trans-unit id="form.cvUpload">
+        <source>CV upload</source>
+      </trans-unit>
+      <trans-unit id="form.allowed">
+        <source>Allowed:</source>
+      </trans-unit>
+      <trans-unit id="form.maxUpload">
+        <source>max</source>
+      </trans-unit>
+      <trans-unit id="form.privacyConsent">
+        <source>I accept the privacy policy</source>
+      </trans-unit>
+      <trans-unit id="form.privacyView">
+        <source>View</source>
+      </trans-unit>
+      <trans-unit id="form.submit">
+        <source>Send application</source>
+      </trans-unit>
+      <trans-unit id="map.alt">
+        <source>World map</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

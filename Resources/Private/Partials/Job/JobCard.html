@@ -14,9 +14,13 @@
   <div class="aiscareer-meta">
     <f:if condition="{job.department}">{job.department}</f:if>
     <f:if condition="{job.contractType}"> | {job.contractType}</f:if>
-    <f:if condition="{job.remotePossible}"> | Remote</f:if>
+    <f:if condition="{job.remotePossible}">
+      | <f:translate key="job.meta.remote" extensionName="AisCareer" />
+    </f:if>
   </div>
   <div>
-    <f:link.action action="show" class="aiscareer-button" arguments="{job: job}" pageUid="{detailPid}">View details</f:link.action>
+    <f:link.action action="show" class="aiscareer-button" arguments="{job: job}" pageUid="{detailPid}">
+      <f:translate key="job.button.viewDetails" extensionName="AisCareer" />
+    </f:link.action>
   </div>
 </div>

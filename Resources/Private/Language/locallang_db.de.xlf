@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.0">
+  <file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2026-02-07T00:00:00Z">
+    <header/>
+    <body>
+      <trans-unit id="tx_aiscareer_domain_model_job">
+        <source>Job</source>
+        <target>Stelle</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.title">
+        <source>Title</source>
+        <target>Titel</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.reference">
+        <source>Reference</source>
+        <target>Referenz</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.description">
+        <source>Description</source>
+        <target>Beschreibung</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.responsibilities">
+        <source>Responsibilities</source>
+        <target>Aufgaben</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.qualifications">
+        <source>Qualifications</source>
+        <target>Qualifikationen</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.benefits">
+        <source>Benefits</source>
+        <target>Vorteile</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.country">
+        <source>Country (ISO-2)</source>
+        <target>Land (ISO-2)</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.city">
+        <source>City</source>
+        <target>Stadt</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.location_label">
+        <source>Location label</source>
+        <target>Standortbezeichnung</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.department">
+        <source>Department</source>
+        <target>Abteilung</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.contract_type">
+        <source>Contract type</source>
+        <target>Vertragsart</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.remote_possible">
+        <source>Remote possible</source>
+        <target>Remote möglich</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.employment_start">
+        <source>Employment start</source>
+        <target>Einstellungsbeginn</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.published_from">
+        <source>Published from</source>
+        <target>Veröffentlicht ab</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.published_to">
+        <source>Published to</source>
+        <target>Veröffentlicht bis</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.is_active">
+        <source>Active</source>
+        <target>Aktiv</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.attachments">
+        <source>Attachments</source>
+        <target>Anhänge</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.contact_email">
+        <source>Contact email</source>
+        <target>Kontakt-E-Mail</target>
+      </trans-unit>
+
+      <trans-unit id="tx_aiscareer_domain_model_application">
+        <source>Application</source>
+        <target>Bewerbung</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.job">
+        <source>Job</source>
+        <target>Stelle</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.first_name">
+        <source>First name</source>
+        <target>Vorname</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.last_name">
+        <source>Last name</source>
+        <target>Nachname</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.email">
+        <source>Email</source>
+        <target>E-Mail</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.phone">
+        <source>Phone</source>
+        <target>Telefon</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.message">
+        <source>Message</source>
+        <target>Nachricht</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.cv_file">
+        <source>CV file</source>
+        <target>Lebenslauf</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.consent_privacy">
+        <source>Consent privacy</source>
+        <target>Datenschutzzustimmung</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.created_at">
+        <source>Created at</source>
+        <target>Erstellt am</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

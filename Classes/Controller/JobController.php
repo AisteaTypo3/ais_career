@@ -17,7 +17,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
-use TYPO3\CMS\Extbase\Property\TypeConverter\UploadedFileReferenceConverter;
 use TYPO3\CMS\Core\Pagination\SimplePagination;
 
 class JobController extends ActionController
@@ -88,11 +87,16 @@ class JobController extends ActionController
         if ($application === null) {
             $application = new Application();
         }
+        $applicationSuccess = false;
+        if ($this->request->hasArgument('applicationSuccess')) {
+            $applicationSuccess = (bool)$this->request->getArgument('applicationSuccess');
+        }
 
         $this->view->assignMultiple([
             'job' => $job,
             'application' => $application,
             'applicationErrors' => $applicationErrors,
+            'applicationSuccess' => $applicationSuccess,
             'settings' => $this->settings,
         ]);
 
@@ -110,14 +114,17 @@ class JobController extends ActionController
         $maxUploadSizeBytes = $maxUploadSizeMb * 1024 * 1024;
 
         $configuration = $this->arguments->getArgument('application')->getPropertyMappingConfiguration();
-        $configuration->forProperty('cvFile')->setTypeConverterOptions(
-            UploadedFileReferenceConverter::class,
-            [
-                UploadedFileReferenceConverter::CONFIGURATION_ALLOWED_FILE_EXTENSIONS => $allowedExtensions,
-                UploadedFileReferenceConverter::CONFIGURATION_MAX_UPLOAD_SIZE => $maxUploadSizeBytes,
-                UploadedFileReferenceConverter::CONFIGURATION_UPLOAD_FOLDER => '1:/user_upload/ais_career/',
-            ]
-        );
+        $converterClass = 'TYPO3\\CMS\\Extbase\\Property\\TypeConverter\\UploadedFileReferenceConverter';
+        if (class_exists($converterClass)) {
+            $configuration->forProperty('cvFile')->setTypeConverterOptions(
+                $converterClass,
+                [
+                    $converterClass::CONFIGURATION_ALLOWED_FILE_EXTENSIONS => $allowedExtensions,
+                    $converterClass::CONFIGURATION_MAX_UPLOAD_SIZE => $maxUploadSizeBytes,
+                    $converterClass::CONFIGURATION_UPLOAD_FOLDER => '1:/user_upload/ais_career/',
+                ]
+            );
+        }
     }
 
     public function applyAction(Job $job, Application $application): ResponseInterface
@@ -151,8 +158,7 @@ class JobController extends ActionController
 
         $this->sendApplicationMail($job, $application);
 
-        $this->addFlashMessage('Application sent successfully.');
-        return $this->redirect('show', null, null, ['job' => $job]);
+        return $this->redirect('show', null, null, ['job' => $job, 'applicationSuccess' => 1]);
     }
 
     private function collectFilterOptions(): array
@@ -241,6 +247,7 @@ class JobController extends ActionController
             return;
         }
 
+        $safe = static fn (string $value): string => htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         $subject = 'Application for ' . $job->getTitle();
         if ($job->getReference() !== '') {
             $subject .= ' (' . $job->getReference() . ')';
@@ -259,11 +266,23 @@ class JobController extends ActionController
             $application->getMessage(),
         ];
 
+        $htmlBody = '<h2>New application received</h2>'
+            . '<p><strong>Job:</strong> ' . $safe($job->getTitle()) . '</p>'
+            . '<p><strong>Reference:</strong> ' . $safe($job->getReference()) . '</p>'
+            . '<p><strong>Name:</strong> ' . $safe($application->getFirstName() . ' ' . $application->getLastName()) . '</p>'
+            . '<p><strong>Email:</strong> ' . $safe($application->getEmail()) . '</p>'
+            . '<p><strong>Phone:</strong> ' . $safe($application->getPhone()) . '</p>'
+            . '<p><strong>Message:</strong><br />' . nl2br($safe($application->getMessage())) . '</p>';
+
         $mail = GeneralUtility::makeInstance(MailMessage::class);
         $mail->setFrom([$fromEmail => 'AIS Career']);
         $mail->setTo([$toEmail]);
+        if (GeneralUtility::validEmail($application->getEmail())) {
+            $mail->setReplyTo([$application->getEmail() => $application->getFirstName() . ' ' . $application->getLastName()]);
+        }
         $mail->setSubject($subject);
         $mail->text(implode("\n", $bodyLines));
+        $mail->html($htmlBody);
 
         $fileReference = $application->getCvFile();
         if ($fileReference !== null) {

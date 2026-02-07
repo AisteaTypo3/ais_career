@@ -10,44 +10,51 @@
   <f:form action="apply" name="application" object="{application}" arguments="{job: job}" enctype="multipart/form-data" class="aiscareer-form">
     <div class="row">
       <div>
-        <label for="aiscareer-firstname">First name *</label>
+        <label for="aiscareer-firstname"><f:translate key="form.firstName" extensionName="AisCareer" /></label>
         <f:form.textfield id="aiscareer-firstname" property="firstName" class="aiscareer-input" required="required" />
       </div>
       <div>
-        <label for="aiscareer-lastname">Last name *</label>
+        <label for="aiscareer-lastname"><f:translate key="form.lastName" extensionName="AisCareer" /></label>
         <f:form.textfield id="aiscareer-lastname" property="lastName" class="aiscareer-input" required="required" />
       </div>
     </div>
     <div class="row">
       <div>
-        <label for="aiscareer-email">Email *</label>
+        <label for="aiscareer-email"><f:translate key="form.email" extensionName="AisCareer" /></label>
         <f:form.textfield id="aiscareer-email" property="email" class="aiscareer-input" type="email" required="required" />
       </div>
       <div>
-        <label for="aiscareer-phone">Phone</label>
+        <label for="aiscareer-phone"><f:translate key="form.phone" extensionName="AisCareer" /></label>
         <f:form.textfield id="aiscareer-phone" property="phone" class="aiscareer-input" />
       </div>
     </div>
     <div>
-      <label for="aiscareer-message">Message</label>
+      <label for="aiscareer-message"><f:translate key="form.message" extensionName="AisCareer" /></label>
       <f:form.textarea id="aiscareer-message" property="message" class="aiscareer-input" rows="5" />
     </div>
     <div>
-      <label for="aiscareer-cv">CV upload</label>
+      <label for="aiscareer-cv"><f:translate key="form.cvUpload" extensionName="AisCareer" /></label>
       <f:form.upload id="aiscareer-cv" property="cvFile" class="aiscareer-input" />
-      <div class="aiscareer-meta">Allowed: {settings.allowedExtensions}, max {settings.maxUploadSizeMB} MB</div>
+      <div class="aiscareer-meta">
+        <f:translate key="form.allowed" extensionName="AisCareer" /> {settings.allowedExtensions},
+        <f:translate key="form.maxUpload" extensionName="AisCareer" /> {settings.maxUploadSizeMB} MB
+      </div>
     </div>
     <div>
       <label>
         <f:form.checkbox property="consentPrivacy" value="1" />
-        I accept the privacy policy
+        <f:translate key="form.privacyConsent" extensionName="AisCareer" />
         <f:if condition="{settings.privacyPageUid}">
-          (<f:link.page pageUid="{settings.privacyPageUid}" target="_blank">View</f:link.page>)
+          (<f:link.page pageUid="{settings.privacyPageUid}" target="_blank">
+            <f:translate key="form.privacyView" extensionName="AisCareer" />
+          </f:link.page>)
         </f:if>
       </label>
     </div>
     <div>
-      <button type="submit" class="aiscareer-button">Send application</button>
+      <button type="submit" class="aiscareer-button">
+        <f:translate key="form.submit" extensionName="AisCareer" />
+      </button>
     </div>
   </f:form>
 </div>
