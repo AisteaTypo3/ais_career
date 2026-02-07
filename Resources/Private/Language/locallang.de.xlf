@@ -147,6 +147,78 @@
         <source>World map</source>
         <target>Weltkarte</target>
       </trans-unit>
+      <trans-unit id="error.firstNameRequired">
+        <source>First name is required.</source>
+        <target>Vorname ist erforderlich.</target>
+      </trans-unit>
+      <trans-unit id="error.lastNameRequired">
+        <source>Last name is required.</source>
+        <target>Nachname ist erforderlich.</target>
+      </trans-unit>
+      <trans-unit id="error.emailRequired">
+        <source>Email is required.</source>
+        <target>E-Mail ist erforderlich.</target>
+      </trans-unit>
+      <trans-unit id="error.emailInvalid">
+        <source>Email is invalid.</source>
+        <target>E-Mail ist ungültig.</target>
+      </trans-unit>
+      <trans-unit id="error.consentRequired">
+        <source>Privacy consent is required.</source>
+        <target>Datenschutzzustimmung ist erforderlich.</target>
+      </trans-unit>
+      <trans-unit id="error.fileType">
+        <source>File type is not allowed.</source>
+        <target>Dateityp ist nicht erlaubt.</target>
+      </trans-unit>
+      <trans-unit id="error.fileTooLarge">
+        <source>File is too large.</source>
+        <target>Datei ist zu groß.</target>
+      </trans-unit>
+      <trans-unit id="error.botDetected">
+        <source>Please try again.</source>
+        <target>Bitte versuchen Sie es erneut.</target>
+      </trans-unit>
+      <trans-unit id="error.rateLimited">
+        <source>Too many submissions. Please try again later.</source>
+        <target>Zu viele Einsendungen. Bitte später erneut versuchen.</target>
+      </trans-unit>
+      <trans-unit id="mail.brand">
+        <source>AIS Career</source>
+        <target>AIS Career</target>
+      </trans-unit>
+      <trans-unit id="mail.confirm.subject">
+        <source>We received your application — %s</source>
+        <target>Wir haben Ihre Bewerbung erhalten — %s</target>
+      </trans-unit>
+      <trans-unit id="mail.confirm.title">
+        <source>Application received</source>
+        <target>Bewerbung eingegangen</target>
+      </trans-unit>
+      <trans-unit id="mail.confirm.greeting">
+        <source>Hi %s %s,</source>
+        <target>Hallo %s %s,</target>
+      </trans-unit>
+      <trans-unit id="mail.confirm.body">
+        <source>Thank you for your application. We’ve received your submission and our team will review it shortly.</source>
+        <target>Vielen Dank für Ihre Bewerbung. Wir haben Ihre Unterlagen erhalten und prüfen diese in Kürze.</target>
+      </trans-unit>
+      <trans-unit id="mail.confirm.positionLabel">
+        <source>Position</source>
+        <target>Position</target>
+      </trans-unit>
+      <trans-unit id="mail.confirm.referenceLabel">
+        <source>Reference:</source>
+        <target>Referenz:</target>
+      </trans-unit>
+      <trans-unit id="mail.confirm.footer">
+        <source>If you have any questions, just reply to this email.</source>
+        <target>Wenn Sie Fragen haben, antworten Sie einfach auf diese E-Mail.</target>
+      </trans-unit>
+      <trans-unit id="mail.confirm.disclaimer">
+        <source>This is an automated confirmation. Please do not share sensitive information.</source>
+        <target>Dies ist eine automatische Bestätigung. Bitte teilen Sie keine sensiblen Informationen.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

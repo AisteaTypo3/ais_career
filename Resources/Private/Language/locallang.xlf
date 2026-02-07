@@ -111,6 +111,60 @@
       <trans-unit id="map.alt">
         <source>World map</source>
       </trans-unit>
+      <trans-unit id="error.firstNameRequired">
+        <source>First name is required.</source>
+      </trans-unit>
+      <trans-unit id="error.lastNameRequired">
+        <source>Last name is required.</source>
+      </trans-unit>
+      <trans-unit id="error.emailRequired">
+        <source>Email is required.</source>
+      </trans-unit>
+      <trans-unit id="error.emailInvalid">
+        <source>Email is invalid.</source>
+      </trans-unit>
+      <trans-unit id="error.consentRequired">
+        <source>Privacy consent is required.</source>
+      </trans-unit>
+      <trans-unit id="error.fileType">
+        <source>File type is not allowed.</source>
+      </trans-unit>
+      <trans-unit id="error.fileTooLarge">
+        <source>File is too large.</source>
+      </trans-unit>
+      <trans-unit id="error.botDetected">
+        <source>Please try again.</source>
+      </trans-unit>
+      <trans-unit id="error.rateLimited">
+        <source>Too many submissions. Please try again later.</source>
+      </trans-unit>
+      <trans-unit id="mail.brand">
+        <source>AIS Career</source>
+      </trans-unit>
+      <trans-unit id="mail.confirm.subject">
+        <source>We received your application — %s</source>
+      </trans-unit>
+      <trans-unit id="mail.confirm.title">
+        <source>Application received</source>
+      </trans-unit>
+      <trans-unit id="mail.confirm.greeting">
+        <source>Hi %s %s,</source>
+      </trans-unit>
+      <trans-unit id="mail.confirm.body">
+        <source>Thank you for your application. We’ve received your submission and our team will review it shortly.</source>
+      </trans-unit>
+      <trans-unit id="mail.confirm.positionLabel">
+        <source>Position</source>
+      </trans-unit>
+      <trans-unit id="mail.confirm.referenceLabel">
+        <source>Reference:</source>
+      </trans-unit>
+      <trans-unit id="mail.confirm.footer">
+        <source>If you have any questions, just reply to this email.</source>
+      </trans-unit>
+      <trans-unit id="mail.confirm.disclaimer">
+        <source>This is an automated confirmation. Please do not share sensitive information.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

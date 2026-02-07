@@ -14,9 +14,11 @@ use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Core\Pagination\SimplePagination;
 
 class JobController extends ActionController
@@ -92,15 +94,7 @@ class JobController extends ActionController
             $applicationSuccess = (bool)$this->request->getArgument('applicationSuccess');
         }
 
-        $this->view->assignMultiple([
-            'job' => $job,
-            'application' => $application,
-            'applicationErrors' => $applicationErrors,
-            'applicationSuccess' => $applicationSuccess,
-            'settings' => $this->settings,
-        ]);
-
-        return $this->htmlResponse();
+        return $this->renderShow($job, $application, $applicationErrors, $applicationSuccess);
     }
 
     public function initializeApplyAction(): void
@@ -140,13 +134,12 @@ class JobController extends ActionController
         $application->setJob($job);
 
         $errors = $this->validateApplication($application);
+        $botErrors = $this->validateBotSignals($job);
+        if ($botErrors !== []) {
+            $errors = array_merge($errors, $botErrors);
+        }
         if ($errors !== []) {
-            $this->addFlashMessage('Please check the application form.', '', \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR);
-            return $this->forward('show', null, null, [
-                'job' => $job,
-                'application' => $application,
-                'applicationErrors' => $errors,
-            ]);
+            return $this->renderShow($job, $application, $errors, false);
         }
 
         $application->setCreatedAt(new \DateTime());
@@ -199,20 +192,21 @@ class JobController extends ActionController
     private function validateApplication(Application $application): array
     {
         $errors = [];
+        $t = static fn (string $key, string $fallback): string => LocalizationUtility::translate($key, 'AisCareer') ?? $fallback;
 
         if (trim($application->getFirstName()) === '') {
-            $errors['firstName'] = 'First name is required.';
+            $errors['firstName'] = $t('error.firstNameRequired', 'First name is required.');
         }
         if (trim($application->getLastName()) === '') {
-            $errors['lastName'] = 'Last name is required.';
+            $errors['lastName'] = $t('error.lastNameRequired', 'Last name is required.');
         }
         if (trim($application->getEmail()) === '') {
-            $errors['email'] = 'Email is required.';
+            $errors['email'] = $t('error.emailRequired', 'Email is required.');
         } elseif (!GeneralUtility::validEmail($application->getEmail())) {
-            $errors['email'] = 'Email is invalid.';
+            $errors['email'] = $t('error.emailInvalid', 'Email is invalid.');
         }
         if (!$application->isConsentPrivacy()) {
-            $errors['consentPrivacy'] = 'Privacy consent is required.';
+            $errors['consentPrivacy'] = $t('error.consentRequired', 'Privacy consent is required.');
         }
 
         $fileReference = $application->getCvFile();
@@ -223,17 +217,105 @@ class JobController extends ActionController
                 $extension = strtolower((string)$file->getExtension());
                 $allowed = array_filter(array_map('trim', explode(',', (string)($this->settings['allowedExtensions'] ?? 'pdf,doc,docx'))));
                 if ($allowed !== [] && !in_array($extension, $allowed, true)) {
-                    $errors['cvFile'] = 'File type is not allowed.';
+                    $errors['cvFile'] = $t('error.fileType', 'File type is not allowed.');
                 }
                 $maxUploadSizeMb = (int)($this->settings['maxUploadSizeMB'] ?? 5);
                 $maxUploadSizeBytes = $maxUploadSizeMb * 1024 * 1024;
                 if ($file->getSize() > $maxUploadSizeBytes) {
-                    $errors['cvFile'] = 'File is too large.';
+                    $errors['cvFile'] = $t('error.fileTooLarge', 'File is too large.');
                 }
             }
         }
 
         return $errors;
+    }
+
+    private function validateBotSignals(Job $job): array
+    {
+        $errors = [];
+        $t = static fn (string $key, string $fallback): string => LocalizationUtility::translate($key, 'AisCareer') ?? $fallback;
+
+        $antiBot = [];
+        if ($this->request->hasArgument('antiBot')) {
+            $antiBot = (array)$this->request->getArgument('antiBot');
+        } else {
+            $httpRequest = $GLOBALS['TYPO3_REQUEST'] ?? null;
+            if ($httpRequest !== null) {
+                $body = (array)$httpRequest->getParsedBody();
+                $raw = $body['tx_aiscareer_jobdetail']['antiBot'] ?? $body['antiBot'] ?? null;
+                if (is_array($raw)) {
+                    $antiBot = $raw;
+                }
+            }
+        }
+
+        $honeypot = trim((string)($antiBot['website'] ?? ''));
+        if ($honeypot !== '') {
+            $errors['_bot'] = $t('error.botDetected', 'Please try again.');
+            return $errors;
+        }
+
+        $minSeconds = (int)($this->settings['botMinSeconds'] ?? 3);
+        $maxSeconds = (int)($this->settings['botMaxSeconds'] ?? 86400);
+        $ts = (int)($antiBot['ts'] ?? 0);
+        $now = (int)(new \DateTime())->format('U');
+        if ($ts > 0) {
+            $age = $now - $ts;
+            if (($minSeconds > 0 && $age < $minSeconds) || ($maxSeconds > 0 && $age > $maxSeconds)) {
+                $errors['_bot'] = $t('error.botDetected', 'Please try again.');
+                return $errors;
+            }
+        }
+
+        if (!empty($this->settings['botRequireHeaders'])) {
+            $userAgent = trim((string)GeneralUtility::getIndpEnv('HTTP_USER_AGENT'));
+            $acceptLanguage = trim((string)GeneralUtility::getIndpEnv('HTTP_ACCEPT_LANGUAGE'));
+            if ($userAgent === '' && $acceptLanguage === '') {
+                $errors['_bot'] = $t('error.botDetected', 'Please try again.');
+                return $errors;
+            }
+        }
+
+        if ($this->isRateLimited($job)) {
+            $errors['_bot'] = $t('error.rateLimited', 'Too many submissions. Please try again later.');
+            return $errors;
+        }
+
+        return $errors;
+    }
+
+    private function isRateLimited(Job $job): bool
+    {
+        $rateLimit = (int)($this->settings['botRateLimit'] ?? 5);
+        $windowSeconds = (int)($this->settings['botRateWindowSeconds'] ?? 3600);
+        if ($rateLimit <= 0) {
+            return false;
+        }
+
+        $ip = trim((string)GeneralUtility::getIndpEnv('REMOTE_ADDR'));
+        if ($ip === '') {
+            return false;
+        }
+
+        try {
+            $cache = GeneralUtility::makeInstance(CacheManager::class)->getCache('aiscareer_rate');
+        } catch (\TYPO3\CMS\Core\Cache\Exception\NoSuchCacheException) {
+            return false;
+        }
+
+        $key = 'ip_' . md5($ip . '|' . $job->getUid());
+        $data = $cache->get($key);
+        $count = 0;
+        if (is_array($data) && isset($data['count'])) {
+            $count = (int)$data['count'];
+        }
+
+        if ($count >= $rateLimit) {
+            return true;
+        }
+
+        $cache->set($key, ['count' => $count + 1], [], $windowSeconds);
+        return false;
     }
 
     private function sendApplicationMail(Job $job, Application $application): void
@@ -297,6 +379,97 @@ class JobController extends ActionController
         }
 
         $mail->send();
+
+        if (!empty($this->settings['applicationConfirmationEnabled'])) {
+            $this->sendApplicantConfirmationMail($job, $application, $fromEmail, $toEmail);
+        }
+    }
+
+    private function sendApplicantConfirmationMail(Job $job, Application $application, string $fromEmail, string $replyToEmail): void
+    {
+        $applicantEmail = trim($application->getEmail());
+        if ($applicantEmail === '' || !GeneralUtility::validEmail($applicantEmail)) {
+            return;
+        }
+        if ($fromEmail === '') {
+            return;
+        }
+
+        $safe = static fn (string $value): string => htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $t = static fn (string $key, string $fallback, array $args = []): string => LocalizationUtility::translate($key, 'AisCareer', $args) ?? $fallback;
+
+        $subject = $t('mail.confirm.subject', 'We received your application — %s', [$job->getTitle()]);
+        if ($job->getReference() !== '') {
+            $subject .= ' (' . $job->getReference() . ')';
+        }
+
+        $jobTitle = $safe($job->getTitle());
+        $jobRef = $safe($job->getReference());
+        $firstName = $safe($application->getFirstName());
+        $lastName = $safe($application->getLastName());
+
+        $htmlBody = '<!doctype html><html><head><meta charset="utf-8"></head><body style="margin:0;padding:0;background:#f6f7fb;font-family:Arial,Helvetica,sans-serif;color:#111827;">'
+            . '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f6f7fb;padding:32px 12px;">'
+            . '<tr><td align="center">'
+            . '<table role="presentation" width="640" cellspacing="0" cellpadding="0" style="background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 18px 40px rgba(15,23,42,0.08);">'
+            . '<tr><td style="background:#0b84ff;padding:24px 28px;color:#fff;">'
+            . '<div style="font-size:18px;letter-spacing:0.04em;text-transform:uppercase;opacity:0.9;">' . $safe($t('mail.brand', 'AIS Career')) . '</div>'
+            . '<div style="font-size:26px;font-weight:700;margin-top:6px;">' . $safe($t('mail.confirm.title', 'Application received')) . '</div>'
+            . '</td></tr>'
+            . '<tr><td style="padding:28px;">'
+            . '<p style="margin:0 0 12px;font-size:16px;">' . $safe($t('mail.confirm.greeting', 'Hi %s %s,', [$application->getFirstName(), $application->getLastName()])) . '</p>'
+            . '<p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#374151;">' . $safe($t('mail.confirm.body', 'Thank you for your application. We’ve received your submission and our team will review it shortly.')) . '</p>'
+            . '<div style="border:1px solid #e5e7eb;border-radius:16px;padding:16px 18px;background:#f9fafb;">'
+            . '<div style="font-size:13px;letter-spacing:0.02em;text-transform:uppercase;color:#6b7280;margin-bottom:6px;">' . $safe($t('mail.confirm.positionLabel', 'Position')) . '</div>'
+            . '<div style="font-size:18px;font-weight:600;color:#111827;">' . $jobTitle . '</div>';
+        if ($jobRef !== '') {
+            $htmlBody .= '<div style="margin-top:6px;color:#6b7280;font-size:14px;">' . $safe($t('mail.confirm.referenceLabel', 'Reference:')) . ' ' . $jobRef . '</div>';
+        }
+        $htmlBody .= '</div>'
+            . '<p style="margin:18px 0 0;font-size:14px;color:#6b7280;line-height:1.6;">' . $safe($t('mail.confirm.footer', 'If you have any questions, just reply to this email.')) . '</p>'
+            . '</td></tr>'
+            . '<tr><td style="padding:18px 28px 26px;color:#9ca3af;font-size:12px;text-align:center;">'
+            . $safe($t('mail.confirm.disclaimer', 'This is an automated confirmation. Please do not share sensitive information.'))
+            . '</td></tr>'
+            . '</table>'
+            . '</td></tr></table></body></html>';
+
+        $textBody = $t('mail.confirm.title', 'Application received') . "\n\n"
+            . $t('mail.confirm.greeting', 'Hi %s %s,', [$application->getFirstName(), $application->getLastName()]) . "\n\n"
+            . $t('mail.confirm.body', 'Thank you for your application. We’ve received your submission and our team will review it shortly.') . "\n\n"
+            . $t('mail.confirm.positionLabel', 'Position') . ': ' . $job->getTitle() . "\n"
+            . ($job->getReference() !== '' ? $t('mail.confirm.referenceLabel', 'Reference:') . ' ' . $job->getReference() . "\n" : '')
+            . "\n" . $t('mail.confirm.footer', 'If you have any questions, just reply to this email.') . "\n";
+
+        $mail = GeneralUtility::makeInstance(MailMessage::class);
+        $mail->setFrom([$fromEmail => 'AIS Career']);
+        $mail->setTo([$applicantEmail => $application->getFirstName() . ' ' . $application->getLastName()]);
+        if (GeneralUtility::validEmail($replyToEmail)) {
+            $mail->setReplyTo([$replyToEmail]);
+        }
+        $mail->setSubject($subject);
+        $mail->text($textBody);
+        $mail->html($htmlBody);
+        $mail->send();
+    }
+
+    private function renderShow(Job $job, Application $application, array $applicationErrors, bool $applicationSuccess): ResponseInterface
+    {
+        $this->view->assignMultiple([
+            'job' => $job,
+            'application' => $application,
+            'applicationErrors' => $applicationErrors,
+            'applicationSuccess' => $applicationSuccess,
+            'formTimestamp' => (new \DateTime())->getTimestamp(),
+            'settings' => $this->settings,
+        ]);
+
+        $templatePath = GeneralUtility::getFileAbsFileName('EXT:ais_career/Resources/Private/Templates/Job/Show.html');
+        if (method_exists($this->view, 'setTemplatePathAndFilename')) {
+            $this->view->setTemplatePathAndFilename($templatePath);
+        }
+
+        return $this->htmlResponse();
     }
 
     private function addAssets(): void

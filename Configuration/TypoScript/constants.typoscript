@@ -20,8 +20,15 @@ plugin.tx_aiscareer {
     applicationToEmail = hr@example.com
     applicationFromEmail = no-reply@example.com
     applicationSave = 1
+    applicationConfirmationEnabled = 1
     maxUploadSizeMB = 5
     allowedExtensions = pdf,doc,docx
     privacyPageUid = 0
+
+    botMinSeconds = 3
+    botMaxSeconds = 86400
+    botRateLimit = 5
+    botRateWindowSeconds = 3600
+    botRequireHeaders = 1
   }
 }

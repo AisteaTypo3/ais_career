@@ -20,9 +20,16 @@ plugin.tx_aiscareer {
     applicationToEmail = {$plugin.tx_aiscareer.settings.applicationToEmail}
     applicationFromEmail = {$plugin.tx_aiscareer.settings.applicationFromEmail}
     applicationSave = {$plugin.tx_aiscareer.settings.applicationSave}
+    applicationConfirmationEnabled = {$plugin.tx_aiscareer.settings.applicationConfirmationEnabled}
     maxUploadSizeMB = {$plugin.tx_aiscareer.settings.maxUploadSizeMB}
     allowedExtensions = {$plugin.tx_aiscareer.settings.allowedExtensions}
     privacyPageUid = {$plugin.tx_aiscareer.settings.privacyPageUid}
+
+    botMinSeconds = {$plugin.tx_aiscareer.settings.botMinSeconds}
+    botMaxSeconds = {$plugin.tx_aiscareer.settings.botMaxSeconds}
+    botRateLimit = {$plugin.tx_aiscareer.settings.botRateLimit}
+    botRateWindowSeconds = {$plugin.tx_aiscareer.settings.botRateWindowSeconds}
+    botRequireHeaders = {$plugin.tx_aiscareer.settings.botRequireHeaders}
   }
 }
 

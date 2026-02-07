@@ -6,6 +6,8 @@ TYPO3 v13 LTS Extbase/Fluid extension for job listings and applications.
 - Job list with filters and interactive world map
 - Job detail with optional application form
 - Email notifications and optional application persistence
+- HTML email notifications
+- Inline form validation + basic anti-bot checks
 - Clean routing with slug-based URLs
 - AJAX filtering without page reload
 
@@ -55,6 +57,12 @@ plugin.tx_aiscareer.settings {
   maxUploadSizeMB = 5
   allowedExtensions = pdf,doc,docx
   privacyPageUid = 123
+
+  botMinSeconds = 3
+  botMaxSeconds = 86400
+  botRateLimit = 5
+  botRateWindowSeconds = 3600
+  botRequireHeaders = 0
 }
 
 page.includeCSS.aiscareer = EXT:ais_career/Resources/Public/Css/aiscareer.css
@@ -76,6 +84,18 @@ page.includeJSFooter.aiscareer = EXT:ais_career/Resources/Public/JavaScript/aisc
 - `maxUploadSizeMB`
 - `allowedExtensions`
 - `privacyPageUid`
+
+## Anti-bot (internal)
+The form includes an internal anti-bot layer (honeypot, timing window, rate limiting).
+Tune via TypoScript:
+- `botMinSeconds` (0 disables timing check)
+- `botMaxSeconds` (0 disables max age)
+- `botRateLimit` + `botRateWindowSeconds`
+- `botRequireHeaders` (1 enables basic header check)
+
+## i18n
+Backend and frontend labels are available in English and German:
+- `Resources/Private/Language/locallang*.xlf`
 
 ## World Map
 `Resources/Public/Images/worldmap.svg` is bundled and rendered via `<object>`. Countries are highlighted and clickable if their ISO‑2 code (e.g. `DE`) exists as an `id` on a `<g>` (or `<path>`) inside the SVG. Jobs should store ISO‑2 codes in the `country` field.

@@ -10,6 +10,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 defined('TYPO3') || die();
 
 call_user_func(static function (): void {
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['aiscareer_rate'] ??= [
+        'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
+        'backend' => \TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend::class,
+        'options' => ['defaultLifetime' => 3600],
+        'groups' => ['pages', 'all'],
+    ];
+
     ExtensionUtility::configurePlugin(
         'AisCareer',
         'JobList',
