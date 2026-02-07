@@ -19,6 +19,7 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Core\Pagination\SimplePagination;
 
 class JobController extends ActionController
@@ -395,7 +396,6 @@ class JobController extends ActionController
             return;
         }
 
-        $safe = static fn (string $value): string => htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         $t = static fn (string $key, string $fallback, array $args = []): string => LocalizationUtility::translate($key, 'AisCareer', $args) ?? $fallback;
 
         $subject = $t('mail.confirm.subject', 'We received your application — %s', [$job->getTitle()]);
@@ -403,43 +403,20 @@ class JobController extends ActionController
             $subject .= ' (' . $job->getReference() . ')';
         }
 
-        $jobTitle = $safe($job->getTitle());
-        $jobRef = $safe($job->getReference());
-        $firstName = $safe($application->getFirstName());
-        $lastName = $safe($application->getLastName());
-
-        $htmlBody = '<!doctype html><html><head><meta charset="utf-8"></head><body style="margin:0;padding:0;background:#f6f7fb;font-family:Arial,Helvetica,sans-serif;color:#111827;">'
-            . '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f6f7fb;padding:32px 12px;">'
-            . '<tr><td align="center">'
-            . '<table role="presentation" width="640" cellspacing="0" cellpadding="0" style="background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 18px 40px rgba(15,23,42,0.08);">'
-            . '<tr><td style="background:#0b84ff;padding:24px 28px;color:#fff;">'
-            . '<div style="font-size:18px;letter-spacing:0.04em;text-transform:uppercase;opacity:0.9;">' . $safe($t('mail.brand', 'AIS Career')) . '</div>'
-            . '<div style="font-size:26px;font-weight:700;margin-top:6px;">' . $safe($t('mail.confirm.title', 'Application received')) . '</div>'
-            . '</td></tr>'
-            . '<tr><td style="padding:28px;">'
-            . '<p style="margin:0 0 12px;font-size:16px;">' . $safe($t('mail.confirm.greeting', 'Hi %s %s,', [$application->getFirstName(), $application->getLastName()])) . '</p>'
-            . '<p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#374151;">' . $safe($t('mail.confirm.body', 'Thank you for your application. We’ve received your submission and our team will review it shortly.')) . '</p>'
-            . '<div style="border:1px solid #e5e7eb;border-radius:16px;padding:16px 18px;background:#f9fafb;">'
-            . '<div style="font-size:13px;letter-spacing:0.02em;text-transform:uppercase;color:#6b7280;margin-bottom:6px;">' . $safe($t('mail.confirm.positionLabel', 'Position')) . '</div>'
-            . '<div style="font-size:18px;font-weight:600;color:#111827;">' . $jobTitle . '</div>';
-        if ($jobRef !== '') {
-            $htmlBody .= '<div style="margin-top:6px;color:#6b7280;font-size:14px;">' . $safe($t('mail.confirm.referenceLabel', 'Reference:')) . ' ' . $jobRef . '</div>';
-        }
-        $htmlBody .= '</div>'
-            . '<p style="margin:18px 0 0;font-size:14px;color:#6b7280;line-height:1.6;">' . $safe($t('mail.confirm.footer', 'If you have any questions, just reply to this email.')) . '</p>'
-            . '</td></tr>'
-            . '<tr><td style="padding:18px 28px 26px;color:#9ca3af;font-size:12px;text-align:center;">'
-            . $safe($t('mail.confirm.disclaimer', 'This is an automated confirmation. Please do not share sensitive information.'))
-            . '</td></tr>'
-            . '</table>'
-            . '</td></tr></table></body></html>';
-
         $textBody = $t('mail.confirm.title', 'Application received') . "\n\n"
             . $t('mail.confirm.greeting', 'Hi %s %s,', [$application->getFirstName(), $application->getLastName()]) . "\n\n"
             . $t('mail.confirm.body', 'Thank you for your application. We’ve received your submission and our team will review it shortly.') . "\n\n"
             . $t('mail.confirm.positionLabel', 'Position') . ': ' . $job->getTitle() . "\n"
             . ($job->getReference() !== '' ? $t('mail.confirm.referenceLabel', 'Reference:') . ' ' . $job->getReference() . "\n" : '')
             . "\n" . $t('mail.confirm.footer', 'If you have any questions, just reply to this email.') . "\n";
+
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
+        $view->setTemplatePathAndFilename('EXT:ais_career/Resources/Private/Templates/Email/ApplicantConfirmation.html');
+        $view->assignMultiple([
+            'job' => $job,
+            'application' => $application,
+        ]);
+        $htmlBody = $view->render();
 
         $mail = GeneralUtility::makeInstance(MailMessage::class);
         $mail->setFrom([$fromEmail => 'AIS Career']);
