@@ -165,6 +165,18 @@
       <trans-unit id="mail.confirm.disclaimer">
         <source>This is an automated confirmation. Please do not share sensitive information.</source>
       </trans-unit>
+      <trans-unit id="mail.admin.title">
+        <source>New application received</source>
+      </trans-unit>
+      <trans-unit id="mail.admin.applicantTitle">
+        <source>Applicant</source>
+      </trans-unit>
+      <trans-unit id="mail.admin.messageTitle">
+        <source>Message</source>
+      </trans-unit>
+      <trans-unit id="mail.admin.footer">
+        <source>Reply directly to this email to contact the applicant.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

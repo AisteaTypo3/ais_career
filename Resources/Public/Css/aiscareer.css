@@ -158,6 +158,31 @@
 .aiscareer .aiscareer-card h3 a {
   color: var(--aiscareer-primary);
   text-decoration: none;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 2px;
+  transition: color 0.2s ease;
+}
+
+.aiscareer .aiscareer-card h3 a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--aiscareer-accent), #7dd3fc);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s ease;
+}
+
+.aiscareer .aiscareer-card h3 a:hover {
+  color: #0b5fcc;
+}
+
+.aiscareer .aiscareer-card h3 a:hover::after {
+  transform: scaleX(1);
 }
 
 .aiscareer .aiscareer-meta {

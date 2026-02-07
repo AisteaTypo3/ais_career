@@ -350,13 +350,13 @@ class JobController extends ActionController
             $application->getMessage(),
         ];
 
-        $htmlBody = '<h2>New application received</h2>'
-            . '<p><strong>Job:</strong> ' . $safe($job->getTitle()) . '</p>'
-            . '<p><strong>Reference:</strong> ' . $safe($job->getReference()) . '</p>'
-            . '<p><strong>Name:</strong> ' . $safe($application->getFirstName() . ' ' . $application->getLastName()) . '</p>'
-            . '<p><strong>Email:</strong> ' . $safe($application->getEmail()) . '</p>'
-            . '<p><strong>Phone:</strong> ' . $safe($application->getPhone()) . '</p>'
-            . '<p><strong>Message:</strong><br />' . nl2br($safe($application->getMessage())) . '</p>';
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
+        $view->setTemplatePathAndFilename('EXT:ais_career/Resources/Private/Templates/Email/AdminNotification.html');
+        $view->assignMultiple([
+            'job' => $job,
+            'application' => $application,
+        ]);
+        $htmlBody = $view->render();
 
         $mail = GeneralUtility::makeInstance(MailMessage::class);
         $mail->setFrom([$fromEmail => 'AIS Career']);

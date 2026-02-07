@@ -219,6 +219,22 @@
         <source>This is an automated confirmation. Please do not share sensitive information.</source>
         <target>Dies ist eine automatische Bestätigung. Bitte teilen Sie keine sensiblen Informationen.</target>
       </trans-unit>
+      <trans-unit id="mail.admin.title">
+        <source>New application received</source>
+        <target>Neue Bewerbung erhalten</target>
+      </trans-unit>
+      <trans-unit id="mail.admin.applicantTitle">
+        <source>Applicant</source>
+        <target>Bewerber:in</target>
+      </trans-unit>
+      <trans-unit id="mail.admin.messageTitle">
+        <source>Message</source>
+        <target>Nachricht</target>
+      </trans-unit>
+      <trans-unit id="mail.admin.footer">
+        <source>Reply directly to this email to contact the applicant.</source>
+        <target>Antworten Sie direkt auf diese E-Mail, um die Bewerber:in zu kontaktieren.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
