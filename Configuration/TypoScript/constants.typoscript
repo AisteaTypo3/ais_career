@@ -24,6 +24,7 @@ plugin.tx_aiscareer {
     maxUploadSizeMB = 5
     allowedExtensions = pdf,doc,docx
     privacyPageUid = 0
+    hiringOrganizationName = Aistea GmbH
 
     botMinSeconds = 3
     botMaxSeconds = 86400

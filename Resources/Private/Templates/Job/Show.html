@@ -5,6 +5,9 @@
   <div class="aiscareer">
     <div class="aiscareer-container">
       <div class="aiscareer-detail">
+        <f:if condition="{jobPostingJsonLd}">
+          <script type="application/ld+json"><f:format.raw>{jobPostingJsonLd}</f:format.raw></script>
+        </f:if>
         <f:if condition="{applicationSuccess}">
           <div class="aiscareer-section">
             <div class="aiscareer-success">

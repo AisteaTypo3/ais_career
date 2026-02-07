@@ -24,6 +24,7 @@ plugin.tx_aiscareer {
     maxUploadSizeMB = {$plugin.tx_aiscareer.settings.maxUploadSizeMB}
     allowedExtensions = {$plugin.tx_aiscareer.settings.allowedExtensions}
     privacyPageUid = {$plugin.tx_aiscareer.settings.privacyPageUid}
+    hiringOrganizationName = {$plugin.tx_aiscareer.settings.hiringOrganizationName}
 
     botMinSeconds = {$plugin.tx_aiscareer.settings.botMinSeconds}
     botMaxSeconds = {$plugin.tx_aiscareer.settings.botMaxSeconds}

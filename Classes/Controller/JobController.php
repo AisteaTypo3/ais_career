@@ -16,6 +16,7 @@ use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
@@ -432,12 +433,14 @@ class JobController extends ActionController
 
     private function renderShow(Job $job, Application $application, array $applicationErrors, bool $applicationSuccess): ResponseInterface
     {
+        $jobPostingJsonLd = $this->buildJobPostingJsonLd($job);
         $this->view->assignMultiple([
             'job' => $job,
             'application' => $application,
             'applicationErrors' => $applicationErrors,
             'applicationSuccess' => $applicationSuccess,
             'formTimestamp' => (new \DateTime())->getTimestamp(),
+            'jobPostingJsonLd' => $jobPostingJsonLd,
             'settings' => $this->settings,
         ]);
 
@@ -447,6 +450,88 @@ class JobController extends ActionController
         }
 
         return $this->htmlResponse();
+    }
+
+    private function buildJobPostingJsonLd(Job $job): string
+    {
+        $description = trim(strip_tags((string)$job->getDescription()));
+        if ($description === '') {
+            $description = trim(strip_tags((string)$job->getResponsibilities()));
+        }
+        if ($description === '') {
+            $description = trim(strip_tags((string)$job->getQualifications()));
+        }
+
+        $data = [
+            '@context' => 'https://schema.org',
+            '@type' => 'JobPosting',
+            'title' => $job->getTitle(),
+        ];
+
+        if ($description !== '') {
+            $data['description'] = $description;
+        }
+        if ($job->getReference() !== '') {
+            $data['identifier'] = [
+                '@type' => 'PropertyValue',
+                'name' => 'Reference',
+                'value' => $job->getReference(),
+            ];
+        }
+        if ($job->getContractType() !== '') {
+            $data['employmentType'] = $job->getContractType();
+        }
+        if ($job->getPublishedFrom() instanceof \DateTime) {
+            $data['datePosted'] = $job->getPublishedFrom()->format('Y-m-d');
+        }
+        if ($job->getPublishedTo() instanceof \DateTime) {
+            $data['validThrough'] = $job->getPublishedTo()->format('Y-m-d');
+        }
+
+        $city = trim((string)$job->getCity());
+        $country = trim((string)$job->getCountry());
+        if ($city !== '' || $country !== '') {
+            $data['jobLocation'] = [
+                '@type' => 'Place',
+                'address' => [
+                    '@type' => 'PostalAddress',
+                ],
+            ];
+            if ($city !== '') {
+                $data['jobLocation']['address']['addressLocality'] = $city;
+            }
+            if ($country !== '') {
+                $data['jobLocation']['address']['addressCountry'] = $country;
+            }
+        }
+        if ($job->isRemotePossible()) {
+            $data['jobLocationType'] = 'TELECOMMUTE';
+        }
+
+        $orgName = trim((string)($this->settings['hiringOrganizationName'] ?? ''));
+        if ($orgName === '' && $this->configurationManager instanceof ConfigurationManagerInterface) {
+            $settings = $this->configurationManager->getConfiguration(
+                ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
+                'AisCareer',
+                'JobDetail'
+            );
+            $orgName = trim((string)($settings['hiringOrganizationName'] ?? ''));
+        }
+        if ($orgName === '') {
+            $site = ($GLOBALS['TYPO3_REQUEST'] ?? null)?->getAttribute('site');
+            if ($site instanceof \TYPO3\CMS\Core\Site\Entity\Site) {
+                $siteConfig = $site->getConfiguration();
+                $orgName = trim((string)($siteConfig['websiteTitle'] ?? $siteConfig['siteName'] ?? ''));
+            }
+        }
+        if ($orgName !== '') {
+            $data['hiringOrganization'] = [
+                '@type' => 'Organization',
+                'name' => $orgName,
+            ];
+        }
+
+        return (string)json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
     private function addAssets(): void
