@@ -273,8 +273,10 @@ class JobController extends ActionController
             'departments' => [],
             'contractTypes' => [],
             'categories' => [],
+            'remotePossibleAvailable' => false,
         ];
 
+        $remoteCounts = ['yes' => 0, 'no' => 0];
         foreach ($this->jobRepository->findActive() as $job) {
             $country = strtoupper(trim($job->getCountry()));
             if ($country !== '') {
@@ -288,6 +290,11 @@ class JobController extends ActionController
             if ($contractType !== '') {
                 $options['contractTypes'][$contractType] = $contractType;
             }
+            if ($job->isRemotePossible()) {
+                $remoteCounts['yes']++;
+            } else {
+                $remoteCounts['no']++;
+            }
             foreach ($job->getCategories() as $category) {
                 $options['categories'][$category->getUid()] = $category->getTitle();
             }
@@ -297,6 +304,8 @@ class JobController extends ActionController
         ksort($options['departments']);
         ksort($options['contractTypes']);
         asort($options['categories']);
+        $options['remotePossibleAvailable'] = ($remoteCounts['yes'] + $remoteCounts['no']) > 0
+            && ($remoteCounts['yes'] > 0 || $remoteCounts['no'] > 0);
 
         return $options;
     }

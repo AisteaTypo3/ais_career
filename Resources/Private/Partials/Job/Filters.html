@@ -1,24 +1,24 @@
 <div class="aiscareer-filters">
   <f:form action="list" method="post" pageUid="{listPid}">
-    <f:if condition="{settings.filterCountry}">
+    <f:if condition="{settings.filterCountry} && {filterOptions.countries -> f:count()} > 0">
       <div>
         <label for="aiscareer-country"><f:translate key="filter.country" extensionName="AisCareer" /></label>
         <f:form.select id="aiscareer-country" name="filter[country]" class="aiscareer-select" value="{filters.country}" options="{filterOptions.countries}" prependOptionLabel="{f:translate(key: 'filter.option.all', extensionName: 'AisCareer')}" prependOptionValue="" />
       </div>
     </f:if>
-    <f:if condition="{settings.filterDepartment}">
+    <f:if condition="{settings.filterDepartment} && {filterOptions.departments -> f:count()} > 0">
       <div>
         <label for="aiscareer-department"><f:translate key="filter.department" extensionName="AisCareer" /></label>
         <f:form.select id="aiscareer-department" name="filter[department]" class="aiscareer-select" value="{filters.department}" options="{filterOptions.departments}" prependOptionLabel="{f:translate(key: 'filter.option.all', extensionName: 'AisCareer')}" prependOptionValue="" />
       </div>
     </f:if>
-    <f:if condition="{settings.filterContractType}">
+    <f:if condition="{settings.filterContractType} && {filterOptions.contractTypes -> f:count()} > 0">
       <div>
         <label for="aiscareer-contract"><f:translate key="filter.contractType" extensionName="AisCareer" /></label>
         <f:form.select id="aiscareer-contract" name="filter[contractType]" class="aiscareer-select" value="{filters.contractType}" options="{filterOptions.contractTypes}" prependOptionLabel="{f:translate(key: 'filter.option.all', extensionName: 'AisCareer')}" prependOptionValue="" />
       </div>
     </f:if>
-    <f:if condition="{settings.filterRemotePossible}">
+    <f:if condition="{settings.filterRemotePossible} && {filterOptions.remotePossibleAvailable}">
       <div>
         <label for="aiscareer-remote"><f:translate key="filter.remote" extensionName="AisCareer" /></label>
         <f:form.select id="aiscareer-remote" name="filter[remotePossible]" class="aiscareer-select" value="{filters.remotePossible}">
@@ -34,7 +34,7 @@
         </f:form.select>
       </div>
     </f:if>
-    <f:if condition="{settings.filterCategory}">
+    <f:if condition="{settings.filterCategory} && {filterOptions.categories -> f:count()} > 0">
       <div>
         <label for="aiscareer-category"><f:translate key="filter.category" extensionName="AisCareer" /></label>
         <f:form.select id="aiscareer-category" name="filter[category]" class="aiscareer-select" value="{filters.category}" options="{filterOptions.categories}" prependOptionLabel="{f:translate(key: 'filter.option.all', extensionName: 'AisCareer')}" prependOptionValue="" />
