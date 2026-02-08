@@ -33,6 +33,11 @@
             <f:render partial="Job/JobCard" arguments="{job: job, detailPid: detailPid}" />
           </f:for>
         </div>
+        <f:if condition="{jobs -> f:count()} == 0">
+          <div class="aiscareer-empty">
+            <f:translate key="list.empty" extensionName="AisCareer" />
+          </div>
+        </f:if>
 
         <f:if condition="{paginator.numberOfPages} > 1">
           <div class="aiscareer-pagination">

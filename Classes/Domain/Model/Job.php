@@ -119,6 +119,19 @@ class Job extends AbstractEntity
         $this->country = $country;
     }
 
+    public function getCountryLabel(): string
+    {
+        $code = strtoupper(trim($this->country));
+        if ($code === '') {
+            return '';
+        }
+        if (!class_exists(\Locale::class)) {
+            return $code;
+        }
+        $label = \Locale::getDisplayRegion('-' . $code, \Locale::getDefault());
+        return $label !== '' ? $label : $code;
+    }
+
     public function getCity(): string
     {
         return $this->city;

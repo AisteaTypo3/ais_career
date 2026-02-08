@@ -111,6 +111,10 @@
         <source>Reset</source>
         <target>Zurücksetzen</target>
       </trans-unit>
+      <trans-unit id="list.empty">
+        <source>No jobs found for the selected filters.</source>
+        <target>Keine Jobs für die gewählten Filter gefunden.</target>
+      </trans-unit>
       <trans-unit id="view.grid">
         <source>Grid</source>
         <target>Boxen</target>

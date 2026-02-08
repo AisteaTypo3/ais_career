@@ -41,6 +41,7 @@ class JobController extends ActionController
 
     public function listAction(): ResponseInterface
     {
+        $this->setLocaleFromRequest();
         $this->addAssets();
         $settings = $this->settings;
         $itemsPerPage = max(1, (int)($settings['itemsPerPage'] ?? 10));
@@ -90,6 +91,7 @@ class JobController extends ActionController
 
     public function showAction(?Job $job = null, ?Application $application = null, array $applicationErrors = []): ResponseInterface
     {
+        $this->setLocaleFromRequest();
         $this->addAssets();
         if ($job === null) {
             $job = $this->resolveJobFromRequest();
@@ -172,6 +174,7 @@ class JobController extends ActionController
 
     public function applyAction(Job $job): ResponseInterface
     {
+        $this->setLocaleFromRequest();
         if (empty($this->settings['applicationEnabled'])) {
             throw new PageNotFoundException('Applications are disabled');
         }
@@ -233,6 +236,7 @@ class JobController extends ActionController
 
     public function confirmAction(?Job $job = null, string $token = ''): ResponseInterface
     {
+        $this->setLocaleFromRequest();
         if ($token === '') {
             throw new PageNotFoundException('Confirmation token missing');
         }
@@ -280,7 +284,7 @@ class JobController extends ActionController
         foreach ($this->jobRepository->findActive() as $job) {
             $country = strtoupper(trim($job->getCountry()));
             if ($country !== '') {
-                $options['countries'][$country] = $country;
+                $options['countries'][$country] = $this->getCountryLabel($country);
             }
             $department = trim($job->getDepartment());
             if ($department !== '') {
@@ -308,6 +312,42 @@ class JobController extends ActionController
             && ($remoteCounts['yes'] > 0 || $remoteCounts['no'] > 0);
 
         return $options;
+    }
+
+    private function getCountryLabel(string $countryCode): string
+    {
+        if (!class_exists(\Locale::class)) {
+            return $countryCode;
+        }
+        $locale = $this->getLocaleFromRequest();
+        $label = \Locale::getDisplayRegion('-' . $countryCode, $locale);
+        return $label !== '' ? $label : $countryCode;
+    }
+
+    private function getLocaleFromRequest(): string
+    {
+        $httpRequest = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if ($httpRequest instanceof ServerRequestInterface) {
+            $language = $httpRequest->getAttribute('language');
+            if ($language instanceof \TYPO3\CMS\Core\Site\Entity\SiteLanguage) {
+                $locale = (string)$language->getLocale();
+                if ($locale !== '') {
+                    return $locale;
+                }
+            }
+        }
+        return 'en';
+    }
+
+    private function setLocaleFromRequest(): void
+    {
+        if (!class_exists(\Locale::class)) {
+            return;
+        }
+        $locale = $this->getLocaleFromRequest();
+        if ($locale !== '') {
+            \Locale::setDefault($locale);
+        }
     }
 
     private function validateApplication(Application $application): array

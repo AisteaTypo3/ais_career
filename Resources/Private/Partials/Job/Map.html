@@ -1,4 +1,15 @@
 <div class="aiscareer-map" data-available-countries="{availableCountries -> f:format.json()}">
+  <div class="aiscareer-map-controls" aria-label="Map controls">
+    <button type="button" class="aiscareer-map-btn" data-map-action="reset" aria-label="Reset view">
+      <span class="aiscareer-map-icon home" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="aiscareer-map-btn" data-map-action="zoom-in" aria-label="Zoom in">
+      <span class="aiscareer-map-icon plus" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="aiscareer-map-btn" data-map-action="zoom-out" aria-label="Zoom out">
+      <span class="aiscareer-map-icon minus" aria-hidden="true"></span>
+    </button>
+  </div>
   <f:form action="list" pageUid="{listPid}" class="aiscareer-map-form">
     <f:form.hidden id="aiscareer-country-hidden" name="filter[country]" value="" />
   </f:form>

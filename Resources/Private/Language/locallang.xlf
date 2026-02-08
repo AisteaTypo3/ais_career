@@ -84,6 +84,9 @@
       <trans-unit id="filter.button.reset">
         <source>Reset</source>
       </trans-unit>
+      <trans-unit id="list.empty">
+        <source>No jobs found for the selected filters.</source>
+      </trans-unit>
       <trans-unit id="view.grid">
         <source>Grid</source>
       </trans-unit>

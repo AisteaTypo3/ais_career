@@ -131,6 +131,167 @@
     });
   }
 
+  function bindMapControls() {
+    var map = document.querySelector('.aiscareer-map');
+    if (!map) {
+      return;
+    }
+    var svgObject = map.querySelector('object[type="image/svg+xml"]');
+    if (!svgObject) {
+      return;
+    }
+
+    function getSvgRoot() {
+      var doc = svgObject.contentDocument;
+      if (!doc) {
+        return null;
+      }
+      return doc.querySelector('svg');
+    }
+
+    var panX = 0;
+    var panY = 0;
+    var rafId = 0;
+    var maxPan = 280;
+
+    function applyTransform() {
+      var svgRoot = getSvgRoot();
+      if (!svgRoot) {
+        return false;
+      }
+      var clampedX = Math.max(-maxPan, Math.min(maxPan, panX));
+      var clampedY = Math.max(-maxPan, Math.min(maxPan, panY));
+      panX = clampedX;
+      panY = clampedY;
+      svgRoot.style.transformOrigin = 'center center';
+      svgRoot.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + zoom + ')';
+      return true;
+    }
+
+    function scheduleTransform() {
+      if (rafId) {
+        return;
+      }
+      rafId = window.requestAnimationFrame(function () {
+        rafId = 0;
+        applyTransform();
+      });
+    }
+
+    function withSvgReady(action) {
+      var svgRoot = getSvgRoot();
+      if (svgRoot) {
+        action();
+        return;
+      }
+      svgObject.addEventListener('load', function () {
+        action();
+      }, { once: true });
+    }
+
+    var zoom = 1;
+    var minZoom = 0.8;
+    var maxZoom = 2.5;
+    var step = 0.2;
+
+    var buttons = map.querySelectorAll('.aiscareer-map-btn');
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var action = btn.getAttribute('data-map-action');
+        withSvgReady(function () {
+          if (action === 'zoom-in') {
+            zoom = Math.min(maxZoom, zoom + step);
+          } else if (action === 'zoom-out') {
+            zoom = Math.max(minZoom, zoom - step);
+          } else {
+            zoom = 1;
+            panX = 0;
+            panY = 0;
+          }
+          scheduleTransform();
+        });
+      });
+    });
+
+    function bindPan() {
+      var svgRoot = getSvgRoot();
+      if (!svgRoot) {
+        return;
+      }
+      var dragging = false;
+      var lastX = 0;
+      var lastY = 0;
+      var pointerId = null;
+      svgRoot.__aiscareerMoved = false;
+
+      svgRoot.style.cursor = 'grab';
+      svgRoot.style.touchAction = 'none';
+
+      svgRoot.addEventListener('pointerdown', function (event) {
+        if (event.pointerType === 'mouse' && event.buttons !== 1) {
+          return;
+        }
+        dragging = true;
+        svgRoot.__aiscareerMoved = false;
+        pointerId = event.pointerId;
+        lastX = event.clientX;
+        lastY = event.clientY;
+        svgRoot.setPointerCapture(pointerId);
+        svgRoot.style.cursor = 'grabbing';
+      });
+
+      svgRoot.addEventListener('pointerup', function () {
+        if (!dragging) {
+          return;
+        }
+        dragging = false;
+        pointerId = null;
+        svgRoot.style.cursor = 'grab';
+        svgRoot.__aiscareerMoved = false;
+      });
+
+      svgRoot.addEventListener('pointercancel', function () {
+        if (!dragging) {
+          return;
+        }
+        dragging = false;
+        pointerId = null;
+        svgRoot.style.cursor = 'grab';
+        svgRoot.__aiscareerMoved = false;
+      });
+
+      svgRoot.addEventListener('pointermove', function (event) {
+        if (!dragging) {
+          return;
+        }
+        if (event.pointerType === 'mouse' && event.buttons !== 1) {
+          dragging = false;
+          pointerId = null;
+          svgRoot.style.cursor = 'grab';
+          return;
+        }
+        if (pointerId !== null && event.pointerId !== pointerId) {
+          return;
+        }
+        var dx = event.clientX - lastX;
+        var dy = event.clientY - lastY;
+        lastX = event.clientX;
+        lastY = event.clientY;
+        if (Math.abs(dx) > 2 || Math.abs(dy) > 2) {
+          svgRoot.__aiscareerMoved = true;
+        }
+        panX += dx;
+        panY += dy;
+        scheduleTransform();
+      });
+    }
+
+    withSvgReady(function () {
+      applyTransform();
+      bindPan();
+    });
+  }
+
   // Fertige Lösung: verfügbare Länder im SVG markieren + beim Klick Country-Filter (Select) setzen
   function highlightAvailableCountries() {
     // Dropdown-Element holen (im Haupt-DOM)
@@ -213,7 +374,7 @@
         svgRoot.appendChild(styleElement);
       }
 
-      // Länder markieren + Click-Handler setzen
+      // Länder markieren
       var markedCount = 0;
 
       availableCountries.forEach(function (countryCode) {
@@ -221,32 +382,43 @@
 
         if (svgElement) {
           svgElement.classList.add('available-country');
-
           // Für den Fall, dass die ID direkt auf einem <path> liegt:
           if (svgElement.tagName && svgElement.tagName.toLowerCase() === 'path') {
             svgElement.style.cursor = 'pointer';
           }
 
-          // Click: aktiv markieren + Filter setzen
-          svgElement.addEventListener('click', function () {
-            // Active-Klasse entfernen
+          markedCount++;
+        } else {
+        }
+      });
+
+      // Zentraler Click-Handler (robuster als pro Element)
+      svgRoot.addEventListener('click', function (event) {
+        if (svgRoot.__aiscareerMoved) {
+          event.preventDefault();
+          event.stopPropagation();
+          svgRoot.__aiscareerMoved = false;
+          return;
+        }
+
+        var hit = svgDoc.elementFromPoint(event.clientX, event.clientY);
+        var node = hit || event.target;
+        while (node && node !== svgRoot) {
+          if (node.id && availableCountries.indexOf(node.id) !== -1) {
             var activeNodes = svgDoc.querySelectorAll('.available-country');
             activeNodes.forEach(function (el) {
               el.classList.remove('active');
             });
-
-            svgElement.classList.add('active');
-            setCountryFilter(countryCode);
-          });
-
-          markedCount++;
-          console.log('Land ' + countryCode + ' markiert');
-        } else {
-          console.warn('SVG-Element für ' + countryCode + ' nicht gefunden');
+            var hit = svgDoc.getElementById(node.id);
+            if (hit) {
+              hit.classList.add('active');
+            }
+            setCountryFilter(node.id);
+            return;
+          }
+          node = node.parentNode;
         }
       });
-
-      console.log(markedCount + ' Länder markiert:', availableCountries);
     }
 
     // Nur einmal binden (falls Funktion mehrfach läuft)
@@ -263,11 +435,13 @@
     document.addEventListener('DOMContentLoaded', function () {
       bindFilterForm();
       bindViewToggle();
+      bindMapControls();
       highlightAvailableCountries();
     });
   } else {
     bindFilterForm();
     bindViewToggle();
+    bindMapControls();
     highlightAvailableCountries();
   }
 })();

@@ -50,6 +50,7 @@
               <f:translate key="job.meta.reference" extensionName="AisCareer" /> {job.reference}
             </f:if>
             <f:if condition="{job.locationLabel}"> | {job.locationLabel}</f:if>
+            <f:if condition="{job.country}"> | {job.countryLabel}</f:if>
             <f:if condition="{job.contractType}"> | {job.contractType}</f:if>
             <f:if condition="{job.remotePossible}">
               | <f:translate key="job.meta.remotePossible" extensionName="AisCareer" />
