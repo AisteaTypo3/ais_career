@@ -147,6 +147,10 @@
         <source>World map</source>
         <target>Weltkarte</target>
       </trans-unit>
+      <trans-unit id="job.backToList">
+        <source>Back to job list</source>
+        <target>Zurück zur Jobliste</target>
+      </trans-unit>
       <trans-unit id="error.firstNameRequired">
         <source>First name is required.</source>
         <target>Vorname ist erforderlich.</target>

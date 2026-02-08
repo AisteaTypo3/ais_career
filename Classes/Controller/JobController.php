@@ -81,9 +81,12 @@ class JobController extends ActionController
         return $this->htmlResponse();
     }
 
-    public function showAction(Job $job, ?Application $application = null, array $applicationErrors = []): ResponseInterface
+    public function showAction(?Job $job = null, ?Application $application = null, array $applicationErrors = []): ResponseInterface
     {
         $this->addAssets();
+        if ($job === null) {
+            throw new PageNotFoundException('Job not specified');
+        }
         if (!$this->jobRepository->isJobVisible($job)) {
             throw new PageNotFoundException('Job not available');
         }
@@ -433,6 +436,7 @@ class JobController extends ActionController
 
     private function renderShow(Job $job, Application $application, array $applicationErrors, bool $applicationSuccess): ResponseInterface
     {
+        $listPid = (int)($this->settings['listPid'] ?? 0);
         $jobPostingJsonLd = $this->buildJobPostingJsonLd($job);
         $this->view->assignMultiple([
             'job' => $job,
@@ -441,6 +445,7 @@ class JobController extends ActionController
             'applicationSuccess' => $applicationSuccess,
             'formTimestamp' => (new \DateTime())->getTimestamp(),
             'jobPostingJsonLd' => $jobPostingJsonLd,
+            'listPid' => $listPid,
             'settings' => $this->settings,
         ]);
 

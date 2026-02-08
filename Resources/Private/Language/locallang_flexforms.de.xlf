@@ -84,6 +84,10 @@
         <source>Privacy page UID</source>
         <target>Datenschutzseiten-UID</target>
       </trans-unit>
+      <trans-unit id="jobdetail.listPid">
+        <source>List page UID</source>
+        <target>Listenseiten-UID</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

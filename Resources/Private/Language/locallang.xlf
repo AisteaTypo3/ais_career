@@ -111,6 +111,9 @@
       <trans-unit id="map.alt">
         <source>World map</source>
       </trans-unit>
+      <trans-unit id="job.backToList">
+        <source>Back to job list</source>
+      </trans-unit>
       <trans-unit id="error.firstNameRequired">
         <source>First name is required.</source>
       </trans-unit>

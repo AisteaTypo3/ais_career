@@ -195,6 +195,29 @@
   gap: 24px;
 }
 
+.aiscareer .aiscareer-back {
+  display: flex;
+  align-items: center;
+}
+
+.aiscareer .aiscareer-back-link {
+  color: var(--aiscareer-primary);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.aiscareer .aiscareer-back-link::before {
+  content: "←";
+  color: var(--aiscareer-accent);
+}
+
+.aiscareer .aiscareer-back-link:hover {
+  color: #0b5fcc;
+}
+
 .aiscareer .aiscareer-section {
   background: var(--aiscareer-surface);
   border: 1px solid var(--aiscareer-border);
