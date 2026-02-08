@@ -22,6 +22,10 @@ CREATE TABLE tx_aiscareer_domain_model_job (
   attachments int(11) unsigned NOT NULL DEFAULT 0,
   categories int(11) unsigned NOT NULL DEFAULT 0,
   sorting int(11) NOT NULL DEFAULT 0,
+  sys_language_uid int(11) NOT NULL DEFAULT 0,
+  l10n_parent int(11) unsigned NOT NULL DEFAULT 0,
+  l10n_source int(11) unsigned NOT NULL DEFAULT 0,
+  l10n_diffsource mediumblob,
   hidden tinyint(1) NOT NULL DEFAULT 0,
   deleted tinyint(1) NOT NULL DEFAULT 0,
   tstamp int(11) unsigned NOT NULL DEFAULT 0,
@@ -29,7 +33,7 @@ CREATE TABLE tx_aiscareer_domain_model_job (
   cruser_id int(11) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (uid),
   KEY parent (pid),
-  UNIQUE KEY slug (slug)
+  UNIQUE KEY slug_language (slug, sys_language_uid, pid)
 );
 
 CREATE TABLE tx_aiscareer_domain_model_application (

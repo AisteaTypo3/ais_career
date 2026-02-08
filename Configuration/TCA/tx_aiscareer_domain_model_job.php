@@ -10,6 +10,10 @@ return [
         'label' => 'title',
         'label_alt' => 'reference,location_label',
         'label_alt_force' => true,
+        'languageField' => 'sys_language_uid',
+        'transOrigPointerField' => 'l10n_parent',
+        'transOrigDiffSourceField' => 'l10n_diffsource',
+        'translationSource' => 'l10n_source',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
@@ -25,7 +29,7 @@ return [
     'types' => [
         '1' => [
             'showitem' => '
-                --div--;General, title, reference, slug, is_active, categories,
+                --div--;General, sys_language_uid, l10n_parent, l10n_source, title, reference, slug, is_active, categories,
                 --div--;Location, country, city, location_label, department, contract_type, remote_possible,
                 --div--;Publishing, employment_start, published_from, published_to,
                 --div--;Content, description, responsibilities, qualifications, benefits,
@@ -41,6 +45,55 @@ return [
             'config' => [
                 'type' => 'check',
                 'renderType' => 'checkboxToggle',
+            ],
+        ],
+        'sys_language_uid' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'special' => 'languages',
+                'items' => [
+                    ['LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.allLanguages', -1],
+                    ['LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.default_value', 0],
+                ],
+                'default' => 0,
+            ],
+        ],
+        'l10n_parent' => [
+            'displayCond' => 'FIELD:sys_language_uid:>:0',
+            'exclude' => true,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'default' => 0,
+                'items' => [
+                    ['', 0],
+                ],
+                'foreign_table' => 'tx_aiscareer_domain_model_job',
+                'foreign_table_where' => 'AND {#tx_aiscareer_domain_model_job}.{#pid}=###CURRENT_PID### AND {#tx_aiscareer_domain_model_job}.{#sys_language_uid} IN (-1,0)',
+            ],
+        ],
+        'l10n_source' => [
+            'displayCond' => 'FIELD:sys_language_uid:>:0',
+            'exclude' => true,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_source',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'default' => 0,
+                'items' => [
+                    ['', 0],
+                ],
+                'foreign_table' => 'tx_aiscareer_domain_model_job',
+                'foreign_table_where' => 'AND {#tx_aiscareer_domain_model_job}.{#pid}=###CURRENT_PID### AND {#tx_aiscareer_domain_model_job}.{#sys_language_uid} IN (-1,0)',
+            ],
+        ],
+        'l10n_diffsource' => [
+            'config' => [
+                'type' => 'passthrough',
             ],
         ],
         'title' => [
@@ -65,7 +118,7 @@ return [
             'config' => [
                 'type' => 'slug',
                 'size' => 50,
-                'eval' => 'uniqueInSite,required',
+                'eval' => 'uniqueInPid,required',
                 'generatorOptions' => [
                     'fields' => ['title', 'reference'],
                     'fieldSeparator' => '-',
