@@ -73,6 +73,16 @@
               <default>5</default>
             </config>
           </settings.maxUploadSizeMB>
+          <settings.maxTotalUploadSizeMB>
+            <TCEforms>
+              <label>LLL:EXT:ais_career/Resources/Private/Language/locallang_flexforms.xlf:jobdetail.maxTotalUploadSizeMB</label>
+            </TCEforms>
+            <config>
+              <type>input</type>
+              <eval>int</eval>
+              <default>10</default>
+            </config>
+          </settings.maxTotalUploadSizeMB>
           <settings.privacyPageUid>
             <TCEforms>
               <label>LLL:EXT:ais_career/Resources/Private/Language/locallang_flexforms.xlf:jobdetail.privacyPageUid</label>

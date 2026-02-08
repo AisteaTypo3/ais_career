@@ -6,6 +6,9 @@
   --aiscareer-accent: #0b84ff;
   --aiscareer-border: #e5e7eb;
   --aiscareer-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  --aiscareer-map-available: #c10c1a;
+  --aiscareer-map-hover: #af0524;
+  --aiscareer-map-active: #dfc109;
   font-family: "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
   color: var(--aiscareer-primary);
   background: radial-gradient(circle at top left, #ffffff 0%, #f3f4f6 60%, #eef2ff 100%);
@@ -24,8 +27,68 @@
   margin-bottom: 32px;
 }
 
+.aiscareer .aiscareer-view-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 999px;
+  background: var(--aiscareer-surface);
+  border: 1px solid var(--aiscareer-border);
+  box-shadow: var(--aiscareer-shadow);
+  width: fit-content;
+}
+
+.aiscareer .aiscareer-toggle-button {
+  border: none;
+  background: transparent;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  color: var(--aiscareer-muted);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.aiscareer .aiscareer-toggle-button.is-active {
+  background: var(--aiscareer-accent);
+  color: #fff;
+}
+
+.aiscareer .aiscareer-toggle-button:hover {
+  color: #0b5fcc;
+}
+
+.aiscareer .aiscareer-toggle-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px 16px;
+}
+
+.aiscareer .aiscareer-toggle-icon.grid {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='7' height='7'/%3E%3Crect x='14' y='3' width='7' height='7'/%3E%3Crect x='3' y='14' width='7' height='7'/%3E%3Crect x='14' y='14' width='7' height='7'/%3E%3C/svg%3E");
+}
+
+.aiscareer .aiscareer-toggle-icon.list {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='8' y1='6' x2='21' y2='6'/%3E%3Cline x1='8' y1='12' x2='21' y2='12'/%3E%3Cline x1='8' y1='18' x2='21' y2='18'/%3E%3Ccircle cx='4' cy='6' r='1'/%3E%3Ccircle cx='4' cy='12' r='1'/%3E%3Ccircle cx='4' cy='18' r='1'/%3E%3C/svg%3E");
+}
+
+.aiscareer .aiscareer-toggle-button.is-active .aiscareer-toggle-icon.grid {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='7' height='7'/%3E%3Crect x='14' y='3' width='7' height='7'/%3E%3Crect x='3' y='14' width='7' height='7'/%3E%3Crect x='14' y='14' width='7' height='7'/%3E%3C/svg%3E");
+}
+
+.aiscareer .aiscareer-toggle-button.is-active .aiscareer-toggle-icon.list {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='8' y1='6' x2='21' y2='6'/%3E%3Cline x1='8' y1='12' x2='21' y2='12'/%3E%3Cline x1='8' y1='18' x2='21' y2='18'/%3E%3Ccircle cx='4' cy='6' r='1'/%3E%3Ccircle cx='4' cy='12' r='1'/%3E%3Ccircle cx='4' cy='18' r='1'/%3E%3C/svg%3E");
+}
+
 .aiscareer .aiscareer-map {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(236, 242, 255, 0.9));
+  background: white;
   border: 1px solid var(--aiscareer-border);
   border-radius: 24px;
   padding: 20px;
@@ -136,6 +199,33 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 22px;
+}
+
+.aiscareer .aiscareer-results.is-list .aiscareer-list {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.aiscareer .aiscareer-results.is-list .aiscareer-card {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.aiscareer .aiscareer-results.is-list .aiscareer-card h3 {
+  margin: 0;
+}
+
+.aiscareer .aiscareer-results.is-list .aiscareer-card .aiscareer-meta {
+  margin-top: 4px;
+}
+
+.aiscareer .aiscareer-results.is-list .aiscareer-card > div:last-child {
+  flex: 0 0 auto;
+}
+
+.aiscareer .aiscareer-results.is-list .aiscareer-card > div:first-of-type {
+  flex: 1 1 auto;
 }
 
 .aiscareer .aiscareer-card {
@@ -260,6 +350,18 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 12px;
+}
+
+.aiscareer .aiscareer-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .aiscareer .aiscareer-form input[type="checkbox"] {

@@ -352,12 +352,15 @@ class JobController extends ActionController
         $allowed = array_filter(array_map('trim', explode(',', (string)($this->settings['allowedExtensions'] ?? 'pdf,png,jpg,jpeg'))));
         $maxUploadSizeMb = (int)($this->settings['maxUploadSizeMB'] ?? 5);
         $maxUploadSizeBytes = $maxUploadSizeMb * 1024 * 1024;
+        $maxTotalUploadSizeMb = (int)($this->settings['maxTotalUploadSizeMB'] ?? 0);
+        $maxTotalUploadSizeBytes = $maxTotalUploadSizeMb > 0 ? $maxTotalUploadSizeMb * 1024 * 1024 : 0;
         $allowedMimeTypes = [
             'pdf' => ['application/pdf'],
             'png' => ['image/png'],
             'jpg' => ['image/jpeg'],
             'jpeg' => ['image/jpeg'],
         ];
+        $totalSize = 0;
 
         foreach (['cvFile', 'portfolioFile', 'additionalFile'] as $field) {
             $file = $this->getUploadedFileFromRequest($field);
@@ -383,9 +386,14 @@ class JobController extends ActionController
                 }
             }
             $size = $file->getSize() ?? 0;
+            $totalSize += $size;
             if ($size > $maxUploadSizeBytes) {
                 $errors[$field] = $t('error.fileTooLarge', 'File is too large.');
             }
+        }
+
+        if ($maxTotalUploadSizeBytes > 0 && $totalSize > $maxTotalUploadSizeBytes) {
+            $errors['_total'] = $t('error.fileTotalTooLarge', 'Total upload size is too large.');
         }
 
         return $errors;

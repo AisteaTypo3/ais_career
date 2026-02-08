@@ -11,6 +11,20 @@
         <f:if condition="{settings.enableFilters}">
           <f:render partial="Job/Filters" arguments="{filters: filters, filterOptions: filterOptions, settings: settings, listPid: listPid}" />
         </f:if>
+        <div class="aiscareer-view-toggle" role="group" aria-label="View mode">
+          <button type="button" class="aiscareer-toggle-button is-active" data-view="grid">
+            <span class="aiscareer-toggle-icon grid" aria-hidden="true"></span>
+            <span class="aiscareer-sr-only">
+              <f:translate key="view.grid" extensionName="AisCareer" />
+            </span>
+          </button>
+          <button type="button" class="aiscareer-toggle-button" data-view="list">
+            <span class="aiscareer-toggle-icon list" aria-hidden="true"></span>
+            <span class="aiscareer-sr-only">
+              <f:translate key="view.list" extensionName="AisCareer" />
+            </span>
+          </button>
+        </div>
       </div>
 
       <div class="aiscareer-results" data-list-url="{f:uri.action(action: 'list', pageUid: listPid)}">

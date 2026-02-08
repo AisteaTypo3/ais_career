@@ -111,6 +111,14 @@
         <source>Reset</source>
         <target>Zurücksetzen</target>
       </trans-unit>
+      <trans-unit id="view.grid">
+        <source>Grid</source>
+        <target>Boxen</target>
+      </trans-unit>
+      <trans-unit id="view.list">
+        <source>List</source>
+        <target>Liste</target>
+      </trans-unit>
       <trans-unit id="form.firstName">
         <source>First name *</source>
         <target>Vorname *</target>
@@ -198,6 +206,10 @@
       <trans-unit id="error.fileTooLarge">
         <source>File is too large.</source>
         <target>Datei ist zu groß.</target>
+      </trans-unit>
+      <trans-unit id="error.fileTotalTooLarge">
+        <source>Total upload size is too large.</source>
+        <target>Gesamtgröße der Uploads ist zu groß.</target>
       </trans-unit>
       <trans-unit id="error.botDetected">
         <source>Please try again.</source>

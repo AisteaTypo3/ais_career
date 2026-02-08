@@ -84,6 +84,10 @@
         <source>Max upload size (MB)</source>
         <target>Maximale Uploadgröße (MB)</target>
       </trans-unit>
+      <trans-unit id="jobdetail.maxTotalUploadSizeMB">
+        <source>Max total upload size (MB)</source>
+        <target>Maximale Gesamt‑Uploadgröße (MB)</target>
+      </trans-unit>
       <trans-unit id="jobdetail.privacyPageUid">
         <source>Privacy page UID</source>
         <target>Datenschutzseiten-UID</target>

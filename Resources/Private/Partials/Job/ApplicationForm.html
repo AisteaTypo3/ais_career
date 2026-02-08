@@ -2,7 +2,7 @@
   <f:if condition="{applicationErrors}">
     <ul class="aiscareer-meta">
       <f:for each="{applicationErrors}" as="message" key="field">
-        <f:if condition="{field} == '_bot'">
+        <f:if condition="{field} == '_bot' || {field} == '_total'">
           <li>{message}</li>
         </f:if>
       </f:for>

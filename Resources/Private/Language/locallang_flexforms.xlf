@@ -64,6 +64,9 @@
       <trans-unit id="jobdetail.maxUploadSizeMB">
         <source>Max upload size (MB)</source>
       </trans-unit>
+      <trans-unit id="jobdetail.maxTotalUploadSizeMB">
+        <source>Max total upload size (MB)</source>
+      </trans-unit>
       <trans-unit id="jobdetail.privacyPageUid">
         <source>Privacy page UID</source>
       </trans-unit>

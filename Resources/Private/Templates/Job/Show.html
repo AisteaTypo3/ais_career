@@ -7,9 +7,9 @@
       <div class="aiscareer-detail">
         <f:if condition="{listPid}">
           <div class="aiscareer-back">
-            <f:link.action action="list" pageUid="{listPid}" class="aiscareer-back-link">
+            <f:link.page pageUid="{listPid}" class="aiscareer-back-link">
               <f:translate key="job.backToList" extensionName="AisCareer" />
-            </f:link.action>
+            </f:link.page>
           </div>
         </f:if>
         <f:if condition="{jobPostingJsonLd}">

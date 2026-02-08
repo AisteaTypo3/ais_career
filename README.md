@@ -55,6 +55,7 @@ plugin.tx_aiscareer.settings {
   applicationToEmail = hr@example.com
   applicationFromEmail = no-reply@example.com
   maxUploadSizeMB = 5
+  maxTotalUploadSizeMB = 10
   allowedExtensions = pdf,png,jpg,jpeg
   privacyPageUid = 123
 
@@ -63,11 +64,27 @@ plugin.tx_aiscareer.settings {
   botRateLimit = 5
   botRateWindowSeconds = 3600
   botRequireHeaders = 0
+
+  gdprPurgeDays = 180
 }
 
 page.includeCSS.aiscareer = EXT:ais_career/Resources/Public/Css/aiscareer.css
 page.includeJSFooter.aiscareer = EXT:ais_career/Resources/Public/JavaScript/aiscareer.js
 ```
+
+## GDPR Purge (Scheduler)
+You can purge old applications and their upload folders via CLI:
+
+```bash
+vendor/bin/typo3 aiscareer:purge-applications --days=180
+```
+
+To run this automatically with the TYPO3 Scheduler:
+1. Backend: **System > Scheduler**
+2. Add new task: **Execute console commands**
+3. Command: `aiscareer:purge-applications --days=180`
+4. Set an interval (e.g. daily)
+5. Save and run the scheduler
 
 ## FlexForms
 **Job List**

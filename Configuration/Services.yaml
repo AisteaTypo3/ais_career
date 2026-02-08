@@ -10,3 +10,8 @@ services:
   Aistea\AisCareer\Controller\JobController:
     public: true
     tags: ['controller.service_arguments']
+
+  Aistea\AisCareer\Command\PurgeApplicationsCommand:
+    tags:
+      - name: 'console.command'
+        command: 'aiscareer:purge-applications'

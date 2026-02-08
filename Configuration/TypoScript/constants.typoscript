@@ -23,9 +23,12 @@ plugin.tx_aiscareer {
     applicationDoubleOptInEnabled = 0
     applicationConfirmationEnabled = 1
     maxUploadSizeMB = 5
+    maxTotalUploadSizeMB = 10
     allowedExtensions = pdf,png,jpg,jpeg
     privacyPageUid = 0
     hiringOrganizationName = Aistea GmbH
+
+    gdprPurgeDays = 180
 
     botMinSeconds = 3
     botMaxSeconds = 86400
