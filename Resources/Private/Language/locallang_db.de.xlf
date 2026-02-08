@@ -112,6 +112,14 @@
         <source>CV file</source>
         <target>Lebenslauf</target>
       </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.portfolio_file">
+        <source>Portfolio file</source>
+        <target>Portfolio</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.additional_file">
+        <source>Additional file</source>
+        <target>Weitere Datei</target>
+      </trans-unit>
       <trans-unit id="tx_aiscareer_domain_model_application.consent_privacy">
         <source>Consent privacy</source>
         <target>Datenschutzzustimmung</target>
@@ -119,6 +127,14 @@
       <trans-unit id="tx_aiscareer_domain_model_application.created_at">
         <source>Created at</source>
         <target>Erstellt am</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.double_opt_in_confirmed_at">
+        <source>Double opt-in confirmed at</source>
+        <target>Double-Opt-in bestätigt am</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.double_opt_in_token">
+        <source>Double opt-in token</source>
+        <target>Double-Opt-in-Token</target>
       </trans-unit>
     </body>
   </file>

@@ -55,7 +55,7 @@ plugin.tx_aiscareer.settings {
   applicationToEmail = hr@example.com
   applicationFromEmail = no-reply@example.com
   maxUploadSizeMB = 5
-  allowedExtensions = pdf,doc,docx
+  allowedExtensions = pdf,png,jpg,jpeg
   privacyPageUid = 123
 
   botMinSeconds = 3

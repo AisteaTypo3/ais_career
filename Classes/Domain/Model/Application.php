@@ -16,8 +16,12 @@ class Application extends AbstractEntity
     protected string $phone = '';
     protected string $message = '';
     protected ?FileReference $cvFile = null;
+    protected ?FileReference $portfolioFile = null;
+    protected ?FileReference $additionalFile = null;
     protected bool $consentPrivacy = false;
     protected ?\DateTime $createdAt = null;
+    protected string $doubleOptInToken = '';
+    protected ?\DateTime $doubleOptInConfirmedAt = null;
 
     public function getJob(): ?Job
     {
@@ -89,6 +93,26 @@ class Application extends AbstractEntity
         $this->cvFile = $cvFile;
     }
 
+    public function getPortfolioFile(): ?FileReference
+    {
+        return $this->portfolioFile;
+    }
+
+    public function setPortfolioFile(?FileReference $portfolioFile): void
+    {
+        $this->portfolioFile = $portfolioFile;
+    }
+
+    public function getAdditionalFile(): ?FileReference
+    {
+        return $this->additionalFile;
+    }
+
+    public function setAdditionalFile(?FileReference $additionalFile): void
+    {
+        $this->additionalFile = $additionalFile;
+    }
+
     public function isConsentPrivacy(): bool
     {
         return $this->consentPrivacy;
@@ -107,5 +131,25 @@ class Application extends AbstractEntity
     public function setCreatedAt(?\DateTime $createdAt): void
     {
         $this->createdAt = $createdAt;
+    }
+
+    public function getDoubleOptInToken(): string
+    {
+        return $this->doubleOptInToken;
+    }
+
+    public function setDoubleOptInToken(string $doubleOptInToken): void
+    {
+        $this->doubleOptInToken = $doubleOptInToken;
+    }
+
+    public function getDoubleOptInConfirmedAt(): ?\DateTime
+    {
+        return $this->doubleOptInConfirmedAt;
+    }
+
+    public function setDoubleOptInConfirmedAt(?\DateTime $doubleOptInConfirmedAt): void
+    {
+        $this->doubleOptInConfirmedAt = $doubleOptInConfirmedAt;
     }
 }

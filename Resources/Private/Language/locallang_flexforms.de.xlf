@@ -64,6 +64,10 @@
         <source>Save application in database</source>
         <target>Bewerbung in Datenbank speichern</target>
       </trans-unit>
+      <trans-unit id="jobdetail.applicationDoubleOptInEnabled">
+        <source>Enable double opt-in for applications</source>
+        <target>Double-Opt-in für Bewerbungen aktivieren</target>
+      </trans-unit>
       <trans-unit id="jobdetail.applicationToEmail">
         <source>Application recipient email</source>
         <target>Empfänger-E-Mail</target>

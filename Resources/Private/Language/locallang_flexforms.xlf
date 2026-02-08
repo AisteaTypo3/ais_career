@@ -49,6 +49,9 @@
       <trans-unit id="jobdetail.applicationSave">
         <source>Save application in database</source>
       </trans-unit>
+      <trans-unit id="jobdetail.applicationDoubleOptInEnabled">
+        <source>Enable double opt-in for applications</source>
+      </trans-unit>
       <trans-unit id="jobdetail.applicationToEmail">
         <source>Application recipient email</source>
       </trans-unit>

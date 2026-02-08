@@ -6,6 +6,15 @@
       <trans-unit id="success.applicationSent">
         <source>Thank you! Your application has been sent successfully.</source>
       </trans-unit>
+      <trans-unit id="success.applicationOptInPending">
+        <source>Thanks! Please check your email and confirm your application.</source>
+      </trans-unit>
+      <trans-unit id="success.applicationOptInConfirmed">
+        <source>Thank you! Your application has been confirmed.</source>
+      </trans-unit>
+      <trans-unit id="error.applicationOptInInvalid">
+        <source>The confirmation link is invalid or has already been used.</source>
+      </trans-unit>
       <trans-unit id="job.meta.reference">
         <source>Ref:</source>
       </trans-unit>
@@ -93,6 +102,12 @@
       <trans-unit id="form.cvUpload">
         <source>CV upload</source>
       </trans-unit>
+      <trans-unit id="form.portfolioUpload">
+        <source>Portfolio upload</source>
+      </trans-unit>
+      <trans-unit id="form.additionalUpload">
+        <source>Additional file upload</source>
+      </trans-unit>
       <trans-unit id="form.allowed">
         <source>Allowed:</source>
       </trans-unit>
@@ -147,14 +162,26 @@
       <trans-unit id="mail.confirm.subject">
         <source>We received your application — %s</source>
       </trans-unit>
+      <trans-unit id="mail.optin.subject">
+        <source>Please confirm your application — %s</source>
+      </trans-unit>
       <trans-unit id="mail.confirm.title">
         <source>Application received</source>
+      </trans-unit>
+      <trans-unit id="mail.optin.title">
+        <source>Confirm your application</source>
       </trans-unit>
       <trans-unit id="mail.confirm.greeting">
         <source>Hi %s %s,</source>
       </trans-unit>
+      <trans-unit id="mail.optin.greeting">
+        <source>Hi %s %s,</source>
+      </trans-unit>
       <trans-unit id="mail.confirm.body">
         <source>Thank you for your application. We’ve received your submission and our team will review it shortly.</source>
+      </trans-unit>
+      <trans-unit id="mail.optin.body">
+        <source>Please confirm your application by clicking the button below. After confirmation, our team will review it.</source>
       </trans-unit>
       <trans-unit id="mail.confirm.positionLabel">
         <source>Position</source>
@@ -162,8 +189,14 @@
       <trans-unit id="mail.confirm.referenceLabel">
         <source>Reference:</source>
       </trans-unit>
+      <trans-unit id="mail.optin.confirm">
+        <source>Confirm application</source>
+      </trans-unit>
       <trans-unit id="mail.confirm.footer">
         <source>If you have any questions, just reply to this email.</source>
+      </trans-unit>
+      <trans-unit id="mail.optin.footer">
+        <source>If you did not apply for this position, you can ignore this email.</source>
       </trans-unit>
       <trans-unit id="mail.confirm.disclaimer">
         <source>This is an automated confirmation. Please do not share sensitive information.</source>

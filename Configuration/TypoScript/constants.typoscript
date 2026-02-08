@@ -20,9 +20,10 @@ plugin.tx_aiscareer {
     applicationToEmail = hr@example.com
     applicationFromEmail = no-reply@example.com
     applicationSave = 1
+    applicationDoubleOptInEnabled = 0
     applicationConfirmationEnabled = 1
     maxUploadSizeMB = 5
-    allowedExtensions = pdf,doc,docx
+    allowedExtensions = pdf,png,jpg,jpeg
     privacyPageUid = 0
     hiringOrganizationName = Aistea GmbH
 

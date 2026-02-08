@@ -9,6 +9,8 @@ use Aistea\AisCareer\Domain\Model\Job;
 use Aistea\AisCareer\Domain\Repository\ApplicationRepository;
 use Aistea\AisCareer\Domain\Repository\JobRepository;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use TYPO3\CMS\Core\Error\Http\PageNotFoundException;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\Page\AssetCollector;
@@ -20,6 +22,11 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use TYPO3\CMS\Extbase\Domain\Model\FileReference;
+use TYPO3\CMS\Core\Resource\ResourceFactory;
+use TYPO3\CMS\Core\Resource\DuplicationBehavior;
+use TYPO3\CMS\Core\Resource\FileReference as CoreFileReference;
+use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Core\Pagination\SimplePagination;
 
@@ -85,6 +92,9 @@ class JobController extends ActionController
     {
         $this->addAssets();
         if ($job === null) {
+            $job = $this->resolveJobFromRequest();
+        }
+        if ($job === null) {
             throw new PageNotFoundException('Job not specified');
         }
         if (!$this->jobRepository->isJobVisible($job)) {
@@ -99,7 +109,40 @@ class JobController extends ActionController
             $applicationSuccess = (bool)$this->request->getArgument('applicationSuccess');
         }
 
-        return $this->renderShow($job, $application, $applicationErrors, $applicationSuccess);
+        return $this->renderShow($job, $application, $applicationErrors, $applicationSuccess, '');
+    }
+
+    private function resolveJobFromRequest(): ?Job
+    {
+        if ($this->request->hasArgument('job')) {
+            $raw = $this->request->getArgument('job');
+            if (is_numeric($raw)) {
+                $job = $this->jobRepository->findByUid((int)$raw);
+                if ($job instanceof Job) {
+                    return $job;
+                }
+            }
+            if (is_string($raw) && $raw !== '') {
+                $job = $this->jobRepository->findOneBySlug($raw);
+                if ($job instanceof Job) {
+                    return $job;
+                }
+            }
+        }
+
+        $httpRequest = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if ($httpRequest instanceof ServerRequestInterface) {
+            $query = $httpRequest->getQueryParams();
+            $slug = $query['job-slug'] ?? $query['job'] ?? null;
+            if (is_string($slug) && $slug !== '') {
+                $job = $this->jobRepository->findOneBySlug($slug);
+                if ($job instanceof Job) {
+                    return $job;
+                }
+            }
+        }
+
+        return null;
     }
 
     public function initializeApplyAction(): void
@@ -108,25 +151,26 @@ class JobController extends ActionController
             return;
         }
 
-        $allowedExtensions = (string)($this->settings['allowedExtensions'] ?? 'pdf,doc,docx');
+        $allowedExtensions = (string)($this->settings['allowedExtensions'] ?? 'pdf,png,jpg,jpeg');
         $maxUploadSizeMb = (int)($this->settings['maxUploadSizeMB'] ?? 5);
         $maxUploadSizeBytes = $maxUploadSizeMb * 1024 * 1024;
 
         $configuration = $this->arguments->getArgument('application')->getPropertyMappingConfiguration();
         $converterClass = 'TYPO3\\CMS\\Extbase\\Property\\TypeConverter\\UploadedFileReferenceConverter';
         if (class_exists($converterClass)) {
-            $configuration->forProperty('cvFile')->setTypeConverterOptions(
-                $converterClass,
-                [
-                    $converterClass::CONFIGURATION_ALLOWED_FILE_EXTENSIONS => $allowedExtensions,
-                    $converterClass::CONFIGURATION_MAX_UPLOAD_SIZE => $maxUploadSizeBytes,
-                    $converterClass::CONFIGURATION_UPLOAD_FOLDER => '1:/user_upload/ais_career/',
-                ]
-            );
+            $fileOptions = [
+                $converterClass::CONFIGURATION_ALLOWED_FILE_EXTENSIONS => $allowedExtensions,
+                $converterClass::CONFIGURATION_MAX_UPLOAD_SIZE => $maxUploadSizeBytes,
+                $converterClass::CONFIGURATION_UPLOAD_FOLDER => '1:/user_upload/ais_career/',
+            ];
+
+            $configuration->forProperty('cvFile')->setTypeConverterOptions($converterClass, $fileOptions);
+            $configuration->forProperty('portfolioFile')->setTypeConverterOptions($converterClass, $fileOptions);
+            $configuration->forProperty('additionalFile')->setTypeConverterOptions($converterClass, $fileOptions);
         }
     }
 
-    public function applyAction(Job $job, Application $application): ResponseInterface
+    public function applyAction(Job $job): ResponseInterface
     {
         if (empty($this->settings['applicationEnabled'])) {
             throw new PageNotFoundException('Applications are disabled');
@@ -136,27 +180,90 @@ class JobController extends ActionController
             throw new PageNotFoundException('Job not available');
         }
 
+        $applicationData = $this->request->hasArgument('application')
+            ? (array)$this->request->getArgument('application')
+            : [];
+
+        $application = $this->buildApplicationFromRequest($applicationData);
         $application->setJob($job);
 
         $errors = $this->validateApplication($application);
+        $fileErrors = $this->validateUploadsFromRequest();
         $botErrors = $this->validateBotSignals($job);
+        if ($fileErrors !== []) {
+            $errors = array_merge($errors, $fileErrors);
+        }
         if ($botErrors !== []) {
             $errors = array_merge($errors, $botErrors);
         }
         if ($errors !== []) {
-            return $this->renderShow($job, $application, $errors, false);
+            return $this->renderShow($job, $application, $errors, false, '');
         }
 
         $application->setCreatedAt(new \DateTime());
 
-        if (!empty($this->settings['applicationSave'])) {
+        $doubleOptInEnabled = !empty($this->settings['applicationDoubleOptInEnabled']);
+        $hasUploads = $this->hasUploadedFiles();
+
+        if (!empty($this->settings['applicationSave']) || $doubleOptInEnabled || $hasUploads) {
             $this->applicationRepository->add($application);
             $this->persistenceManager->persistAll();
+        }
+
+        if ($hasUploads) {
+            $this->attachUploadedFilesToApplication($application);
+            $this->applicationRepository->update($application);
+            $this->persistenceManager->persistAll();
+        }
+
+        if ($doubleOptInEnabled) {
+            $application->setDoubleOptInToken($this->generateOptInToken());
+            $application->setDoubleOptInConfirmedAt(null);
+            $this->applicationRepository->update($application);
+            $this->persistenceManager->persistAll();
+            $this->sendDoubleOptInMail($job, $application);
+
+            return $this->renderShow($job, $application, [], false, 'pending');
         }
 
         $this->sendApplicationMail($job, $application);
 
         return $this->redirect('show', null, null, ['job' => $job, 'applicationSuccess' => 1]);
+    }
+
+    public function confirmAction(?Job $job = null, string $token = ''): ResponseInterface
+    {
+        if ($token === '') {
+            throw new PageNotFoundException('Confirmation token missing');
+        }
+
+        $application = $this->applicationRepository->findOneByDoubleOptInToken($token);
+        if ($application instanceof Application) {
+            if ($job === null) {
+                $job = $application->getJob();
+            }
+        }
+
+        if (!$job instanceof Job) {
+            throw new PageNotFoundException('Job not specified');
+        }
+
+        if (!$application instanceof Application || $application->getJob()?->getUid() !== $job->getUid()) {
+            return $this->renderShow($job, new Application(), [], false, 'invalid');
+        }
+
+        if ($application->getDoubleOptInConfirmedAt() instanceof \DateTime) {
+            return $this->renderShow($job, $application, [], false, 'confirmed');
+        }
+
+        $application->setDoubleOptInConfirmedAt(new \DateTime());
+        $application->setDoubleOptInToken('');
+        $this->applicationRepository->update($application);
+        $this->persistenceManager->persistAll();
+
+        $this->sendApplicationMail($job, $application);
+
+        return $this->renderShow($job, $application, [], false, 'confirmed');
     }
 
     private function collectFilterOptions(): array
@@ -214,25 +321,255 @@ class JobController extends ActionController
             $errors['consentPrivacy'] = $t('error.consentRequired', 'Privacy consent is required.');
         }
 
-        $fileReference = $application->getCvFile();
-        if ($fileReference !== null) {
-            $resource = $fileReference->getOriginalResource();
-            if ($resource !== null) {
-                $file = $resource->getOriginalFile();
-                $extension = strtolower((string)$file->getExtension());
-                $allowed = array_filter(array_map('trim', explode(',', (string)($this->settings['allowedExtensions'] ?? 'pdf,doc,docx'))));
-                if ($allowed !== [] && !in_array($extension, $allowed, true)) {
-                    $errors['cvFile'] = $t('error.fileType', 'File type is not allowed.');
+        $allowed = array_filter(array_map('trim', explode(',', (string)($this->settings['allowedExtensions'] ?? 'pdf,png,jpg,jpeg'))));
+        $maxUploadSizeMb = (int)($this->settings['maxUploadSizeMB'] ?? 5);
+        $maxUploadSizeBytes = $maxUploadSizeMb * 1024 * 1024;
+
+        $this->validateUpload($application->getCvFile(), 'cvFile', $allowed, $maxUploadSizeBytes, $errors, $t);
+        $this->validateUpload($application->getPortfolioFile(), 'portfolioFile', $allowed, $maxUploadSizeBytes, $errors, $t);
+        $this->validateUpload($application->getAdditionalFile(), 'additionalFile', $allowed, $maxUploadSizeBytes, $errors, $t);
+
+        return $errors;
+    }
+
+    private function buildApplicationFromRequest(array $applicationData): Application
+    {
+        $application = new Application();
+        $application->setFirstName(trim((string)($applicationData['firstName'] ?? '')));
+        $application->setLastName(trim((string)($applicationData['lastName'] ?? '')));
+        $application->setEmail(trim((string)($applicationData['email'] ?? '')));
+        $application->setPhone(trim((string)($applicationData['phone'] ?? '')));
+        $application->setMessage(trim((string)($applicationData['message'] ?? '')));
+        $application->setConsentPrivacy((bool)($applicationData['consentPrivacy'] ?? false));
+
+        return $application;
+    }
+
+    private function validateUploadsFromRequest(): array
+    {
+        $errors = [];
+        $t = static fn (string $key, string $fallback): string => LocalizationUtility::translate($key, 'AisCareer') ?? $fallback;
+        $allowed = array_filter(array_map('trim', explode(',', (string)($this->settings['allowedExtensions'] ?? 'pdf,png,jpg,jpeg'))));
+        $maxUploadSizeMb = (int)($this->settings['maxUploadSizeMB'] ?? 5);
+        $maxUploadSizeBytes = $maxUploadSizeMb * 1024 * 1024;
+        $allowedMimeTypes = [
+            'pdf' => ['application/pdf'],
+            'png' => ['image/png'],
+            'jpg' => ['image/jpeg'],
+            'jpeg' => ['image/jpeg'],
+        ];
+
+        foreach (['cvFile', 'portfolioFile', 'additionalFile'] as $field) {
+            $file = $this->getUploadedFileFromRequest($field);
+            if (!$file instanceof UploadedFileInterface || $file->getError() === UPLOAD_ERR_NO_FILE) {
+                continue;
+            }
+            if ($file->getError() !== UPLOAD_ERR_OK) {
+                $errors[$field] = $t('error.fileType', 'File type is not allowed.');
+                continue;
+            }
+            $name = strtolower((string)$file->getClientFilename());
+            $extension = $name !== '' ? strtolower((string)pathinfo($name, PATHINFO_EXTENSION)) : '';
+            if ($allowed !== [] && $extension !== '' && !in_array($extension, $allowed, true)) {
+                $errors[$field] = $t('error.fileType', 'File type is not allowed.');
+                continue;
+            }
+            if ($extension !== '' && isset($allowedMimeTypes[$extension])) {
+                $tmpPath = $this->getUploadedTempPath($file);
+                $mime = $this->detectMimeType($tmpPath);
+                if ($mime === '' || !in_array($mime, $allowedMimeTypes[$extension], true)) {
+                    $errors[$field] = $t('error.fileType', 'File type is not allowed.');
+                    continue;
                 }
-                $maxUploadSizeMb = (int)($this->settings['maxUploadSizeMB'] ?? 5);
-                $maxUploadSizeBytes = $maxUploadSizeMb * 1024 * 1024;
-                if ($file->getSize() > $maxUploadSizeBytes) {
-                    $errors['cvFile'] = $t('error.fileTooLarge', 'File is too large.');
-                }
+            }
+            $size = $file->getSize() ?? 0;
+            if ($size > $maxUploadSizeBytes) {
+                $errors[$field] = $t('error.fileTooLarge', 'File is too large.');
             }
         }
 
         return $errors;
+    }
+
+    private function hasUploadedFiles(): bool
+    {
+        foreach (['cvFile', 'portfolioFile', 'additionalFile'] as $field) {
+            $file = $this->getUploadedFileFromRequest($field);
+            if ($file instanceof UploadedFileInterface && $file->getError() !== UPLOAD_ERR_NO_FILE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function attachUploadedFilesToApplication(Application $application): void
+    {
+        $folder = $this->getOrCreateApplicationFolder($application);
+        if (!$folder instanceof Folder) {
+            return;
+        }
+
+        $application->setCvFile($this->convertUploadedFile('cvFile', $folder));
+        $application->setPortfolioFile($this->convertUploadedFile('portfolioFile', $folder));
+        $application->setAdditionalFile($this->convertUploadedFile('additionalFile', $folder));
+    }
+
+    private function convertUploadedFile(string $field, Folder $folder): ?FileReference
+    {
+        $file = $this->getUploadedFileFromRequest($field);
+        if (!$file instanceof UploadedFileInterface) {
+            return null;
+        }
+        if ($file->getError() !== UPLOAD_ERR_OK) {
+            return null;
+        }
+        $tmpPath = $this->getUploadedTempPath($file);
+        if ($tmpPath === '' || !is_file($tmpPath)) {
+            return null;
+        }
+
+        try {
+            $clientName = trim((string)$file->getClientFilename());
+            $safeName = $clientName !== '' ? $clientName : ('upload_' . uniqid('', true));
+
+            $storage = $folder->getStorage();
+            $falFile = $storage->addFile($tmpPath, $folder, $safeName, DuplicationBehavior::RENAME);
+            $falFileReference = $storage->createFileReferenceObject($falFile);
+        } catch (\Throwable) {
+            return null;
+        }
+
+        $fileReference = GeneralUtility::makeInstance(FileReference::class);
+        $fileReference->setOriginalResource($falFileReference);
+
+        return $fileReference;
+    }
+
+    private function getOrCreateApplicationFolder(Application $application): ?Folder
+    {
+        $uid = (int)$application->getUid();
+        if ($uid <= 0) {
+            return null;
+        }
+
+        $storage = GeneralUtility::makeInstance(ResourceFactory::class)->getStorageObject(1);
+        $baseIdentifier = 'user_upload/ais_career/';
+        $baseFolder = $storage->hasFolder($baseIdentifier)
+            ? $storage->getFolder($baseIdentifier)
+            : $storage->createFolder($baseIdentifier);
+
+        $nameParts = trim($application->getFirstName() . ' ' . $application->getLastName());
+        $slug = $this->slugifyFolderName($nameParts);
+        $folderName = $uid . ($slug !== '' ? '-' . $slug : '');
+        if ($baseFolder->hasFolder($folderName)) {
+            return $baseFolder->getSubfolder($folderName);
+        }
+
+        return $storage->createFolder($folderName, $baseFolder);
+    }
+
+    private function slugifyFolderName(string $name): string
+    {
+        $name = strtolower($name);
+        $name = preg_replace('/[^a-z0-9]+/', '-', $name) ?? '';
+        $name = trim($name, '-');
+        if (strlen($name) > 60) {
+            $name = substr($name, 0, 60);
+            $name = rtrim($name, '-');
+        }
+        return $name;
+    }
+
+    private function getUploadedFileFromRequest(string $field): ?UploadedFileInterface
+    {
+        $psrRequest = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if (!$psrRequest instanceof ServerRequestInterface) {
+            return null;
+        }
+
+        $uploadedFiles = $psrRequest->getUploadedFiles();
+        $namespace = $this->buildPluginNamespaceKey();
+
+        $file = $uploadedFiles[$namespace]['application'][$field]
+            ?? $uploadedFiles['application'][$field]
+            ?? null;
+
+        return $file instanceof UploadedFileInterface ? $file : null;
+    }
+
+    private function buildPluginNamespaceKey(): string
+    {
+        $extension = strtolower((string)$this->request->getControllerExtensionName());
+        $plugin = strtolower((string)$this->request->getPluginName());
+        return 'tx_' . $extension . '_' . $plugin;
+    }
+
+    private function uploadedFileToLegacyArray(UploadedFileInterface $file): array
+    {
+        $tmpName = '';
+        if (method_exists($file, 'getTemporaryFileName')) {
+            $tmpName = (string)$file->getTemporaryFileName();
+        }
+        if ($tmpName === '') {
+            $meta = $file->getStream()->getMetadata();
+            if (is_array($meta) && isset($meta['uri'])) {
+                $tmpName = (string)$meta['uri'];
+            }
+        }
+
+        return [
+            'name' => (string)$file->getClientFilename(),
+            'type' => (string)$file->getClientMediaType(),
+            'tmp_name' => $tmpName,
+            'error' => $file->getError(),
+            'size' => $file->getSize() ?? 0,
+        ];
+    }
+
+    private function getUploadedTempPath(UploadedFileInterface $file): string
+    {
+        if (method_exists($file, 'getTemporaryFileName')) {
+            $tmpName = (string)$file->getTemporaryFileName();
+            if ($tmpName !== '') {
+                return $tmpName;
+            }
+        }
+        $meta = $file->getStream()->getMetadata();
+        if (is_array($meta) && isset($meta['uri'])) {
+            return (string)$meta['uri'];
+        }
+
+        return '';
+    }
+
+    private function detectMimeType(string $path): string
+    {
+        if ($path === '' || !is_file($path)) {
+            return '';
+        }
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->file($path);
+        return is_string($mime) ? $mime : '';
+    }
+
+    private function validateUpload(?\TYPO3\CMS\Extbase\Domain\Model\FileReference $fileReference, string $field, array $allowed, int $maxUploadSizeBytes, array &$errors, callable $t): void
+    {
+        if ($fileReference === null) {
+            return;
+        }
+        $resource = $fileReference->getOriginalResource();
+        if ($resource === null) {
+            return;
+        }
+        $file = $resource->getOriginalFile();
+        $extension = strtolower((string)$file->getExtension());
+        if ($allowed !== [] && !in_array($extension, $allowed, true)) {
+            $errors[$field] = $t('error.fileType', 'File type is not allowed.');
+            return;
+        }
+        if ($file->getSize() > $maxUploadSizeBytes) {
+            $errors[$field] = $t('error.fileTooLarge', 'File is too large.');
+        }
     }
 
     private function validateBotSignals(Job $job): array
@@ -371,23 +708,67 @@ class JobController extends ActionController
         $mail->text(implode("\n", $bodyLines));
         $mail->html($htmlBody);
 
-        $fileReference = $application->getCvFile();
-        if ($fileReference !== null) {
-            $resource = $fileReference->getOriginalResource();
-            if ($resource !== null) {
-                $file = $resource->getOriginalFile();
-                $localFile = $file->getForLocalProcessing(false);
-                if (is_string($localFile) && $localFile !== '' && file_exists($localFile)) {
-                    $mail->attachFromPath($localFile, $file->getName());
-                }
-            }
-        }
+        $this->attachFileToMail($mail, $application->getCvFile());
+        $this->attachFileToMail($mail, $application->getPortfolioFile());
+        $this->attachFileToMail($mail, $application->getAdditionalFile());
 
         $mail->send();
 
         if (!empty($this->settings['applicationConfirmationEnabled'])) {
             $this->sendApplicantConfirmationMail($job, $application, $fromEmail, $toEmail);
         }
+    }
+
+    private function sendDoubleOptInMail(Job $job, Application $application): void
+    {
+        $applicantEmail = trim($application->getEmail());
+        $fromEmail = (string)($this->settings['applicationFromEmail'] ?? '');
+        if ($applicantEmail === '' || !GeneralUtility::validEmail($applicantEmail) || $fromEmail === '') {
+            return;
+        }
+
+        $subject = LocalizationUtility::translate(
+            'mail.optin.subject',
+            'AisCareer',
+            [$job->getTitle()]
+        ) ?? ('Please confirm your application — ' . $job->getTitle());
+        if ($job->getReference() !== '') {
+            $subject .= ' (' . $job->getReference() . ')';
+        }
+
+        $confirmUrl = $this->buildOptInConfirmUrl($job, $application);
+
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
+        $view->setTemplatePathAndFilename('EXT:ais_career/Resources/Private/Templates/Email/ApplicantOptIn.html');
+        $view->assignMultiple([
+            'job' => $job,
+            'application' => $application,
+            'confirmUrl' => $confirmUrl,
+        ]);
+        $htmlBody = $view->render();
+
+        $mail = GeneralUtility::makeInstance(MailMessage::class);
+        $mail->setFrom([$fromEmail => 'AIS Career']);
+        $mail->setTo([$applicantEmail => $application->getFirstName() . ' ' . $application->getLastName()]);
+        $mail->setSubject($subject);
+        $mail->html($htmlBody);
+        $mail->send();
+    }
+
+    private function buildOptInConfirmUrl(Job $job, Application $application): string
+    {
+        $pageUid = (int)($this->settings['detailPid'] ?? 0);
+        $uriBuilder = $this->uriBuilder->reset()->setCreateAbsoluteUri(true);
+        if ($pageUid > 0) {
+            $uriBuilder->setTargetPageUid($pageUid);
+        }
+
+        return $uriBuilder->uriFor('confirm', ['job' => $job, 'token' => $application->getDoubleOptInToken()], 'Job');
+    }
+
+    private function generateOptInToken(): string
+    {
+        return bin2hex(random_bytes(32));
     }
 
     private function sendApplicantConfirmationMail(Job $job, Application $application, string $fromEmail, string $replyToEmail): void
@@ -434,7 +815,23 @@ class JobController extends ActionController
         $mail->send();
     }
 
-    private function renderShow(Job $job, Application $application, array $applicationErrors, bool $applicationSuccess): ResponseInterface
+    private function attachFileToMail(MailMessage $mail, ?\TYPO3\CMS\Extbase\Domain\Model\FileReference $fileReference): void
+    {
+        if ($fileReference === null) {
+            return;
+        }
+        $resource = $fileReference->getOriginalResource();
+        if ($resource === null) {
+            return;
+        }
+        $file = $resource->getOriginalFile();
+        $localFile = $file->getForLocalProcessing(false);
+        if (is_string($localFile) && $localFile !== '' && file_exists($localFile)) {
+            $mail->attachFromPath($localFile, $file->getName());
+        }
+    }
+
+    private function renderShow(Job $job, Application $application, array $applicationErrors, bool $applicationSuccess, string $optInState): ResponseInterface
     {
         $listPid = (int)($this->settings['listPid'] ?? 0);
         $jobPostingJsonLd = $this->buildJobPostingJsonLd($job);
@@ -443,6 +840,7 @@ class JobController extends ActionController
             'application' => $application,
             'applicationErrors' => $applicationErrors,
             'applicationSuccess' => $applicationSuccess,
+            'optInState' => $optInState,
             'formTimestamp' => (new \DateTime())->getTimestamp(),
             'jobPostingJsonLd' => $jobPostingJsonLd,
             'listPid' => $listPid,

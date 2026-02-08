@@ -26,6 +26,15 @@
               <default>1</default>
             </config>
           </settings.applicationSave>
+          <settings.applicationDoubleOptInEnabled>
+            <TCEforms>
+              <label>LLL:EXT:ais_career/Resources/Private/Language/locallang_flexforms.xlf:jobdetail.applicationDoubleOptInEnabled</label>
+            </TCEforms>
+            <config>
+              <type>check</type>
+              <default>0</default>
+            </config>
+          </settings.applicationDoubleOptInEnabled>
           <settings.applicationToEmail>
             <TCEforms>
               <label>LLL:EXT:ais_career/Resources/Private/Language/locallang_flexforms.xlf:jobdetail.applicationToEmail</label>
@@ -51,7 +60,7 @@
             <config>
               <type>input</type>
               <eval>trim</eval>
-              <default>pdf,doc,docx</default>
+              <default>pdf,png,jpg,jpeg</default>
             </config>
           </settings.allowedExtensions>
           <settings.maxUploadSizeMB>

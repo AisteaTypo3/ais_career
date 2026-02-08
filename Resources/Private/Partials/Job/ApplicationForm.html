@@ -60,6 +60,20 @@
       </div>
     </div>
     <div>
+      <label for="aiscareer-portfolio"><f:translate key="form.portfolioUpload" extensionName="AisCareer" /></label>
+      <f:form.upload id="aiscareer-portfolio" property="portfolioFile" class="aiscareer-input{f:if(condition: applicationErrors.portfolioFile, then: ' is-invalid')}" />
+      <f:if condition="{applicationErrors.portfolioFile}">
+        <div class="aiscareer-field-error">{applicationErrors.portfolioFile}</div>
+      </f:if>
+    </div>
+    <div>
+      <label for="aiscareer-additional"><f:translate key="form.additionalUpload" extensionName="AisCareer" /></label>
+      <f:form.upload id="aiscareer-additional" property="additionalFile" class="aiscareer-input{f:if(condition: applicationErrors.additionalFile, then: ' is-invalid')}" />
+      <f:if condition="{applicationErrors.additionalFile}">
+        <div class="aiscareer-field-error">{applicationErrors.additionalFile}</div>
+      </f:if>
+    </div>
+    <div>
       <label>
         <f:form.checkbox property="consentPrivacy" value="1" class="{f:if(condition: applicationErrors.consentPrivacy, then: 'is-invalid')}" />
         <f:translate key="form.privacyConsent" extensionName="AisCareer" />

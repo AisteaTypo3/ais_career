@@ -23,8 +23,8 @@ return [
     'types' => [
         '1' => [
             'showitem' => '
-                --div--;General, job, first_name, last_name, email, phone, message, consent_privacy, created_at,
-                --div--;Media, cv_file,
+                --div--;General, job, first_name, last_name, email, phone, message, consent_privacy, created_at, double_opt_in_confirmed_at, double_opt_in_token,
+                --div--;Media, cv_file, portfolio_file, additional_file,
                 --div--;Access, hidden
             ',
         ],
@@ -96,7 +96,31 @@ return [
             'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_application.cv_file',
             'config' => [
                 'type' => 'file',
-                'allowed' => 'pdf,doc,docx',
+                'allowed' => 'pdf,png,jpg,jpeg',
+                'maxitems' => 1,
+                'appearance' => [
+                    'createNewRelationLinkTitle' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.addFileReference',
+                ],
+            ],
+        ],
+        'portfolio_file' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_application.portfolio_file',
+            'config' => [
+                'type' => 'file',
+                'allowed' => 'pdf,png,jpg,jpeg',
+                'maxitems' => 1,
+                'appearance' => [
+                    'createNewRelationLinkTitle' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.addFileReference',
+                ],
+            ],
+        ],
+        'additional_file' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_application.additional_file',
+            'config' => [
+                'type' => 'file',
+                'allowed' => 'pdf,png,jpg,jpeg',
                 'maxitems' => 1,
                 'appearance' => [
                     'createNewRelationLinkTitle' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.addFileReference',
@@ -120,6 +144,26 @@ return [
                 'dbType' => 'int',
                 'format' => 'datetime',
                 'default' => 0,
+                'readOnly' => true,
+            ],
+        ],
+        'double_opt_in_confirmed_at' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_application.double_opt_in_confirmed_at',
+            'config' => [
+                'type' => 'datetime',
+                'dbType' => 'int',
+                'format' => 'datetime',
+                'default' => 0,
+                'readOnly' => true,
+            ],
+        ],
+        'double_opt_in_token' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_application.double_opt_in_token',
+            'config' => [
+                'type' => 'input',
+                'eval' => 'trim',
                 'readOnly' => true,
             ],
         ],

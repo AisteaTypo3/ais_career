@@ -22,6 +22,27 @@
             </div>
           </div>
         </f:if>
+        <f:if condition="{optInState} == 'pending'">
+          <div class="aiscareer-section">
+            <div class="aiscareer-success">
+              <f:translate key="success.applicationOptInPending" extensionName="AisCareer" />
+            </div>
+          </div>
+        </f:if>
+        <f:if condition="{optInState} == 'confirmed'">
+          <div class="aiscareer-section">
+            <div class="aiscareer-success">
+              <f:translate key="success.applicationOptInConfirmed" extensionName="AisCareer" />
+            </div>
+          </div>
+        </f:if>
+        <f:if condition="{optInState} == 'invalid'">
+          <div class="aiscareer-section">
+            <div class="aiscareer-success">
+              <f:translate key="error.applicationOptInInvalid" extensionName="AisCareer" />
+            </div>
+          </div>
+        </f:if>
         <div class="aiscareer-section">
           <h1>{job.title}</h1>
           <div class="aiscareer-meta">

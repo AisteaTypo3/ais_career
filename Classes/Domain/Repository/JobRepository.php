@@ -29,6 +29,15 @@ class JobRepository extends Repository
         return $query->execute();
     }
 
+    public function findOneBySlug(string $slug): ?Job
+    {
+        $query = $this->createQuery();
+        $query->matching($query->equals('slug', $slug));
+        $result = $query->execute();
+
+        return $result instanceof QueryResultInterface ? $result->getFirst() : null;
+    }
+
     public function findActiveFiltered(array $filters): QueryResultInterface
     {
         $query = $this->createQuery();

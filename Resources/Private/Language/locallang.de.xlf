@@ -7,6 +7,18 @@
         <source>Thank you! Your application has been sent successfully.</source>
         <target>Vielen Dank! Ihre Bewerbung wurde erfolgreich gesendet.</target>
       </trans-unit>
+      <trans-unit id="success.applicationOptInPending">
+        <source>Thanks! Please check your email and confirm your application.</source>
+        <target>Danke! Bitte prüfen Sie Ihre E-Mail und bestätigen Sie Ihre Bewerbung.</target>
+      </trans-unit>
+      <trans-unit id="success.applicationOptInConfirmed">
+        <source>Thank you! Your application has been confirmed.</source>
+        <target>Vielen Dank! Ihre Bewerbung wurde bestätigt.</target>
+      </trans-unit>
+      <trans-unit id="error.applicationOptInInvalid">
+        <source>The confirmation link is invalid or has already been used.</source>
+        <target>Der Bestätigungslink ist ungültig oder wurde bereits verwendet.</target>
+      </trans-unit>
       <trans-unit id="job.meta.reference">
         <source>Ref:</source>
         <target>Ref.:</target>
@@ -123,6 +135,14 @@
         <source>CV upload</source>
         <target>Lebenslauf hochladen</target>
       </trans-unit>
+      <trans-unit id="form.portfolioUpload">
+        <source>Portfolio upload</source>
+        <target>Portfolio hochladen</target>
+      </trans-unit>
+      <trans-unit id="form.additionalUpload">
+        <source>Additional file upload</source>
+        <target>Weitere Datei hochladen</target>
+      </trans-unit>
       <trans-unit id="form.allowed">
         <source>Allowed:</source>
         <target>Erlaubt:</target>
@@ -195,17 +215,33 @@
         <source>We received your application — %s</source>
         <target>Wir haben Ihre Bewerbung erhalten — %s</target>
       </trans-unit>
+      <trans-unit id="mail.optin.subject">
+        <source>Please confirm your application — %s</source>
+        <target>Bitte bestätigen Sie Ihre Bewerbung — %s</target>
+      </trans-unit>
       <trans-unit id="mail.confirm.title">
         <source>Application received</source>
         <target>Bewerbung eingegangen</target>
       </trans-unit>
+      <trans-unit id="mail.optin.title">
+        <source>Confirm your application</source>
+        <target>Bewerbung bestätigen</target>
+      </trans-unit>
       <trans-unit id="mail.confirm.greeting">
+        <source>Hi %s %s,</source>
+        <target>Hallo %s %s,</target>
+      </trans-unit>
+      <trans-unit id="mail.optin.greeting">
         <source>Hi %s %s,</source>
         <target>Hallo %s %s,</target>
       </trans-unit>
       <trans-unit id="mail.confirm.body">
         <source>Thank you for your application. We’ve received your submission and our team will review it shortly.</source>
         <target>Vielen Dank für Ihre Bewerbung. Wir haben Ihre Unterlagen erhalten und prüfen diese in Kürze.</target>
+      </trans-unit>
+      <trans-unit id="mail.optin.body">
+        <source>Please confirm your application by clicking the button below. After confirmation, our team will review it.</source>
+        <target>Bitte bestätigen Sie Ihre Bewerbung über den Button unten. Nach der Bestätigung wird unser Team sie prüfen.</target>
       </trans-unit>
       <trans-unit id="mail.confirm.positionLabel">
         <source>Position</source>
@@ -215,9 +251,17 @@
         <source>Reference:</source>
         <target>Referenz:</target>
       </trans-unit>
+      <trans-unit id="mail.optin.confirm">
+        <source>Confirm application</source>
+        <target>Bewerbung bestätigen</target>
+      </trans-unit>
       <trans-unit id="mail.confirm.footer">
         <source>If you have any questions, just reply to this email.</source>
         <target>Wenn Sie Fragen haben, antworten Sie einfach auf diese E-Mail.</target>
+      </trans-unit>
+      <trans-unit id="mail.optin.footer">
+        <source>If you did not apply for this position, you can ignore this email.</source>
+        <target>Wenn Sie sich nicht auf diese Stelle beworben haben, ignorieren Sie diese E-Mail.</target>
       </trans-unit>
       <trans-unit id="mail.confirm.disclaimer">
         <source>This is an automated confirmation. Please do not share sensitive information.</source>

@@ -85,11 +85,23 @@
       <trans-unit id="tx_aiscareer_domain_model_application.cv_file">
         <source>CV file</source>
       </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.portfolio_file">
+        <source>Portfolio file</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.additional_file">
+        <source>Additional file</source>
+      </trans-unit>
       <trans-unit id="tx_aiscareer_domain_model_application.consent_privacy">
         <source>Consent privacy</source>
       </trans-unit>
       <trans-unit id="tx_aiscareer_domain_model_application.created_at">
         <source>Created at</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.double_opt_in_confirmed_at">
+        <source>Double opt-in confirmed at</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_application.double_opt_in_token">
+        <source>Double opt-in token</source>
       </trans-unit>
     </body>
   </file>
