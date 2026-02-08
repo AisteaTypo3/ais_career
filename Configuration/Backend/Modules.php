@@ -8,7 +8,7 @@ return [
         'position' => ['after' => 'web_list'],
         'access' => 'user,group',
         'path' => '/module/web/aiscareer',
-        'iconIdentifier' => 'aiscareer-extension',
+        'iconIdentifier' => 'aiscareer-module-analytics',
         'labels' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang.xlf:module.aiscareer',
         'extensionName' => 'AisCareer',
         'controllerActions' => [

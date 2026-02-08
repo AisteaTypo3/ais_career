@@ -65,4 +65,9 @@ call_user_func(static function (): void {
         SvgIconProvider::class,
         ['source' => 'EXT:ais_career/Resources/Public/Icons/RecordApplication.svg']
     );
+    $iconRegistry->registerIcon(
+        'aiscareer-module-analytics',
+        SvgIconProvider::class,
+        ['source' => 'EXT:ais_career/Resources/Public/Icons/ModuleAnalytics.svg']
+    );
 });
