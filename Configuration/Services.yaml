@@ -11,6 +11,11 @@ services:
     public: true
     tags: ['controller.service_arguments']
 
+  Aistea\AisCareer\Controller\Backend\AnalyticsController:
+    public: true
+    tags:
+      - 'backend.controller'
+
   Aistea\AisCareer\Command\PurgeApplicationsCommand:
     tags:
       - name: 'console.command'

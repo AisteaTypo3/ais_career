@@ -60,3 +60,19 @@ CREATE TABLE tx_aiscareer_domain_model_application (
   PRIMARY KEY (uid),
   KEY parent (pid)
 );
+
+CREATE TABLE tx_aiscareer_event (
+  uid int(11) unsigned NOT NULL auto_increment,
+  pid int(11) unsigned NOT NULL DEFAULT 0,
+  job int(11) unsigned NOT NULL DEFAULT 0,
+  event_type varchar(50) NOT NULL DEFAULT '',
+  created_at int(11) unsigned NOT NULL DEFAULT 0,
+  deleted tinyint(1) NOT NULL DEFAULT 0,
+  tstamp int(11) unsigned NOT NULL DEFAULT 0,
+  crdate int(11) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (uid),
+  KEY parent (pid),
+  KEY event_type (event_type),
+  KEY job (job),
+  KEY created_at (created_at)
+);

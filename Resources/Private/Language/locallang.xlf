@@ -87,6 +87,84 @@
       <trans-unit id="list.empty">
         <source>No jobs found for the selected filters.</source>
       </trans-unit>
+      <trans-unit id="module.aiscareer">
+        <source>AIS Career Analytics</source>
+      </trans-unit>
+      <trans-unit id="analytics.totalJobs">
+        <source>Total jobs</source>
+      </trans-unit>
+      <trans-unit id="analytics.activeJobs">
+        <source>Active jobs</source>
+      </trans-unit>
+      <trans-unit id="analytics.totalApplications">
+        <source>Total applications</source>
+      </trans-unit>
+      <trans-unit id="analytics.applications30">
+        <source>Applications (last 30 days)</source>
+      </trans-unit>
+      <trans-unit id="analytics.period">
+        <source>Period</source>
+      </trans-unit>
+      <trans-unit id="analytics.period7">
+        <source>Last 7 days</source>
+      </trans-unit>
+      <trans-unit id="analytics.period30">
+        <source>Last 30 days</source>
+      </trans-unit>
+      <trans-unit id="analytics.period90">
+        <source>Last 90 days</source>
+      </trans-unit>
+      <trans-unit id="analytics.periodCustom">
+        <source>Custom</source>
+      </trans-unit>
+      <trans-unit id="analytics.apply">
+        <source>Apply</source>
+      </trans-unit>
+      <trans-unit id="analytics.range">
+        <source>Range</source>
+      </trans-unit>
+      <trans-unit id="analytics.jobs">
+        <source>Jobs</source>
+      </trans-unit>
+      <trans-unit id="analytics.traffic">
+        <source>Traffic</source>
+      </trans-unit>
+      <trans-unit id="analytics.listViews">
+        <source>List views</source>
+      </trans-unit>
+      <trans-unit id="analytics.detailViews">
+        <source>Detail views</source>
+      </trans-unit>
+      <trans-unit id="analytics.applicationsRange">
+        <source>Applications</source>
+      </trans-unit>
+      <trans-unit id="analytics.inRange">
+        <source>In selected range</source>
+      </trans-unit>
+      <trans-unit id="analytics.conversion">
+        <source>Conversion</source>
+      </trans-unit>
+      <trans-unit id="analytics.conversionListDetail">
+        <source>List → Detail</source>
+      </trans-unit>
+      <trans-unit id="analytics.conversionDetailApp">
+        <source>Detail → Application</source>
+      </trans-unit>
+      <trans-unit id="analytics.conversionListApp">
+        <source>List → Application</source>
+      </trans-unit>
+      <trans-unit id="analytics.topJobs">
+        <source>Top jobs by applications</source>
+      </trans-unit>
+      <trans-unit id="analytics.job">
+        <source>Job</source>
+      </trans-unit>
+      <trans-unit id="analytics.applications">
+        <source>Applications</source>
+      </trans-unit>
+      <trans-unit id="analytics.noData">
+        <source>No data available.</source>
+      </trans-unit>
       <trans-unit id="view.grid">
         <source>Grid</source>
       </trans-unit>

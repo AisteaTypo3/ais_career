@@ -7,6 +7,7 @@ namespace Aistea\AisCareer\Controller;
 use Aistea\AisCareer\Domain\Model\Application;
 use Aistea\AisCareer\Domain\Model\Job;
 use Aistea\AisCareer\Domain\Repository\ApplicationRepository;
+use Aistea\AisCareer\Domain\Repository\EventRepository;
 use Aistea\AisCareer\Domain\Repository\JobRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -35,6 +36,7 @@ class JobController extends ActionController
     public function __construct(
         protected readonly JobRepository $jobRepository,
         protected readonly ApplicationRepository $applicationRepository,
+        protected readonly EventRepository $eventRepository,
         protected readonly PersistenceManagerInterface $persistenceManager
     ) {
     }
@@ -86,6 +88,8 @@ class JobController extends ActionController
         $this->view->assign('listPid', $listPid);
         $this->view->assign('settings', $settings);
 
+        $this->trackListView();
+
         return $this->htmlResponse();
     }
 
@@ -102,6 +106,8 @@ class JobController extends ActionController
         if (!$this->jobRepository->isJobVisible($job)) {
             throw new PageNotFoundException('Job not available');
         }
+
+        $this->trackDetailView($job);
 
         if ($application === null) {
             $application = new Application();
@@ -204,6 +210,7 @@ class JobController extends ActionController
         }
 
         $application->setCreatedAt(new \DateTime());
+        $this->trackApplicationSubmit($job);
 
         $doubleOptInEnabled = !empty($this->settings['applicationDoubleOptInEnabled']);
         $hasUploads = $this->hasUploadedFiles();
@@ -1003,5 +1010,89 @@ class JobController extends ActionController
         $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
         $pageRenderer->addCssFile('EXT:ais_career/Resources/Public/Css/aiscareer.css');
         $pageRenderer->addJsFooterFile('EXT:ais_career/Resources/Public/JavaScript/aiscareer.js');
+    }
+
+    private function trackListView(): void
+    {
+        if ($this->isXmlHttpRequest()) {
+            return;
+        }
+        $pageId = $this->getCurrentPageId();
+        if ($pageId > 0 && !$this->shouldTrackSessionOnce('aiscareer_list_view_' . $pageId)) {
+            return;
+        }
+        $this->safeAddEvent('list_view', null);
+    }
+
+    private function trackDetailView(Job $job): void
+    {
+        if ($this->isXmlHttpRequest()) {
+            return;
+        }
+        $jobUid = (int)$job->getUid();
+        if ($jobUid > 0 && !$this->shouldTrackSessionOnce('aiscareer_detail_view_' . $jobUid)) {
+            return;
+        }
+        $this->safeAddEvent('detail_view', $job);
+    }
+
+    private function trackApplicationSubmit(Job $job): void
+    {
+        $jobUid = (int)$job->getUid();
+        if ($jobUid > 0 && !$this->shouldTrackSessionOnce('aiscareer_application_submit_' . $jobUid)) {
+            return;
+        }
+        $this->safeAddEvent('application_submit', $job);
+    }
+
+    private function safeAddEvent(string $eventType, ?Job $job): void
+    {
+        try {
+            $jobUid = $job instanceof Job ? (int)$job->getUid() : 0;
+            $pid = $this->getCurrentPageId();
+            $this->eventRepository->addEvent($eventType, $jobUid, $pid);
+        } catch (\Throwable) {
+            // avoid blocking frontend if analytics logging fails
+        }
+    }
+
+    private function isXmlHttpRequest(): bool
+    {
+        $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if ($request instanceof ServerRequestInterface) {
+            $header = (string)$request->getHeaderLine('X-Requested-With');
+            return strtolower($header) === 'xmlhttprequest';
+        }
+        return false;
+    }
+
+    private function getCurrentPageId(): int
+    {
+        if (isset($GLOBALS['TSFE']) && $GLOBALS['TSFE'] instanceof \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController) {
+            return (int)$GLOBALS['TSFE']->id;
+        }
+        return 0;
+    }
+
+    private function shouldTrackSessionOnce(string $key): bool
+    {
+        if (!isset($GLOBALS['TSFE']) || !$GLOBALS['TSFE'] instanceof \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController) {
+            return true;
+        }
+        $feUser = $GLOBALS['TSFE']->fe_user ?? null;
+        if ($feUser === null) {
+            return true;
+        }
+        try {
+            $existing = $feUser->getKey('ses', $key);
+            if (!empty($existing)) {
+                return false;
+            }
+            $feUser->setKey('ses', $key, 1);
+            $feUser->storeSessionData();
+        } catch (\Throwable) {
+            return true;
+        }
+        return true;
     }
 }

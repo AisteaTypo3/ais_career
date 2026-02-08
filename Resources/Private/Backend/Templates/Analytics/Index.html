@@ -1,0 +1,206 @@
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+  .aiscareer-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+    margin-bottom: 20px;
+  }
+  .aiscareer-filter {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .aiscareer-filter label {
+    font-size: 12px;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+  .aiscareer-filter select,
+  .aiscareer-filter input[type="date"] {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 13px;
+    background: #fff;
+  }
+  .aiscareer-filter button {
+    border: 0;
+    background: #111827;
+    color: #fff;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .aiscareer-section-title {
+    margin: 16px 0 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+  }
+  .aiscareer-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .aiscareer-kpi {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+  }
+  .aiscareer-kpi h3 {
+    margin: 0 0 6px;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #6b7280;
+  }
+  .aiscareer-kpi .value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+  }
+  .aiscareer-kpi .sub {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #64748b;
+  }
+  .aiscareer-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+  }
+  .aiscareer-table th,
+  .aiscareer-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: left;
+    font-size: 13px;
+  }
+  .aiscareer-table th {
+    background: #f8fafc;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-weight: 600;
+  }
+</style>
+
+<div class="aiscareer-toolbar">
+  <form method="get" class="aiscareer-filter">
+    <f:for each="{queryParams}" as="value" key="key">
+      <f:if condition="{key} != 'period' && {key} != 'from' && {key} != 'to'">
+        <input type="hidden" name="{key}" value="{value}" />
+      </f:if>
+    </f:for>
+    <label for="aiscareer-period">{f:translate(key: 'analytics.period', extensionName: 'AisCareer')}</label>
+    <select id="aiscareer-period" name="period">
+      <option value="7" {f:if(condition: "{period} == '7'", then: 'selected')}>{f:translate(key: 'analytics.period7', extensionName: 'AisCareer')}</option>
+      <option value="30" {f:if(condition: "{period} == '30'", then: 'selected')}>{f:translate(key: 'analytics.period30', extensionName: 'AisCareer')}</option>
+      <option value="90" {f:if(condition: "{period} == '90'", then: 'selected')}>{f:translate(key: 'analytics.period90', extensionName: 'AisCareer')}</option>
+      <option value="custom" {f:if(condition: "{period} == 'custom'", then: 'selected')}>{f:translate(key: 'analytics.periodCustom', extensionName: 'AisCareer')}</option>
+    </select>
+    <input type="date" name="from" value="{fromDate}" />
+    <input type="date" name="to" value="{toDate}" />
+    <button type="submit">{f:translate(key: 'analytics.apply', extensionName: 'AisCareer')}</button>
+  </form>
+  <div class="aiscareer-kpi">
+    <h3>{f:translate(key: 'analytics.range', extensionName: 'AisCareer')}</h3>
+    <div class="value">
+      <f:switch expression="{period}">
+        <f:case value="7">{f:translate(key: 'analytics.period7', extensionName: 'AisCareer')}</f:case>
+        <f:case value="30">{f:translate(key: 'analytics.period30', extensionName: 'AisCareer')}</f:case>
+        <f:case value="90">{f:translate(key: 'analytics.period90', extensionName: 'AisCareer')}</f:case>
+        <f:case value="custom">{fromDate} → {toDate}</f:case>
+        <f:defaultCase>{f:translate(key: 'analytics.period30', extensionName: 'AisCareer')}</f:defaultCase>
+      </f:switch>
+    </div>
+  </div>
+</div>
+
+<div class="aiscareer-section-title">{f:translate(key: 'analytics.jobs', extensionName: 'AisCareer')}</div>
+<div class="aiscareer-kpis">
+  <div class="aiscareer-kpi">
+    <h3>{f:translate(key: 'analytics.totalJobs', extensionName: 'AisCareer')}</h3>
+    <div class="value">{totalJobs}</div>
+  </div>
+  <div class="aiscareer-kpi">
+    <h3>{f:translate(key: 'analytics.activeJobs', extensionName: 'AisCareer')}</h3>
+    <div class="value">{activeJobs}</div>
+  </div>
+  <div class="aiscareer-kpi">
+    <h3>{f:translate(key: 'analytics.totalApplications', extensionName: 'AisCareer')}</h3>
+    <div class="value">{totalApplications}</div>
+  </div>
+</div>
+
+<div class="aiscareer-section-title">{f:translate(key: 'analytics.traffic', extensionName: 'AisCareer')}</div>
+<div class="aiscareer-kpis">
+  <div class="aiscareer-kpi">
+    <h3>{f:translate(key: 'analytics.listViews', extensionName: 'AisCareer')}</h3>
+    <div class="value">{listViews}</div>
+    <div class="sub">{f:translate(key: 'analytics.inRange', extensionName: 'AisCareer')}</div>
+  </div>
+  <div class="aiscareer-kpi">
+    <h3>{f:translate(key: 'analytics.detailViews', extensionName: 'AisCareer')}</h3>
+    <div class="value">{detailViews}</div>
+    <div class="sub">{f:translate(key: 'analytics.inRange', extensionName: 'AisCareer')}</div>
+  </div>
+  <div class="aiscareer-kpi">
+    <h3>{f:translate(key: 'analytics.applicationsRange', extensionName: 'AisCareer')}</h3>
+    <div class="value">{applicationSubmits}</div>
+    <div class="sub">{f:translate(key: 'analytics.inRange', extensionName: 'AisCareer')}</div>
+  </div>
+</div>
+
+<div class="aiscareer-section-title">{f:translate(key: 'analytics.conversion', extensionName: 'AisCareer')}</div>
+<div class="aiscareer-kpis">
+  <div class="aiscareer-kpi">
+    <h3>{f:translate(key: 'analytics.conversionListDetail', extensionName: 'AisCareer')}</h3>
+    <div class="value">{conversionListToDetail}</div>
+  </div>
+  <div class="aiscareer-kpi">
+    <h3>{f:translate(key: 'analytics.conversionDetailApp', extensionName: 'AisCareer')}</h3>
+    <div class="value">{conversionDetailToApplication}</div>
+  </div>
+  <div class="aiscareer-kpi">
+    <h3>{f:translate(key: 'analytics.conversionListApp', extensionName: 'AisCareer')}</h3>
+    <div class="value">{conversionListToApplication}</div>
+  </div>
+</div>
+
+<h2>{f:translate(key: 'analytics.topJobs', extensionName: 'AisCareer')}</h2>
+<table class="aiscareer-table">
+  <thead>
+    <tr>
+      <th>{f:translate(key: 'analytics.job', extensionName: 'AisCareer')}</th>
+      <th>{f:translate(key: 'analytics.applications', extensionName: 'AisCareer')}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <f:for each="{topJobs}" as="row">
+      <tr>
+        <td>{row.job_title}</td>
+        <td>{row.applications}</td>
+      </tr>
+    </f:for>
+    <f:if condition="{topJobs -> f:count()} == 0">
+      <tr>
+        <td colspan="2">{f:translate(key: 'analytics.noData', extensionName: 'AisCareer')}</td>
+      </tr>
+    </f:if>
+  </tbody>
+</table>

@@ -13,6 +13,19 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 
 class JobRepository extends Repository
 {
+    public function countAll(): int
+    {
+        $query = $this->createQuery();
+        return $query->execute()->count();
+    }
+
+    public function countActive(): int
+    {
+        $query = $this->createQuery();
+        $constraints = $this->buildActiveConstraints($query);
+        $query->matching($query->logicalAnd(...$constraints));
+        return $query->execute()->count();
+    }
     public function initializeObject(): void
     {
         $this->setDefaultOrderings([
