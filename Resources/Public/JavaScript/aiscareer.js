@@ -322,6 +322,13 @@
       return;
     }
 
+    function scrollToFilters() {
+      var filters = document.querySelector('.aiscareer-filters') || document.getElementById('aiscareer-country');
+      if (filters && typeof filters.scrollIntoView === 'function') {
+        filters.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
     // Helper: Country Filter setzen (im Haupt-DOM)
     function setCountryFilter(countryCode) {
       var select = document.getElementById('aiscareer-country');
@@ -333,8 +340,6 @@
 
       // Change-Event triggern, damit vorhandene Listener/Filter-Logik feuert
       select.dispatchEvent(new Event('change', { bubbles: true }));
-
-      console.log('Country Filter gesetzt auf: ' + countryCode);
     }
 
     function resolveMapColors() {
@@ -374,6 +379,20 @@
         svgRoot.appendChild(styleElement);
       }
 
+      function setActiveCountry(countryCode) {
+        var activeNodes = svgDoc.querySelectorAll('.available-country');
+        activeNodes.forEach(function (el) {
+          el.classList.remove('active');
+        });
+        if (!countryCode) {
+          return;
+        }
+        var target = svgDoc.getElementById(countryCode);
+        if (target) {
+          target.classList.add('active');
+        }
+      }
+
       // Länder markieren
       var markedCount = 0;
 
@@ -392,6 +411,15 @@
         }
       });
 
+      // Auswahl aus Filter spiegeln
+      setActiveCountry(countrySelect.value);
+      if (!countrySelect.__aiscareerMapBound) {
+        countrySelect.addEventListener('change', function () {
+          setActiveCountry(countrySelect.value);
+        });
+        countrySelect.__aiscareerMapBound = true;
+      }
+
       // Zentraler Click-Handler (robuster als pro Element)
       svgRoot.addEventListener('click', function (event) {
         if (svgRoot.__aiscareerMoved) {
@@ -405,15 +433,9 @@
         var node = hit || event.target;
         while (node && node !== svgRoot) {
           if (node.id && availableCountries.indexOf(node.id) !== -1) {
-            var activeNodes = svgDoc.querySelectorAll('.available-country');
-            activeNodes.forEach(function (el) {
-              el.classList.remove('active');
-            });
-            var hit = svgDoc.getElementById(node.id);
-            if (hit) {
-              hit.classList.add('active');
-            }
+            setActiveCountry(node.id);
             setCountryFilter(node.id);
+            scrollToFilters();
             return;
           }
           node = node.parentNode;
