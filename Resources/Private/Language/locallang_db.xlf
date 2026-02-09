@@ -60,6 +60,21 @@
       <trans-unit id="tx_aiscareer_domain_model_job.contact_email">
         <source>Contact email</source>
       </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.contact_name">
+        <source>Contact name</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.contact_title">
+        <source>Contact title</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.contact_phone">
+        <source>Contact phone</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.contact_public_email">
+        <source>Contact email (public)</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.contact_image">
+        <source>Contact image</source>
+      </trans-unit>
 
       <trans-unit id="tx_aiscareer_domain_model_application">
         <source>Application</source>

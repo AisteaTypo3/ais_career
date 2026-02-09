@@ -33,7 +33,8 @@ return [
                 --div--;Location, country, city, location_label, department, contract_type, remote_possible,
                 --div--;Publishing, employment_start, published_from, published_to,
                 --div--;Content, description, responsibilities, qualifications, benefits,
-                --div--;Media, attachments, contact_email,
+                --div--;Media, attachments,
+                --div--;Contact, contact_name, contact_title, contact_phone, contact_public_email, contact_email, contact_image,
                 --div--;Access, hidden
             ',
         ],
@@ -299,6 +300,50 @@ return [
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim,email',
+            ],
+        ],
+        'contact_name' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.contact_name',
+            'config' => [
+                'type' => 'input',
+                'eval' => 'trim',
+            ],
+        ],
+        'contact_title' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.contact_title',
+            'config' => [
+                'type' => 'input',
+                'eval' => 'trim',
+            ],
+        ],
+        'contact_phone' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.contact_phone',
+            'config' => [
+                'type' => 'input',
+                'eval' => 'trim',
+            ],
+        ],
+        'contact_public_email' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.contact_public_email',
+            'config' => [
+                'type' => 'input',
+                'eval' => 'trim,email',
+            ],
+        ],
+        'contact_image' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.contact_image',
+            'config' => [
+                'type' => 'file',
+                'allowed' => 'jpg,jpeg,png,webp,svg,gif',
+                'maxitems' => 1,
+                'appearance' => [
+                    'createNewRelationLinkTitle' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.addFileReference',
+                ],
             ],
         ],
     ],

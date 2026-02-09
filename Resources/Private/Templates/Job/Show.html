@@ -99,6 +99,39 @@
           </div>
         </f:if>
 
+        <f:if condition="{contact}">
+          <div class="aiscareer-section aiscareer-contact">
+            <h2><f:translate key="job.section.contact" extensionName="AisCareer" /></h2>
+            <div class="aiscareer-contact-card">
+              <f:if condition="{contact.image}">
+                <div class="aiscareer-contact-image">
+                  <f:image image="{contact.image}" alt="{contact.name}" width="140" height="140" />
+                </div>
+              </f:if>
+              <div class="aiscareer-contact-details">
+                <f:if condition="{contact.name}">
+                  <div class="aiscareer-contact-name">{contact.name}</div>
+                </f:if>
+                <f:if condition="{contact.title}">
+                  <div class="aiscareer-contact-title">{contact.title}</div>
+                </f:if>
+                <f:if condition="{contact.phone}">
+                  <div class="aiscareer-contact-row">
+                    <span class="aiscareer-contact-label"><f:translate key="contact.phone" extensionName="AisCareer" />:</span>
+                    <a href="tel:{contact.phone}" class="aiscareer-contact-link">{contact.phone}</a>
+                  </div>
+                </f:if>
+                <f:if condition="{contact.email}">
+                  <div class="aiscareer-contact-row">
+                    <span class="aiscareer-contact-label"><f:translate key="contact.email" extensionName="AisCareer" />:</span>
+                    <a href="mailto:{contact.email}" class="aiscareer-contact-link">{contact.email}</a>
+                  </div>
+                </f:if>
+              </div>
+            </div>
+          </div>
+        </f:if>
+
         <f:if condition="{settings.applicationEnabled}">
           <div class="aiscareer-section">
             <h2><f:translate key="job.section.applyNow" extensionName="AisCareer" /></h2>

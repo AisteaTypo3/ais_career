@@ -28,6 +28,8 @@ use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Resource\DuplicationBehavior;
 use TYPO3\CMS\Core\Resource\FileReference as CoreFileReference;
 use TYPO3\CMS\Core\Resource\Folder;
+use TYPO3\CMS\Core\Resource\FileInterface;
+use TYPO3\CMS\Core\Resource\FileRepository;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Core\Pagination\SimplePagination;
 
@@ -899,6 +901,7 @@ class JobController extends ActionController
     {
         $listPid = (int)($this->settings['listPid'] ?? 0);
         $jobPostingJsonLd = $this->buildJobPostingJsonLd($job);
+        $contact = $this->resolveContactData($job);
         $this->view->assignMultiple([
             'job' => $job,
             'application' => $application,
@@ -909,6 +912,7 @@ class JobController extends ActionController
             'jobPostingJsonLd' => $jobPostingJsonLd,
             'listPid' => $listPid,
             'settings' => $this->settings,
+            'contact' => $contact,
         ]);
 
         $templatePath = GeneralUtility::getFileAbsFileName('EXT:ais_career/Resources/Private/Templates/Job/Show.html');
@@ -1010,6 +1014,233 @@ class JobController extends ActionController
         $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
         $pageRenderer->addCssFile('EXT:ais_career/Resources/Public/Css/aiscareer.css');
         $pageRenderer->addJsFooterFile('EXT:ais_career/Resources/Public/JavaScript/aiscareer.js');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function resolveContactData(Job $job): array
+    {
+        $settings = $this->settings;
+
+        $name = trim($job->getContactName());
+        $title = trim($job->getContactTitle());
+        $phone = trim($job->getContactPhone());
+        $email = trim($job->getContactPublicEmail());
+        $image = $this->ensureImageFile($job->getContactImage());
+
+        if ($name === '') {
+            $name = trim((string)($settings['contactDefaultName'] ?? ''));
+        }
+        if ($title === '') {
+            $title = trim((string)($settings['contactDefaultTitle'] ?? ''));
+        }
+        if ($phone === '') {
+            $phone = trim((string)($settings['contactDefaultPhone'] ?? ''));
+        }
+        if ($email === '') {
+            $email = trim($job->getContactEmail());
+        }
+        if ($email === '') {
+            $email = trim((string)($settings['contactDefaultEmail'] ?? ''));
+        }
+        if ($image === null) {
+            $image = $this->resolveFlexFormImage($settings['contactDefaultImage'] ?? null);
+        }
+        if ($image === null) {
+            $image = $this->resolveFlexFormImageFromContent();
+        }
+
+        if ($name === '' && $title === '' && $phone === '' && $email === '' && $image === null) {
+            return [];
+        }
+
+        return [
+            'name' => $name,
+            'title' => $title,
+            'phone' => $phone,
+            'email' => $email,
+            'image' => $image,
+        ];
+    }
+
+    private function resolveFlexFormImage(mixed $value): ?FileInterface
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if (is_array($value)) {
+            if (isset($value['uid']) && is_numeric($value['uid'])) {
+                $value = (string)$value['uid'];
+            } elseif (isset($value['uid_local']) && is_numeric($value['uid_local'])) {
+                $value = (string)$value['uid_local'];
+            } elseif (isset($value['identifier']) && is_string($value['identifier'])) {
+                $value = $value['identifier'];
+            } elseif (isset($value['publicUrl']) && is_string($value['publicUrl'])) {
+                $value = $value['publicUrl'];
+            } elseif (isset($value['url']) && is_string($value['url'])) {
+                $value = $value['url'];
+            } elseif (isset($value['file']) && is_numeric($value['file'])) {
+                $value = (string)$value['file'];
+            } else {
+                $first = reset($value);
+                if (is_array($first)) {
+                    if (isset($first['uid']) && is_numeric($first['uid'])) {
+                        $value = (string)$first['uid'];
+                    } elseif (isset($first['uid_local']) && is_numeric($first['uid_local'])) {
+                        $value = (string)$first['uid_local'];
+                    } elseif (isset($first['identifier']) && is_string($first['identifier'])) {
+                        $value = $first['identifier'];
+                    } elseif (isset($first['publicUrl']) && is_string($first['publicUrl'])) {
+                        $value = $first['publicUrl'];
+                    } elseif (isset($first['url']) && is_string($first['url'])) {
+                        $value = $first['url'];
+                    } elseif (isset($first['file']) && is_numeric($first['file'])) {
+                        $value = (string)$first['file'];
+                    } else {
+                        $value = $first;
+                    }
+                } else {
+                    $value = $first;
+                }
+            }
+        }
+
+        if (is_numeric($value)) {
+            try {
+                $resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
+                $file = $resourceFactory->getFileReferenceObject((int)$value);
+                return $this->ensureImageFile($file);
+            } catch (\Throwable) {
+                // maybe it's a sys_file uid
+                try {
+                    $resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
+                    $file = $resourceFactory->getFileObject((int)$value);
+                    return $this->ensureImageFile($file);
+                } catch (\Throwable) {
+                    return null;
+                }
+            }
+        }
+
+        if (is_string($value)) {
+            $clean = trim($value);
+            if (str_contains($clean, ',')) {
+                $parts = array_filter(array_map('trim', explode(',', $clean)));
+                $clean = (string)reset($parts);
+            }
+            if (str_starts_with($clean, 't3://file')) {
+                $query = parse_url($clean, PHP_URL_QUERY);
+                if (is_string($query)) {
+                    parse_str($query, $params);
+                    if (isset($params['uid']) && is_numeric($params['uid'])) {
+                        $clean = (string)$params['uid'];
+                    }
+                }
+            }
+            if (str_starts_with($clean, 'file:')) {
+                $clean = substr($clean, 5);
+            }
+            if (str_starts_with($clean, '/fileadmin/')) {
+                $clean = '1:/' . ltrim(substr($clean, strlen('/fileadmin/')), '/');
+            } elseif (str_starts_with($clean, 'fileadmin/')) {
+                $clean = '1:/' . ltrim(substr($clean, strlen('fileadmin/')), '/');
+            }
+            if (is_numeric($clean)) {
+                try {
+                    $resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
+                    $file = $resourceFactory->getFileReferenceObject((int)$clean);
+                    return $this->ensureImageFile($file);
+                } catch (\Throwable) {
+                    try {
+                        $resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
+                        $file = $resourceFactory->getFileObject((int)$clean);
+                        return $this->ensureImageFile($file);
+                    } catch (\Throwable) {
+                        return null;
+                    }
+                }
+            }
+            try {
+                if (str_ends_with($clean, '/')) {
+                    return null;
+                }
+                if (pathinfo($clean, PATHINFO_EXTENSION) === '') {
+                    return null;
+                }
+                $resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
+                $file = $resourceFactory->getFileObjectFromCombinedIdentifier($clean);
+                return $this->ensureImageFile($file);
+            } catch (\Throwable) {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    private function resolveFlexFormImageFromContent(): ?FileInterface
+    {
+        $contentUid = $this->getContentElementUid();
+        if ($contentUid <= 0) {
+            return null;
+        }
+        try {
+            $fileRepository = GeneralUtility::makeInstance(FileRepository::class);
+            $refs = $fileRepository->findByRelation('tt_content', 'settings.contactDefaultImage', $contentUid);
+            if (!is_array($refs) || $refs === []) {
+                $refs = $fileRepository->findByRelation('tt_content', 'pi_flexform', $contentUid);
+            }
+            if (is_array($refs) && $refs !== []) {
+                $first = reset($refs);
+                return $this->ensureImageFile($first);
+            }
+        } catch (\Throwable) {
+            return null;
+        }
+        return null;
+    }
+
+    private function getContentElementUid(): int
+    {
+        $cObj = $this->request->getAttribute('currentContentObject');
+        if ($cObj && isset($cObj->data['uid'])) {
+            return (int)$cObj->data['uid'];
+        }
+        return 0;
+    }
+
+    private function ensureImageFile(mixed $file): ?FileInterface
+    {
+        if ($file === null) {
+            return null;
+        }
+
+        if ($file instanceof \TYPO3\CMS\Extbase\Domain\Model\FileReference) {
+            $resource = $file->getOriginalResource();
+            if ($resource === null) {
+                return null;
+            }
+            $file = $resource;
+        }
+
+        if (!$file instanceof FileInterface) {
+            return null;
+        }
+
+        $check = $file instanceof CoreFileReference ? $file->getOriginalFile() : $file;
+        $extension = strtolower((string)$check->getExtension());
+        $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'];
+        if ($extension === '' || !in_array($extension, $allowed, true)) {
+            return null;
+        }
+        $mime = strtolower((string)$check->getMimeType());
+        if ($mime !== '' && !str_starts_with($mime, 'image/')) {
+            return null;
+        }
+
+        return $file;
     }
 
     private function trackListView(): void

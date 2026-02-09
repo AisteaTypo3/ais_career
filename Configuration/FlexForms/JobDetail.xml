@@ -103,6 +103,52 @@
               <default>0</default>
             </config>
           </settings.listPid>
+          <settings.contactDefaultName>
+            <TCEforms>
+              <label>LLL:EXT:ais_career/Resources/Private/Language/locallang_flexforms.xlf:jobdetail.contactDefaultName</label>
+            </TCEforms>
+            <config>
+              <type>input</type>
+              <eval>trim</eval>
+            </config>
+          </settings.contactDefaultName>
+          <settings.contactDefaultTitle>
+            <TCEforms>
+              <label>LLL:EXT:ais_career/Resources/Private/Language/locallang_flexforms.xlf:jobdetail.contactDefaultTitle</label>
+            </TCEforms>
+            <config>
+              <type>input</type>
+              <eval>trim</eval>
+            </config>
+          </settings.contactDefaultTitle>
+          <settings.contactDefaultPhone>
+            <TCEforms>
+              <label>LLL:EXT:ais_career/Resources/Private/Language/locallang_flexforms.xlf:jobdetail.contactDefaultPhone</label>
+            </TCEforms>
+            <config>
+              <type>input</type>
+              <eval>trim</eval>
+            </config>
+          </settings.contactDefaultPhone>
+          <settings.contactDefaultEmail>
+            <TCEforms>
+              <label>LLL:EXT:ais_career/Resources/Private/Language/locallang_flexforms.xlf:jobdetail.contactDefaultEmail</label>
+            </TCEforms>
+            <config>
+              <type>input</type>
+              <eval>trim,email</eval>
+            </config>
+          </settings.contactDefaultEmail>
+          <settings.contactDefaultImage>
+            <TCEforms>
+              <label>LLL:EXT:ais_career/Resources/Private/Language/locallang_flexforms.xlf:jobdetail.contactDefaultImage</label>
+            </TCEforms>
+            <config>
+              <type>file</type>
+              <allowed>jpg,jpeg,png,webp,svg,gif</allowed>
+              <maxitems>1</maxitems>
+            </config>
+          </settings.contactDefaultImage>
         </el>
       </ROOT>
     </general>

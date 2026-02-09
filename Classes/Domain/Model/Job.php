@@ -32,6 +32,11 @@ class Job extends AbstractEntity
     protected ObjectStorage $categories;
     protected ObjectStorage $attachments;
     protected string $contactEmail = '';
+    protected string $contactName = '';
+    protected string $contactTitle = '';
+    protected string $contactPhone = '';
+    protected string $contactPublicEmail = '';
+    protected ?FileReference $contactImage = null;
 
     public function __construct()
     {
@@ -292,5 +297,55 @@ class Job extends AbstractEntity
     public function setContactEmail(string $contactEmail): void
     {
         $this->contactEmail = $contactEmail;
+    }
+
+    public function getContactName(): string
+    {
+        return $this->contactName;
+    }
+
+    public function setContactName(string $contactName): void
+    {
+        $this->contactName = $contactName;
+    }
+
+    public function getContactTitle(): string
+    {
+        return $this->contactTitle;
+    }
+
+    public function setContactTitle(string $contactTitle): void
+    {
+        $this->contactTitle = $contactTitle;
+    }
+
+    public function getContactPhone(): string
+    {
+        return $this->contactPhone;
+    }
+
+    public function setContactPhone(string $contactPhone): void
+    {
+        $this->contactPhone = $contactPhone;
+    }
+
+    public function getContactPublicEmail(): string
+    {
+        return $this->contactPublicEmail;
+    }
+
+    public function setContactPublicEmail(string $contactPublicEmail): void
+    {
+        $this->contactPublicEmail = $contactPublicEmail;
+    }
+
+    public function getContactImage(): ?FileReference
+    {
+        return $this->contactImage;
+    }
+
+    public function setContactImage(?FileReference $contactImage): void
+    {
+        $this->contactImage = $contactImage;
     }
 }

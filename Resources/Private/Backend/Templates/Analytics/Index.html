@@ -204,3 +204,30 @@
     </f:if>
   </tbody>
 </table>
+
+<h2>{f:translate(key: 'analytics.funnelByJob', extensionName: 'AisCareer')}</h2>
+<table class="aiscareer-table">
+  <thead>
+    <tr>
+      <th>{f:translate(key: 'analytics.job', extensionName: 'AisCareer')}</th>
+      <th>{f:translate(key: 'analytics.detailViews', extensionName: 'AisCareer')}</th>
+      <th>{f:translate(key: 'analytics.applications', extensionName: 'AisCareer')}</th>
+      <th>{f:translate(key: 'analytics.conversionDetailApp', extensionName: 'AisCareer')}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <f:for each="{jobFunnel}" as="row">
+      <tr>
+        <td>{row.job_title}</td>
+        <td>{row.detail_views}</td>
+        <td>{row.applications}</td>
+        <td>{row.conversion}</td>
+      </tr>
+    </f:for>
+    <f:if condition="{jobFunnel -> f:count()} == 0">
+      <tr>
+        <td colspan="4">{f:translate(key: 'analytics.noData', extensionName: 'AisCareer')}</td>
+      </tr>
+    </f:if>
+  </tbody>
+</table>

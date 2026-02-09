@@ -73,6 +73,21 @@
       <trans-unit id="jobdetail.listPid">
         <source>List page UID</source>
       </trans-unit>
+      <trans-unit id="jobdetail.contactDefaultName">
+        <source>Default contact name</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.contactDefaultTitle">
+        <source>Default contact title</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.contactDefaultPhone">
+        <source>Default contact phone</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.contactDefaultEmail">
+        <source>Default contact email</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.contactDefaultImage">
+        <source>Default contact image</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

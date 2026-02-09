@@ -29,6 +29,7 @@ class AnalyticsController extends ActionController
         $listViews = $this->eventRepository->countByTypeBetween('list_view', $range['from'], $range['to']);
         $detailViews = $this->eventRepository->countByTypeBetween('detail_view', $range['from'], $range['to']);
         $applicationSubmits = $this->eventRepository->countByTypeBetween('application_submit', $range['from'], $range['to']);
+        $jobFunnel = $this->eventRepository->findJobFunnelBetween($range['from'], $range['to']);
 
         $totalJobs = $this->jobRepository->countAll();
         $activeJobs = $this->jobRepository->countActive();
@@ -56,6 +57,7 @@ class AnalyticsController extends ActionController
             'fromDate' => $range['from']->format('Y-m-d'),
             'toDate' => $range['to']->format('Y-m-d'),
             'queryParams' => $range['queryParams'],
+            'jobFunnel' => $this->formatJobFunnel($jobFunnel),
         ]);
 
         return new \TYPO3\CMS\Core\Http\HtmlResponse($view->render());
@@ -152,5 +154,19 @@ class AnalyticsController extends ActionController
         }
         $value = ($numerator / $denominator) * 100;
         return number_format($value, 1) . '%';
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $rows
+     * @return array<int, array<string, mixed>>
+     */
+    private function formatJobFunnel(array $rows): array
+    {
+        foreach ($rows as $index => $row) {
+            $detailViews = (int)($row['detail_views'] ?? 0);
+            $applications = (int)($row['applications'] ?? 0);
+            $rows[$index]['conversion'] = $this->formatPercent($applications, $detailViews);
+        }
+        return $rows;
     }
 }

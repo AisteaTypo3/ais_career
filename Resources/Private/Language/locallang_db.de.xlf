@@ -79,6 +79,26 @@
         <source>Contact email</source>
         <target>Kontakt-E-Mail</target>
       </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.contact_name">
+        <source>Contact name</source>
+        <target>Kontaktname</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.contact_title">
+        <source>Contact title</source>
+        <target>Kontakt-Titel</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.contact_phone">
+        <source>Contact phone</source>
+        <target>Kontakt-Telefon</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.contact_public_email">
+        <source>Contact email (public)</source>
+        <target>Kontakt-E-Mail (öffentlich)</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.contact_image">
+        <source>Contact image</source>
+        <target>Kontaktbild</target>
+      </trans-unit>
 
       <trans-unit id="tx_aiscareer_domain_model_application">
         <source>Application</source>

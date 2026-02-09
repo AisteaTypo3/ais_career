@@ -42,6 +42,15 @@
       <trans-unit id="job.section.applyNow">
         <source>Apply now</source>
       </trans-unit>
+      <trans-unit id="job.section.contact">
+        <source>Contact</source>
+      </trans-unit>
+      <trans-unit id="contact.phone">
+        <source>Phone</source>
+      </trans-unit>
+      <trans-unit id="contact.email">
+        <source>Email</source>
+      </trans-unit>
       <trans-unit id="job.button.viewDetails">
         <source>View details</source>
       </trans-unit>
@@ -152,6 +161,9 @@
       </trans-unit>
       <trans-unit id="analytics.conversionListApp">
         <source>List → Application</source>
+      </trans-unit>
+      <trans-unit id="analytics.funnelByJob">
+        <source>Funnel by job</source>
       </trans-unit>
       <trans-unit id="analytics.topJobs">
         <source>Top jobs by applications</source>

@@ -376,6 +376,70 @@
   box-shadow: var(--aiscareer-shadow);
 }
 
+.aiscareer .aiscareer-contact-card {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 18px;
+  align-items: center;
+}
+
+.aiscareer .aiscareer-contact-image img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 1px solid var(--aiscareer-border);
+  box-shadow: var(--aiscareer-shadow);
+}
+
+.aiscareer .aiscareer-contact-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--aiscareer-primary);
+}
+
+.aiscareer .aiscareer-contact-title {
+  font-size: 14px;
+  color: var(--aiscareer-muted);
+  margin-top: 4px;
+}
+
+.aiscareer .aiscareer-contact-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.aiscareer .aiscareer-contact-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--aiscareer-muted);
+  font-weight: 700;
+}
+
+.aiscareer .aiscareer-contact-link {
+  color: var(--aiscareer-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.aiscareer .aiscareer-contact-link:hover {
+  color: var(--aiscareer-accent);
+}
+
+@media (max-width: 640px) {
+  .aiscareer .aiscareer-contact-card {
+    grid-template-columns: 1fr;
+  }
+  .aiscareer .aiscareer-contact-image img {
+    width: 120px;
+    height: 120px;
+  }
+}
+
 .aiscareer .aiscareer-section ul {
   margin: 12px 0 0;
   padding-left: 20px;

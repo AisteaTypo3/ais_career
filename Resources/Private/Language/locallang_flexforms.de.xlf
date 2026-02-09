@@ -96,6 +96,26 @@
         <source>List page UID</source>
         <target>Listenseiten-UID</target>
       </trans-unit>
+      <trans-unit id="jobdetail.contactDefaultName">
+        <source>Default contact name</source>
+        <target>Standard-Kontaktname</target>
+      </trans-unit>
+      <trans-unit id="jobdetail.contactDefaultTitle">
+        <source>Default contact title</source>
+        <target>Standard-Kontakttitel</target>
+      </trans-unit>
+      <trans-unit id="jobdetail.contactDefaultPhone">
+        <source>Default contact phone</source>
+        <target>Standard-Kontakttelefon</target>
+      </trans-unit>
+      <trans-unit id="jobdetail.contactDefaultEmail">
+        <source>Default contact email</source>
+        <target>Standard-Kontakt-E-Mail</target>
+      </trans-unit>
+      <trans-unit id="jobdetail.contactDefaultImage">
+        <source>Default contact image</source>
+        <target>Standard-Kontaktbild</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
