@@ -287,7 +287,7 @@ return [
             'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.attachments',
             'config' => [
                 'type' => 'file',
-                'allowed' => '*',
+                'allowed' => 'pdf,doc,docx,jpg,jpeg,png,webp,svg,gif',
                 'maxitems' => 10,
                 'appearance' => [
                     'createNewRelationLinkTitle' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.addFileReference',
