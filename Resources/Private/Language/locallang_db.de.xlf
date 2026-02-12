@@ -51,6 +51,42 @@
         <source>Contract type</source>
         <target>Vertragsart</target>
       </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_min">
+        <source>Salary min</source>
+        <target>Gehalt min</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_max">
+        <source>Salary max</source>
+        <target>Gehalt max</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_currency">
+        <source>Salary currency</source>
+        <target>Gehaltswährung</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_period">
+        <source>Salary period</source>
+        <target>Gehaltsperiode</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_period.hour">
+        <source>Per hour</source>
+        <target>Pro Stunde</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_period.day">
+        <source>Per day</source>
+        <target>Pro Tag</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_period.week">
+        <source>Per week</source>
+        <target>Pro Woche</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_period.month">
+        <source>Per month</source>
+        <target>Pro Monat</target>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_period.year">
+        <source>Per year</source>
+        <target>Pro Jahr</target>
+      </trans-unit>
       <trans-unit id="tx_aiscareer_domain_model_job.remote_possible">
         <source>Remote possible</source>
         <target>Remote möglich</target>

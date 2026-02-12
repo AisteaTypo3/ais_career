@@ -952,6 +952,24 @@ class JobController extends ActionController
         if ($job->getContractType() !== '') {
             $data['employmentType'] = $job->getContractType();
         }
+        if ($job->hasSalary() && $job->getSalaryCurrency() !== '') {
+            $quantitativeValue = [
+                '@type' => 'QuantitativeValue',
+                'unitText' => $this->mapSalaryPeriodToUnitText($job->getSalaryPeriod()),
+            ];
+            if ($job->getSalaryMin() > 0) {
+                $quantitativeValue['minValue'] = $job->getSalaryMin();
+            }
+            if ($job->getSalaryMax() > 0) {
+                $quantitativeValue['maxValue'] = $job->getSalaryMax();
+            }
+
+            $data['baseSalary'] = [
+                '@type' => 'MonetaryAmount',
+                'currency' => $job->getSalaryCurrency(),
+                'value' => $quantitativeValue,
+            ];
+        }
         if ($job->getPublishedFrom() instanceof \DateTime) {
             $data['datePosted'] = $job->getPublishedFrom()->format('Y-m-d');
         }
@@ -1003,6 +1021,17 @@ class JobController extends ActionController
         }
 
         return (string)json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
+
+    private function mapSalaryPeriodToUnitText(string $period): string
+    {
+        return match (strtolower($period)) {
+            'hour' => 'HOUR',
+            'day' => 'DAY',
+            'week' => 'WEEK',
+            'month' => 'MONTH',
+            default => 'YEAR',
+        };
     }
 
     private function addAssets(): void

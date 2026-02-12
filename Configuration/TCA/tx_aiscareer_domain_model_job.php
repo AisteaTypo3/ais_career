@@ -30,7 +30,7 @@ return [
         '1' => [
             'showitem' => '
                 --div--;General, sys_language_uid, l10n_parent, l10n_source, title, reference, slug, is_active, categories,
-                --div--;Location, country, city, location_label, department, contract_type, remote_possible,
+                --div--;Location, country, city, location_label, department, contract_type, salary_min, salary_max, salary_currency, salary_period, remote_possible,
                 --div--;Publishing, employment_start, published_from, published_to,
                 --div--;Content, description, responsibilities, qualifications, benefits,
                 --div--;Media, attachments,
@@ -213,6 +213,57 @@ return [
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim',
+            ],
+        ],
+        'salary_min' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.salary_min',
+            'config' => [
+                'type' => 'number',
+                'format' => 'decimal',
+                'default' => 0,
+                'range' => [
+                    'lower' => 0,
+                ],
+            ],
+        ],
+        'salary_max' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.salary_max',
+            'config' => [
+                'type' => 'number',
+                'format' => 'decimal',
+                'default' => 0,
+                'range' => [
+                    'lower' => 0,
+                ],
+            ],
+        ],
+        'salary_currency' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.salary_currency',
+            'config' => [
+                'type' => 'input',
+                'eval' => 'trim,upper',
+                'size' => 8,
+                'max' => 8,
+                'default' => 'EUR',
+            ],
+        ],
+        'salary_period' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.salary_period',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'default' => 'year',
+                'items' => [
+                    ['LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.salary_period.hour', 'hour'],
+                    ['LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.salary_period.day', 'day'],
+                    ['LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.salary_period.week', 'week'],
+                    ['LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.salary_period.month', 'month'],
+                    ['LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.salary_period.year', 'year'],
+                ],
             ],
         ],
         'remote_possible' => [

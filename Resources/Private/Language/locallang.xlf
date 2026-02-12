@@ -24,6 +24,24 @@
       <trans-unit id="job.meta.remote">
         <source>Remote</source>
       </trans-unit>
+      <trans-unit id="job.meta.salary">
+        <source>Salary</source>
+      </trans-unit>
+      <trans-unit id="job.salary.period.hour">
+        <source>per hour</source>
+      </trans-unit>
+      <trans-unit id="job.salary.period.day">
+        <source>per day</source>
+      </trans-unit>
+      <trans-unit id="job.salary.period.week">
+        <source>per week</source>
+      </trans-unit>
+      <trans-unit id="job.salary.period.month">
+        <source>per month</source>
+      </trans-unit>
+      <trans-unit id="job.salary.period.year">
+        <source>per year</source>
+      </trans-unit>
       <trans-unit id="job.section.description">
         <source>Description</source>
       </trans-unit>

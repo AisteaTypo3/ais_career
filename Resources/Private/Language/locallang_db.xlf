@@ -39,6 +39,33 @@
       <trans-unit id="tx_aiscareer_domain_model_job.contract_type">
         <source>Contract type</source>
       </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_min">
+        <source>Salary min</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_max">
+        <source>Salary max</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_currency">
+        <source>Salary currency</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_period">
+        <source>Salary period</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_period.hour">
+        <source>Per hour</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_period.day">
+        <source>Per day</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_period.week">
+        <source>Per week</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_period.month">
+        <source>Per month</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.salary_period.year">
+        <source>Per year</source>
+      </trans-unit>
       <trans-unit id="tx_aiscareer_domain_model_job.remote_possible">
         <source>Remote possible</source>
       </trans-unit>

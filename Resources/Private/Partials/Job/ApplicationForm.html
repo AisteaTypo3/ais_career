@@ -9,7 +9,7 @@
     </ul>
   </f:if>
 
-  <f:form action="apply" name="application" object="{application}" arguments="{job: job}" enctype="multipart/form-data" class="aiscareer-form">
+  <f:form action="apply" name="application" object="{application}" arguments="{job: job}" enctype="multipart/form-data" class="aiscareer-form" data-draft-scope="job-{job.uid}">
     <div class="aiscareer-honeypot" aria-hidden="true">
       <label for="aiscareer-website">Website</label>
       <f:form.textfield id="aiscareer-website" name="antiBot[website]" value="" />

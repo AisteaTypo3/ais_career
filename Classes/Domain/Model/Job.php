@@ -23,6 +23,10 @@ class Job extends AbstractEntity
     protected string $locationLabel = '';
     protected string $department = '';
     protected string $contractType = '';
+    protected float $salaryMin = 0.0;
+    protected float $salaryMax = 0.0;
+    protected string $salaryCurrency = '';
+    protected string $salaryPeriod = 'year';
     protected bool $remotePossible = false;
     protected ?\DateTime $employmentStart = null;
     protected ?\DateTime $publishedFrom = null;
@@ -175,6 +179,72 @@ class Job extends AbstractEntity
     public function setContractType(string $contractType): void
     {
         $this->contractType = $contractType;
+    }
+
+    public function getSalaryMin(): float
+    {
+        return $this->salaryMin;
+    }
+
+    public function setSalaryMin(float $salaryMin): void
+    {
+        $this->salaryMin = max(0.0, $salaryMin);
+    }
+
+    public function getSalaryMax(): float
+    {
+        return $this->salaryMax;
+    }
+
+    public function setSalaryMax(float $salaryMax): void
+    {
+        $this->salaryMax = max(0.0, $salaryMax);
+    }
+
+    public function getSalaryCurrency(): string
+    {
+        return strtoupper(trim($this->salaryCurrency));
+    }
+
+    public function setSalaryCurrency(string $salaryCurrency): void
+    {
+        $this->salaryCurrency = strtoupper(trim($salaryCurrency));
+    }
+
+    public function getSalaryPeriod(): string
+    {
+        $period = strtolower(trim($this->salaryPeriod));
+        return in_array($period, ['hour', 'day', 'week', 'month', 'year'], true) ? $period : 'year';
+    }
+
+    public function setSalaryPeriod(string $salaryPeriod): void
+    {
+        $period = strtolower(trim($salaryPeriod));
+        $this->salaryPeriod = in_array($period, ['hour', 'day', 'week', 'month', 'year'], true) ? $period : 'year';
+    }
+
+    public function hasSalary(): bool
+    {
+        return $this->salaryMin > 0.0 || $this->salaryMax > 0.0;
+    }
+
+    public function getSalaryDisplayValue(): string
+    {
+        if (!$this->hasSalary()) {
+            return '';
+        }
+
+        $currency = $this->getSalaryCurrency();
+        $min = $this->salaryMin > 0.0 ? number_format($this->salaryMin, 0, '.', ',') : '';
+        $max = $this->salaryMax > 0.0 ? number_format($this->salaryMax, 0, '.', ',') : '';
+
+        if ($min !== '' && $max !== '') {
+            $value = $min . ' - ' . $max;
+        } else {
+            $value = $min !== '' ? $min : $max;
+        }
+
+        return trim(($currency !== '' ? $currency . ' ' : '') . $value);
     }
 
     public function isRemotePossible(): bool

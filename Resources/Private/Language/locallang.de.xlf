@@ -31,6 +31,30 @@
         <source>Remote</source>
         <target>Remote</target>
       </trans-unit>
+      <trans-unit id="job.meta.salary">
+        <source>Salary</source>
+        <target>Gehalt</target>
+      </trans-unit>
+      <trans-unit id="job.salary.period.hour">
+        <source>per hour</source>
+        <target>pro Stunde</target>
+      </trans-unit>
+      <trans-unit id="job.salary.period.day">
+        <source>per day</source>
+        <target>pro Tag</target>
+      </trans-unit>
+      <trans-unit id="job.salary.period.week">
+        <source>per week</source>
+        <target>pro Woche</target>
+      </trans-unit>
+      <trans-unit id="job.salary.period.month">
+        <source>per month</source>
+        <target>pro Monat</target>
+      </trans-unit>
+      <trans-unit id="job.salary.period.year">
+        <source>per year</source>
+        <target>pro Jahr</target>
+      </trans-unit>
       <trans-unit id="job.section.description">
         <source>Description</source>
         <target>Beschreibung</target>

@@ -292,6 +292,184 @@
     });
   }
 
+  function bindApplicationDraft() {
+    var form = document.querySelector('.aiscareer-form');
+    if (!form) {
+      return;
+    }
+
+    var scope = form.getAttribute('data-draft-scope') || 'default';
+    var draftKey = 'aiscareerApplicationDraft:' + scope;
+    var detail = document.querySelector('.aiscareer-detail');
+    var success = detail && detail.getAttribute('data-application-success') === '1';
+    var optInState = detail ? (detail.getAttribute('data-optin-state') || '') : '';
+
+    if (success || optInState === 'pending' || optInState === 'confirmed') {
+      try {
+        localStorage.removeItem(draftKey);
+      } catch (e) {
+        // ignore storage errors
+      }
+      return;
+    }
+
+    function isDraftField(control) {
+      if (!control || !control.name) {
+        return false;
+      }
+      if (control.name.indexOf('antiBot[') === 0) {
+        return false;
+      }
+      var type = (control.type || '').toLowerCase();
+      if (type === 'file' || type === 'hidden' || type === 'submit' || type === 'button' || type === 'reset') {
+        return false;
+      }
+      return true;
+    }
+
+    function getControls(name) {
+      var named = form.elements.namedItem(name);
+      if (!named) {
+        return [];
+      }
+      if (typeof named.length === 'number' && !named.tagName) {
+        return Array.prototype.slice.call(named);
+      }
+      return [named];
+    }
+
+    function readValue(name) {
+      var controls = getControls(name);
+      if (!controls.length) {
+        return null;
+      }
+      var first = controls[0];
+      var type = (first.type || '').toLowerCase();
+
+      if (type === 'checkbox') {
+        if (controls.length === 1) {
+          return !!first.checked;
+        }
+        return controls.filter(function (el) { return el.checked; }).map(function (el) { return el.value; });
+      }
+      if (type === 'radio') {
+        var selected = controls.find(function (el) { return el.checked; });
+        return selected ? selected.value : '';
+      }
+      return first.value || '';
+    }
+
+    function isEmpty(name) {
+      var controls = getControls(name);
+      if (!controls.length) {
+        return true;
+      }
+      var first = controls[0];
+      var type = (first.type || '').toLowerCase();
+
+      if (type === 'checkbox') {
+        return !controls.some(function (el) { return el.checked; });
+      }
+      if (type === 'radio') {
+        return !controls.some(function (el) { return el.checked; });
+      }
+      return !first.value;
+    }
+
+    function applyValue(name, value) {
+      var controls = getControls(name);
+      if (!controls.length) {
+        return;
+      }
+      var first = controls[0];
+      var type = (first.type || '').toLowerCase();
+
+      if (type === 'checkbox') {
+        if (controls.length === 1) {
+          controls[0].checked = !!value;
+          return;
+        }
+        var selectedValues = Array.isArray(value) ? value.map(String) : [];
+        controls.forEach(function (el) {
+          el.checked = selectedValues.indexOf(String(el.value)) !== -1;
+        });
+        return;
+      }
+      if (type === 'radio') {
+        controls.forEach(function (el) {
+          el.checked = String(el.value) === String(value);
+        });
+        return;
+      }
+      first.value = typeof value === 'string' ? value : '';
+    }
+
+    function collectDraft() {
+      var draft = {};
+      var seen = {};
+      var controls = form.querySelectorAll('input[name], textarea[name], select[name]');
+      controls.forEach(function (control) {
+        if (!isDraftField(control) || seen[control.name]) {
+          return;
+        }
+        seen[control.name] = true;
+        draft[control.name] = readValue(control.name);
+      });
+      return draft;
+    }
+
+    function saveDraft() {
+      var draft = collectDraft();
+      try {
+        localStorage.setItem(draftKey, JSON.stringify(draft));
+      } catch (e) {
+        // ignore storage errors
+      }
+    }
+
+    function restoreDraft() {
+      var raw = null;
+      try {
+        raw = localStorage.getItem(draftKey);
+      } catch (e) {
+        raw = null;
+      }
+      if (!raw) {
+        return;
+      }
+
+      var draft = null;
+      try {
+        draft = JSON.parse(raw);
+      } catch (e) {
+        draft = null;
+      }
+      if (!draft || typeof draft !== 'object') {
+        return;
+      }
+
+      Object.keys(draft).forEach(function (name) {
+        if (!isEmpty(name)) {
+          return;
+        }
+        applyValue(name, draft[name]);
+      });
+    }
+
+    restoreDraft();
+
+    var saveTimer = 0;
+    function scheduleSave() {
+      if (saveTimer) {
+        window.clearTimeout(saveTimer);
+      }
+      saveTimer = window.setTimeout(saveDraft, 250);
+    }
+
+    form.addEventListener('input', scheduleSave);
+    form.addEventListener('change', scheduleSave);
+  }
+
   // Fertige Lösung: verfügbare Länder im SVG markieren + beim Klick Country-Filter (Select) setzen
   function highlightAvailableCountries() {
     // Dropdown-Element holen (im Haupt-DOM)
@@ -459,11 +637,13 @@
       bindViewToggle();
       bindMapControls();
       highlightAvailableCountries();
+      bindApplicationDraft();
     });
   } else {
     bindFilterForm();
     bindViewToggle();
     bindMapControls();
     highlightAvailableCountries();
+    bindApplicationDraft();
   }
 })();
