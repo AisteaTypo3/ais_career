@@ -63,6 +63,24 @@
       <trans-unit id="job.section.contact">
         <source>Contact</source>
       </trans-unit>
+      <trans-unit id="job.section.share">
+        <source>Share this job</source>
+      </trans-unit>
+      <trans-unit id="job.share.copy">
+        <source>Copy link</source>
+      </trans-unit>
+      <trans-unit id="job.share.copied">
+        <source>Link copied.</source>
+      </trans-unit>
+      <trans-unit id="job.share.copyError">
+        <source>Could not copy link.</source>
+      </trans-unit>
+      <trans-unit id="job.share.email">
+        <source>Email</source>
+      </trans-unit>
+      <trans-unit id="job.share.mailSubject">
+        <source>Check out this job posting</source>
+      </trans-unit>
       <trans-unit id="contact.phone">
         <source>Phone</source>
       </trans-unit>
@@ -153,6 +171,18 @@
       <trans-unit id="analytics.jobs">
         <source>Jobs</source>
       </trans-unit>
+      <trans-unit id="analytics.tab.overview">
+        <source>Overview</source>
+      </trans-unit>
+      <trans-unit id="analytics.tab.traffic">
+        <source>Traffic</source>
+      </trans-unit>
+      <trans-unit id="analytics.tab.shares">
+        <source>Shares</source>
+      </trans-unit>
+      <trans-unit id="analytics.tab.jobs">
+        <source>Jobs</source>
+      </trans-unit>
       <trans-unit id="analytics.traffic">
         <source>Traffic</source>
       </trans-unit>
@@ -164,6 +194,33 @@
       </trans-unit>
       <trans-unit id="analytics.applicationsRange">
         <source>Applications</source>
+      </trans-unit>
+      <trans-unit id="analytics.shareTotal">
+        <source>Total shares</source>
+      </trans-unit>
+      <trans-unit id="analytics.shareCopy">
+        <source>Shares via Copy link</source>
+      </trans-unit>
+      <trans-unit id="analytics.shareEmail">
+        <source>Shares via Email</source>
+      </trans-unit>
+      <trans-unit id="analytics.shareLinkedin">
+        <source>Shares via LinkedIn</source>
+      </trans-unit>
+      <trans-unit id="analytics.shareWhatsapp">
+        <source>Shares via WhatsApp</source>
+      </trans-unit>
+      <trans-unit id="analytics.shareX">
+        <source>Shares via X</source>
+      </trans-unit>
+      <trans-unit id="analytics.sharesByJob">
+        <source>Shares by job</source>
+      </trans-unit>
+      <trans-unit id="analytics.sharesByChannel">
+        <source>Shares by channel</source>
+      </trans-unit>
+      <trans-unit id="analytics.exportCsv">
+        <source>Export CSV</source>
       </trans-unit>
       <trans-unit id="analytics.inRange">
         <source>In selected range</source>

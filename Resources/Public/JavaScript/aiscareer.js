@@ -300,6 +300,9 @@
 
     var scope = form.getAttribute('data-draft-scope') || 'default';
     var draftKey = 'aiscareerApplicationDraft:' + scope;
+    var expiryDaysRaw = parseInt(form.getAttribute('data-draft-expiry-days') || '7', 10);
+    var expiryDays = isNaN(expiryDaysRaw) || expiryDaysRaw <= 0 ? 7 : expiryDaysRaw;
+    var expiryMs = expiryDays * 24 * 60 * 60 * 1000;
     var detail = document.querySelector('.aiscareer-detail');
     var success = detail && detail.getAttribute('data-application-success') === '1';
     var optInState = detail ? (detail.getAttribute('data-optin-state') || '') : '';
@@ -421,7 +424,10 @@
     function saveDraft() {
       var draft = collectDraft();
       try {
-        localStorage.setItem(draftKey, JSON.stringify(draft));
+        localStorage.setItem(draftKey, JSON.stringify({
+          savedAt: Date.now(),
+          data: draft
+        }));
       } catch (e) {
         // ignore storage errors
       }
@@ -438,15 +444,27 @@
         return;
       }
 
-      var draft = null;
+      var payload = null;
       try {
-        draft = JSON.parse(raw);
+        payload = JSON.parse(raw);
       } catch (e) {
-        draft = null;
+        payload = null;
       }
-      if (!draft || typeof draft !== 'object') {
+      if (!payload || typeof payload !== 'object') {
         return;
       }
+
+      var savedAt = typeof payload.savedAt === 'number' ? payload.savedAt : 0;
+      if (savedAt > 0 && Date.now() - savedAt > expiryMs) {
+        try {
+          localStorage.removeItem(draftKey);
+        } catch (e) {
+          // ignore storage errors
+        }
+        return;
+      }
+
+      var draft = payload.data && typeof payload.data === 'object' ? payload.data : payload;
 
       Object.keys(draft).forEach(function (name) {
         if (!isEmpty(name)) {
@@ -468,6 +486,133 @@
 
     form.addEventListener('input', scheduleSave);
     form.addEventListener('change', scheduleSave);
+  }
+
+  function bindShareActions() {
+    var detail = document.querySelector('.aiscareer-detail');
+    var copyButton = document.querySelector('.aiscareer-share-copy');
+    if (!copyButton) {
+      return;
+    }
+
+    var feedback = document.querySelector('.aiscareer-share-feedback');
+    var trackUrl = detail ? (detail.getAttribute('data-share-track-url') || '') : '';
+    var shareUrl = copyButton.getAttribute('data-share-url') || '';
+    if (!shareUrl) {
+      shareUrl = detail ? (detail.getAttribute('data-current-url') || window.location.href) : window.location.href;
+    }
+
+    function setFeedback(message) {
+      if (!feedback) {
+        return;
+      }
+      feedback.textContent = message;
+    }
+
+    function showToast(message, isError) {
+      if (!message) {
+        return;
+      }
+      var toast = document.createElement('div');
+      toast.className = 'aiscareer-toast' + (isError ? ' is-error' : '');
+      toast.textContent = message;
+      document.body.appendChild(toast);
+
+      window.requestAnimationFrame(function () {
+        toast.classList.add('is-visible');
+      });
+
+      window.setTimeout(function () {
+        toast.classList.remove('is-visible');
+        window.setTimeout(function () {
+          if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+          }
+        }, 180);
+      }, 2000);
+    }
+
+    function trackShare(channel) {
+      if (!trackUrl || !channel) {
+        return;
+      }
+      var payload = new URLSearchParams();
+      payload.append('channel', channel);
+
+      if (navigator.sendBeacon) {
+        try {
+          navigator.sendBeacon(trackUrl, payload);
+          return;
+        } catch (e) {
+          // fall back to fetch
+        }
+      }
+
+      fetch(trackUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: payload.toString(),
+        keepalive: true,
+        credentials: 'same-origin'
+      }).catch(function () {
+        // ignore tracking errors
+      });
+    }
+
+    var shareButtons = document.querySelectorAll('.aiscareer-share-icon-btn[data-share-channel]');
+    shareButtons.forEach(function (el) {
+      if (el.classList.contains('aiscareer-share-copy')) {
+        return;
+      }
+      el.addEventListener('click', function () {
+        var channel = el.getAttribute('data-share-channel') || '';
+        trackShare(channel);
+      });
+    });
+
+    copyButton.addEventListener('click', function () {
+      var copiedText = copyButton.getAttribute('data-copied-text') || 'Link copied.';
+      var errorText = copyButton.getAttribute('data-copy-error-text') || 'Copy failed.';
+      trackShare(copyButton.getAttribute('data-share-channel') || 'copy');
+      if (!shareUrl) {
+        setFeedback(errorText);
+        showToast(errorText, true);
+        return;
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(shareUrl)
+          .then(function () {
+            setFeedback(copiedText);
+            showToast(copiedText, false);
+          })
+          .catch(function () {
+            setFeedback(errorText);
+            showToast(errorText, true);
+          });
+        return;
+      }
+
+      try {
+        var textarea = document.createElement('textarea');
+        textarea.value = shareUrl;
+        textarea.setAttribute('readonly', 'readonly');
+        textarea.style.position = 'absolute';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        var ok = document.execCommand('copy');
+        document.body.removeChild(textarea);
+        setFeedback(ok ? copiedText : errorText);
+        showToast(ok ? copiedText : errorText, !ok);
+      } catch (e) {
+        setFeedback(errorText);
+        showToast(errorText, true);
+      }
+    });
   }
 
   // Fertige Lösung: verfügbare Länder im SVG markieren + beim Klick Country-Filter (Select) setzen
@@ -638,6 +783,7 @@
       bindMapControls();
       highlightAvailableCountries();
       bindApplicationDraft();
+      bindShareActions();
     });
   } else {
     bindFilterForm();
@@ -645,5 +791,6 @@
     bindMapControls();
     highlightAvailableCountries();
     bindApplicationDraft();
+    bindShareActions();
   }
 })();

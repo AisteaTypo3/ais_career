@@ -22,6 +22,7 @@ plugin.tx_aiscareer {
     applicationSave = {$plugin.tx_aiscareer.settings.applicationSave}
     applicationDoubleOptInEnabled = {$plugin.tx_aiscareer.settings.applicationDoubleOptInEnabled}
     applicationConfirmationEnabled = {$plugin.tx_aiscareer.settings.applicationConfirmationEnabled}
+    applicationDraftExpiryDays = {$plugin.tx_aiscareer.settings.applicationDraftExpiryDays}
     maxUploadSizeMB = {$plugin.tx_aiscareer.settings.maxUploadSizeMB}
     maxTotalUploadSizeMB = {$plugin.tx_aiscareer.settings.maxTotalUploadSizeMB}
     allowedExtensions = {$plugin.tx_aiscareer.settings.allowedExtensions}

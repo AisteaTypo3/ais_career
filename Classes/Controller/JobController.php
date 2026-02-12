@@ -20,6 +20,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Core\Http\JsonResponse;
 use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
@@ -277,6 +278,47 @@ class JobController extends ActionController
         $this->sendApplicationMail($job, $application);
 
         return $this->renderShow($job, $application, [], false, 'confirmed');
+    }
+
+    public function shareEventAction(Job $job): ResponseInterface
+    {
+        if (!$this->jobRepository->isJobVisible($job)) {
+            return new JsonResponse(['status' => 'ignored'], 404);
+        }
+
+        $channel = $this->resolveShareChannelFromRequest();
+        $eventType = match ($channel) {
+            'copy' => 'share_copy',
+            'email' => 'share_email',
+            'linkedin' => 'share_linkedin',
+            'whatsapp' => 'share_whatsapp',
+            'x' => 'share_x',
+            default => '',
+        };
+
+        if ($eventType !== '') {
+            $this->safeAddEvent($eventType, $job);
+        }
+
+        return new JsonResponse(['status' => 'ok']);
+    }
+
+    private function resolveShareChannelFromRequest(): string
+    {
+        if ($this->request->hasArgument('channel')) {
+            return strtolower(trim((string)$this->request->getArgument('channel')));
+        }
+
+        $httpRequest = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if ($httpRequest instanceof ServerRequestInterface) {
+            $body = (array)$httpRequest->getParsedBody();
+            $query = (array)$httpRequest->getQueryParams();
+            $raw = $body['tx_aiscareer_jobdetail']['channel'] ?? $body['channel']
+                ?? $query['tx_aiscareer_jobdetail']['channel'] ?? $query['channel'] ?? '';
+            return strtolower(trim((string)$raw));
+        }
+
+        return '';
     }
 
     private function collectFilterOptions(): array
@@ -910,6 +952,7 @@ class JobController extends ActionController
             'optInState' => $optInState,
             'formTimestamp' => (new \DateTime())->getTimestamp(),
             'jobPostingJsonLd' => $jobPostingJsonLd,
+            'currentUrl' => $this->getCurrentRequestUrl(),
             'listPid' => $listPid,
             'settings' => $this->settings,
             'contact' => $contact,
@@ -1021,6 +1064,15 @@ class JobController extends ActionController
         }
 
         return (string)json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
+
+    private function getCurrentRequestUrl(): string
+    {
+        $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if ($request instanceof ServerRequestInterface) {
+            return (string)$request->getUri();
+        }
+        return '';
     }
 
     private function mapSalaryPeriodToUnitText(string $period): string

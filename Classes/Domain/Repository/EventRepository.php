@@ -110,4 +110,49 @@ class EventRepository
             ->executeQuery()
             ->fetchAllAssociative();
     }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function findJobSharesBetween(\DateTime $from, \DateTime $to): array
+    {
+        $fromTs = (int)$from->format('U');
+        $toTs = (int)$to->format('U');
+        $shareTypes = ['share_copy', 'share_email', 'share_linkedin', 'share_whatsapp', 'share_x'];
+
+        $qb = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_aiscareer_event');
+        $qb->getRestrictions()->removeAll();
+
+        return $qb
+            ->select('j.uid AS job_uid', 'j.title AS job_title')
+            ->addSelectLiteral('SUM(CASE WHEN e.event_type = \'share_copy\' THEN 1 ELSE 0 END) AS shares_copy')
+            ->addSelectLiteral('SUM(CASE WHEN e.event_type = \'share_email\' THEN 1 ELSE 0 END) AS shares_email')
+            ->addSelectLiteral('SUM(CASE WHEN e.event_type = \'share_linkedin\' THEN 1 ELSE 0 END) AS shares_linkedin')
+            ->addSelectLiteral('SUM(CASE WHEN e.event_type = \'share_whatsapp\' THEN 1 ELSE 0 END) AS shares_whatsapp')
+            ->addSelectLiteral('SUM(CASE WHEN e.event_type = \'share_x\' THEN 1 ELSE 0 END) AS shares_x')
+            ->addSelectLiteral('COUNT(e.uid) AS shares_total')
+            ->from('tx_aiscareer_event', 'e')
+            ->innerJoin(
+                'e',
+                'tx_aiscareer_domain_model_job',
+                'j',
+                $qb->expr()->eq('e.job', $qb->quoteIdentifier('j.uid'))
+            )
+            ->where(
+                $qb->expr()->eq('e.deleted', 0),
+                $qb->expr()->eq('j.deleted', 0),
+                $qb->expr()->eq('j.hidden', 0),
+                $qb->expr()->gt('e.job', 0),
+                $qb->expr()->in('e.event_type', $qb->createNamedParameter($shareTypes, ArrayParameterType::STRING)),
+                $qb->expr()->gte('e.created_at', $qb->createNamedParameter($fromTs, ParameterType::INTEGER)),
+                $qb->expr()->lte('e.created_at', $qb->createNamedParameter($toTs, ParameterType::INTEGER))
+            )
+            ->groupBy('j.uid', 'j.title')
+            ->orderBy('shares_total', 'DESC')
+            ->addOrderBy('shares_linkedin', 'DESC')
+            ->addOrderBy('shares_whatsapp', 'DESC')
+            ->executeQuery()
+            ->fetchAllAssociative();
+    }
 }

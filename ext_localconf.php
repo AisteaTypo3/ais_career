@@ -32,10 +32,10 @@ call_user_func(static function (): void {
         'AisCareer',
         'JobDetail',
         [
-            Aistea\AisCareer\Controller\JobController::class => 'show,apply,confirm',
+            Aistea\AisCareer\Controller\JobController::class => 'show,apply,confirm,shareEvent',
         ],
         [
-            Aistea\AisCareer\Controller\JobController::class => 'apply,confirm',
+            Aistea\AisCareer\Controller\JobController::class => 'apply,confirm,shareEvent',
         ]
     );
 

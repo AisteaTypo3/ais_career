@@ -4,12 +4,15 @@ TYPO3 v13 LTS Extbase/Fluid extension for job listings and applications.
 
 ## Features
 - Job list with filters and interactive world map
-- Job detail with optional application form
+- Job detail with optional application form and inline share actions
 - Email notifications and optional application persistence
 - HTML email notifications
 - Inline form validation + basic anti-bot checks
+- Application draft autosave (browser local storage) with configurable expiry
+- Structured salary fields (min/max/currency/period) with frontend output + JobPosting JSON-LD
 - Clean routing with slug-based URLs
 - AJAX filtering without page reload
+- Backend analytics with tabs, share tracking, and CSV exports
 
 ## Installation
 1. Add the package to your project (local path or VCS):
@@ -54,6 +57,7 @@ plugin.tx_aiscareer.settings {
   applicationEnabled = 1
   applicationToEmail = hr@example.com
   applicationFromEmail = no-reply@example.com
+  applicationDraftExpiryDays = 7
   maxUploadSizeMB = 5
   maxTotalUploadSizeMB = 10
   allowedExtensions = pdf,png,jpg,jpeg
@@ -98,9 +102,33 @@ To run this automatically with the TYPO3 Scheduler:
 - `applicationEnabled`
 - `applicationToEmail`
 - `applicationFromEmail`
+- `applicationDraftExpiryDays`
 - `maxUploadSizeMB`
 - `allowedExtensions`
 - `privacyPageUid`
+- `contactDefault*` fallback fields
+
+## Salary Fields
+Job records support:
+- `salary_min`
+- `salary_max`
+- `salary_currency` (e.g. `EUR`)
+- `salary_period` (`hour`, `day`, `week`, `month`, `year`)
+
+The values are shown on list/detail pages and included in JobPosting JSON-LD (`baseSalary`) when present.
+
+## Share Tracking
+Detail page share actions (Copy, Email, LinkedIn, WhatsApp, X) are tracked as analytics events:
+- `share_copy`
+- `share_email`
+- `share_linkedin`
+- `share_whatsapp`
+- `share_x`
+
+In Backend Analytics:
+- “Shares by channel” card (mini bars)
+- “Shares by job” table
+- CSV export buttons for shares/jobs/funnel tables
 
 ## Anti-bot (internal)
 The form includes an internal anti-bot layer (honeypot, timing window, rate limiting).

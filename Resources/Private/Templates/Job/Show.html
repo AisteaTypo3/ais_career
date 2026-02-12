@@ -4,7 +4,7 @@
 <f:section name="Main">
   <div class="aiscareer">
     <div class="aiscareer-container">
-      <div class="aiscareer-detail" data-application-success="{f:if(condition: applicationSuccess, then: '1', else: '0')}" data-optin-state="{optInState}" data-job-uid="{job.uid}">
+      <div class="aiscareer-detail" data-application-success="{f:if(condition: applicationSuccess, then: '1', else: '0')}" data-optin-state="{optInState}" data-job-uid="{job.uid}" data-current-url="{currentUrl}" data-share-track-url="{f:uri.action(action: 'shareEvent', arguments: {job: job})}">
         <f:if condition="{listPid}">
           <div class="aiscareer-back">
             <f:link.page pageUid="{listPid}" class="aiscareer-back-link">
@@ -44,7 +44,28 @@
           </div>
         </f:if>
         <div class="aiscareer-section">
-          <h1>{job.title}</h1>
+          <div class="aiscareer-titlebar">
+            <h1>{job.title}</h1>
+            <f:if condition="{currentUrl}">
+              <div class="aiscareer-share-inline">
+                <button type="button" class="aiscareer-share-icon-btn aiscareer-share-copy aiscareer-share-copy-icon" data-share-channel="copy" data-share-url="{currentUrl}" data-copied-text="{f:translate(key: 'job.share.copied', extensionName: 'AisCareer')}" data-copy-error-text="{f:translate(key: 'job.share.copyError', extensionName: 'AisCareer')}" title="{f:translate(key: 'job.share.copy', extensionName: 'AisCareer')}">
+                  <span class="aiscareer-sr-only"><f:translate key="job.share.copy" extensionName="AisCareer" /></span>
+                </button>
+                <a class="aiscareer-share-icon-btn aiscareer-share-mail-icon" data-share-channel="email" href="mailto:?subject={f:translate(key: 'job.share.mailSubject', extensionName: 'AisCareer') -> f:format.urlencode()}&body={currentUrl -> f:format.urlencode()}" title="{f:translate(key: 'job.share.email', extensionName: 'AisCareer')}" aria-label="{f:translate(key: 'job.share.email', extensionName: 'AisCareer')}">
+                  <span class="aiscareer-sr-only"><f:translate key="job.share.email" extensionName="AisCareer" /></span>
+                </a>
+                <a class="aiscareer-share-icon-btn aiscareer-share-linkedin-icon" data-share-channel="linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url={currentUrl -> f:format.urlencode()}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
+                  <span class="aiscareer-sr-only">LinkedIn</span>
+                </a>
+                <a class="aiscareer-share-icon-btn aiscareer-share-whatsapp-icon" data-share-channel="whatsapp" href="https://wa.me/?text={job.title -> f:format.urlencode()}%20{currentUrl -> f:format.urlencode()}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp">
+                  <span class="aiscareer-sr-only">WhatsApp</span>
+                </a>
+                <a class="aiscareer-share-icon-btn aiscareer-share-x-icon" data-share-channel="x" href="https://twitter.com/intent/tweet?url={currentUrl -> f:format.urlencode()}&text={job.title -> f:format.urlencode()}" target="_blank" rel="noopener noreferrer" aria-label="X" title="X">
+                  <span class="aiscareer-sr-only">X</span>
+                </a>
+              </div>
+            </f:if>
+          </div>
           <div class="aiscareer-meta">
             <f:if condition="{job.reference}">
               <f:translate key="job.meta.reference" extensionName="AisCareer" /> {job.reference}
@@ -66,6 +87,9 @@
               | <f:translate key="job.meta.remotePossible" extensionName="AisCareer" />
             </f:if>
           </div>
+          <f:if condition="{currentUrl}">
+            <div class="aiscareer-meta aiscareer-share-feedback" aria-live="polite"></div>
+          </f:if>
         </div>
 
         <f:if condition="{job.description}">

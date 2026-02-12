@@ -7,7 +7,7 @@
     flex-wrap: wrap;
     gap: 12px;
     align-items: flex-end;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
   .aiscareer-filter {
     display: flex;
@@ -29,7 +29,8 @@
     font-size: 13px;
     background: #fff;
   }
-  .aiscareer-filter button {
+  .aiscareer-filter button,
+  .aiscareer-export {
     border: 0;
     background: #111827;
     color: #fff;
@@ -38,6 +39,11 @@
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .aiscareer-export {
+    background: #0f172a;
   }
   .aiscareer-section-title {
     margin: 16px 0 10px;
@@ -75,6 +81,91 @@
     font-size: 12px;
     color: #64748b;
   }
+  .aiscareer-tab-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .aiscareer-tabs {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 6px 0 18px;
+  }
+  .aiscareer-tab {
+    border: 1px solid #dbe2ea;
+    background: #fff;
+    color: #334155;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  #tab-overview:checked ~ .aiscareer-tabs label[for="tab-overview"],
+  #tab-traffic:checked ~ .aiscareer-tabs label[for="tab-traffic"],
+  #tab-shares:checked ~ .aiscareer-tabs label[for="tab-shares"],
+  #tab-jobs:checked ~ .aiscareer-tabs label[for="tab-jobs"] {
+    background: #111827;
+    color: #fff;
+    border-color: #111827;
+  }
+  .aiscareer-tab-panel {
+    display: none;
+  }
+  #tab-overview:checked ~ .aiscareer-panels .panel-overview,
+  #tab-traffic:checked ~ .aiscareer-panels .panel-traffic,
+  #tab-shares:checked ~ .aiscareer-panels .panel-shares,
+  #tab-jobs:checked ~ .aiscareer-panels .panel-jobs {
+    display: block;
+  }
+  .aiscareer-share-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+    margin-bottom: 24px;
+  }
+  .aiscareer-share-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 64px;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: #334155;
+  }
+  .aiscareer-share-row:last-child {
+    margin-bottom: 0;
+  }
+  .aiscareer-share-bar-track {
+    height: 10px;
+    border-radius: 999px;
+    background: #e2e8f0;
+    overflow: hidden;
+  }
+  .aiscareer-share-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #0ea5e9, #22c55e);
+  }
+  .aiscareer-table-wrap {
+    margin-bottom: 24px;
+  }
+  .aiscareer-table-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px 0 8px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .aiscareer-table-head h2 {
+    margin: 0;
+  }
   .aiscareer-table {
     width: 100%;
     border-collapse: collapse;
@@ -102,7 +193,7 @@
 <div class="aiscareer-toolbar">
   <form method="get" class="aiscareer-filter">
     <f:for each="{queryParams}" as="value" key="key">
-      <f:if condition="{key} != 'period' && {key} != 'from' && {key} != 'to'">
+      <f:if condition="{key} != 'period' && {key} != 'from' && {key} != 'to' && {key} != 'export'">
         <input type="hidden" name="{key}" value="{value}" />
       </f:if>
     </f:for>
@@ -124,110 +215,209 @@
         <f:case value="7">{f:translate(key: 'analytics.period7', extensionName: 'AisCareer')}</f:case>
         <f:case value="30">{f:translate(key: 'analytics.period30', extensionName: 'AisCareer')}</f:case>
         <f:case value="90">{f:translate(key: 'analytics.period90', extensionName: 'AisCareer')}</f:case>
-        <f:case value="custom">{fromDate} → {toDate}</f:case>
+        <f:case value="custom">{fromDate} -> {toDate}</f:case>
         <f:defaultCase>{f:translate(key: 'analytics.period30', extensionName: 'AisCareer')}</f:defaultCase>
       </f:switch>
     </div>
   </div>
 </div>
 
-<div class="aiscareer-section-title">{f:translate(key: 'analytics.jobs', extensionName: 'AisCareer')}</div>
-<div class="aiscareer-kpis">
-  <div class="aiscareer-kpi">
-    <h3>{f:translate(key: 'analytics.totalJobs', extensionName: 'AisCareer')}</h3>
-    <div class="value">{totalJobs}</div>
-  </div>
-  <div class="aiscareer-kpi">
-    <h3>{f:translate(key: 'analytics.activeJobs', extensionName: 'AisCareer')}</h3>
-    <div class="value">{activeJobs}</div>
-  </div>
-  <div class="aiscareer-kpi">
-    <h3>{f:translate(key: 'analytics.totalApplications', extensionName: 'AisCareer')}</h3>
-    <div class="value">{totalApplications}</div>
-  </div>
+<input class="aiscareer-tab-input" type="radio" name="analytics-tab" id="tab-overview" checked>
+<input class="aiscareer-tab-input" type="radio" name="analytics-tab" id="tab-traffic">
+<input class="aiscareer-tab-input" type="radio" name="analytics-tab" id="tab-shares">
+<input class="aiscareer-tab-input" type="radio" name="analytics-tab" id="tab-jobs">
+
+<div class="aiscareer-tabs" role="tablist" aria-label="Analytics tabs">
+  <label class="aiscareer-tab" for="tab-overview">{f:translate(key: 'analytics.tab.overview', extensionName: 'AisCareer')}</label>
+  <label class="aiscareer-tab" for="tab-traffic">{f:translate(key: 'analytics.tab.traffic', extensionName: 'AisCareer')}</label>
+  <label class="aiscareer-tab" for="tab-shares">{f:translate(key: 'analytics.tab.shares', extensionName: 'AisCareer')}</label>
+  <label class="aiscareer-tab" for="tab-jobs">{f:translate(key: 'analytics.tab.jobs', extensionName: 'AisCareer')}</label>
 </div>
 
-<div class="aiscareer-section-title">{f:translate(key: 'analytics.traffic', extensionName: 'AisCareer')}</div>
-<div class="aiscareer-kpis">
-  <div class="aiscareer-kpi">
-    <h3>{f:translate(key: 'analytics.listViews', extensionName: 'AisCareer')}</h3>
-    <div class="value">{listViews}</div>
-    <div class="sub">{f:translate(key: 'analytics.inRange', extensionName: 'AisCareer')}</div>
-  </div>
-  <div class="aiscareer-kpi">
-    <h3>{f:translate(key: 'analytics.detailViews', extensionName: 'AisCareer')}</h3>
-    <div class="value">{detailViews}</div>
-    <div class="sub">{f:translate(key: 'analytics.inRange', extensionName: 'AisCareer')}</div>
-  </div>
-  <div class="aiscareer-kpi">
-    <h3>{f:translate(key: 'analytics.applicationsRange', extensionName: 'AisCareer')}</h3>
-    <div class="value">{applicationSubmits}</div>
-    <div class="sub">{f:translate(key: 'analytics.inRange', extensionName: 'AisCareer')}</div>
-  </div>
+<div class="aiscareer-panels">
+  <section class="aiscareer-tab-panel panel-overview">
+    <div class="aiscareer-section-title">{f:translate(key: 'analytics.jobs', extensionName: 'AisCareer')}</div>
+    <div class="aiscareer-kpis">
+      <div class="aiscareer-kpi">
+        <h3>{f:translate(key: 'analytics.totalJobs', extensionName: 'AisCareer')}</h3>
+        <div class="value">{totalJobs}</div>
+      </div>
+      <div class="aiscareer-kpi">
+        <h3>{f:translate(key: 'analytics.activeJobs', extensionName: 'AisCareer')}</h3>
+        <div class="value">{activeJobs}</div>
+      </div>
+      <div class="aiscareer-kpi">
+        <h3>{f:translate(key: 'analytics.totalApplications', extensionName: 'AisCareer')}</h3>
+        <div class="value">{totalApplications}</div>
+      </div>
+      <div class="aiscareer-kpi">
+        <h3>{f:translate(key: 'analytics.shareTotal', extensionName: 'AisCareer')}</h3>
+        <div class="value">{shareTotal}</div>
+        <div class="sub">{f:translate(key: 'analytics.inRange', extensionName: 'AisCareer')}</div>
+      </div>
+    </div>
+
+    <div class="aiscareer-section-title">{f:translate(key: 'analytics.conversion', extensionName: 'AisCareer')}</div>
+    <div class="aiscareer-kpis">
+      <div class="aiscareer-kpi">
+        <h3>{f:translate(key: 'analytics.conversionListDetail', extensionName: 'AisCareer')}</h3>
+        <div class="value">{conversionListToDetail}</div>
+      </div>
+      <div class="aiscareer-kpi">
+        <h3>{f:translate(key: 'analytics.conversionDetailApp', extensionName: 'AisCareer')}</h3>
+        <div class="value">{conversionDetailToApplication}</div>
+      </div>
+      <div class="aiscareer-kpi">
+        <h3>{f:translate(key: 'analytics.conversionListApp', extensionName: 'AisCareer')}</h3>
+        <div class="value">{conversionListToApplication}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="aiscareer-tab-panel panel-traffic">
+    <div class="aiscareer-section-title">{f:translate(key: 'analytics.traffic', extensionName: 'AisCareer')}</div>
+    <div class="aiscareer-kpis">
+      <div class="aiscareer-kpi">
+        <h3>{f:translate(key: 'analytics.listViews', extensionName: 'AisCareer')}</h3>
+        <div class="value">{listViews}</div>
+        <div class="sub">{f:translate(key: 'analytics.inRange', extensionName: 'AisCareer')}</div>
+      </div>
+      <div class="aiscareer-kpi">
+        <h3>{f:translate(key: 'analytics.detailViews', extensionName: 'AisCareer')}</h3>
+        <div class="value">{detailViews}</div>
+        <div class="sub">{f:translate(key: 'analytics.inRange', extensionName: 'AisCareer')}</div>
+      </div>
+      <div class="aiscareer-kpi">
+        <h3>{f:translate(key: 'analytics.applicationsRange', extensionName: 'AisCareer')}</h3>
+        <div class="value">{applicationSubmits}</div>
+        <div class="sub">{f:translate(key: 'analytics.inRange', extensionName: 'AisCareer')}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="aiscareer-tab-panel panel-shares">
+    <div class="aiscareer-section-title">{f:translate(key: 'analytics.sharesByChannel', extensionName: 'AisCareer')}</div>
+    <div class="aiscareer-share-card">
+      <f:for each="{shareBreakdown}" as="row">
+        <div class="aiscareer-share-row">
+          <div>
+            <f:switch expression="{row.key}">
+              <f:case value="copy">{f:translate(key: 'analytics.shareCopy', extensionName: 'AisCareer')}</f:case>
+              <f:case value="email">{f:translate(key: 'analytics.shareEmail', extensionName: 'AisCareer')}</f:case>
+              <f:case value="linkedin">{f:translate(key: 'analytics.shareLinkedin', extensionName: 'AisCareer')}</f:case>
+              <f:case value="whatsapp">{f:translate(key: 'analytics.shareWhatsapp', extensionName: 'AisCareer')}</f:case>
+              <f:defaultCase>{f:translate(key: 'analytics.shareX', extensionName: 'AisCareer')}</f:defaultCase>
+            </f:switch>
+          </div>
+          <div class="aiscareer-share-bar-track">
+            <div class="aiscareer-share-bar-fill" style="width: {row.percent}%"></div>
+          </div>
+          <div>{row.count}</div>
+        </div>
+      </f:for>
+      <f:if condition="{shareBreakdown -> f:count()} == 0">
+        <div class="aiscareer-sub">{f:translate(key: 'analytics.noData', extensionName: 'AisCareer')}</div>
+      </f:if>
+    </div>
+
+    <div class="aiscareer-table-wrap">
+      <div class="aiscareer-table-head">
+        <h2>{f:translate(key: 'analytics.sharesByJob', extensionName: 'AisCareer')}</h2>
+        <a class="aiscareer-export" href="{exportUrls.sharesByJob}">{f:translate(key: 'analytics.exportCsv', extensionName: 'AisCareer')}</a>
+      </div>
+      <table class="aiscareer-table" id="shares-by-job-table">
+        <thead>
+          <tr>
+            <th>{f:translate(key: 'analytics.job', extensionName: 'AisCareer')}</th>
+            <th>{f:translate(key: 'analytics.shareTotal', extensionName: 'AisCareer')}</th>
+            <th>{f:translate(key: 'analytics.shareCopy', extensionName: 'AisCareer')}</th>
+            <th>{f:translate(key: 'analytics.shareEmail', extensionName: 'AisCareer')}</th>
+            <th>{f:translate(key: 'analytics.shareLinkedin', extensionName: 'AisCareer')}</th>
+            <th>{f:translate(key: 'analytics.shareWhatsapp', extensionName: 'AisCareer')}</th>
+            <th>{f:translate(key: 'analytics.shareX', extensionName: 'AisCareer')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <f:for each="{jobShares}" as="row">
+            <tr>
+              <td>{row.job_title}</td>
+              <td>{row.shares_total}</td>
+              <td>{row.shares_copy}</td>
+              <td>{row.shares_email}</td>
+              <td>{row.shares_linkedin}</td>
+              <td>{row.shares_whatsapp}</td>
+              <td>{row.shares_x}</td>
+            </tr>
+          </f:for>
+          <f:if condition="{jobShares -> f:count()} == 0">
+            <tr>
+              <td colspan="7">{f:translate(key: 'analytics.noData', extensionName: 'AisCareer')}</td>
+            </tr>
+          </f:if>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="aiscareer-tab-panel panel-jobs">
+    <div class="aiscareer-table-wrap">
+      <div class="aiscareer-table-head">
+        <h2>{f:translate(key: 'analytics.topJobs', extensionName: 'AisCareer')}</h2>
+        <a class="aiscareer-export" href="{exportUrls.topJobs}">{f:translate(key: 'analytics.exportCsv', extensionName: 'AisCareer')}</a>
+      </div>
+      <table class="aiscareer-table" id="top-jobs-table">
+        <thead>
+          <tr>
+            <th>{f:translate(key: 'analytics.job', extensionName: 'AisCareer')}</th>
+            <th>{f:translate(key: 'analytics.applications', extensionName: 'AisCareer')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <f:for each="{topJobs}" as="row">
+            <tr>
+              <td>{row.job_title}</td>
+              <td>{row.applications}</td>
+            </tr>
+          </f:for>
+          <f:if condition="{topJobs -> f:count()} == 0">
+            <tr>
+              <td colspan="2">{f:translate(key: 'analytics.noData', extensionName: 'AisCareer')}</td>
+            </tr>
+          </f:if>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aiscareer-table-wrap">
+      <div class="aiscareer-table-head">
+        <h2>{f:translate(key: 'analytics.funnelByJob', extensionName: 'AisCareer')}</h2>
+        <a class="aiscareer-export" href="{exportUrls.jobFunnel}">{f:translate(key: 'analytics.exportCsv', extensionName: 'AisCareer')}</a>
+      </div>
+      <table class="aiscareer-table" id="job-funnel-table">
+        <thead>
+          <tr>
+            <th>{f:translate(key: 'analytics.job', extensionName: 'AisCareer')}</th>
+            <th>{f:translate(key: 'analytics.detailViews', extensionName: 'AisCareer')}</th>
+            <th>{f:translate(key: 'analytics.applications', extensionName: 'AisCareer')}</th>
+            <th>{f:translate(key: 'analytics.conversionDetailApp', extensionName: 'AisCareer')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <f:for each="{jobFunnel}" as="row">
+            <tr>
+              <td>{row.job_title}</td>
+              <td>{row.detail_views}</td>
+              <td>{row.applications}</td>
+              <td>{row.conversion}</td>
+            </tr>
+          </f:for>
+          <f:if condition="{jobFunnel -> f:count()} == 0">
+            <tr>
+              <td colspan="4">{f:translate(key: 'analytics.noData', extensionName: 'AisCareer')}</td>
+            </tr>
+          </f:if>
+        </tbody>
+      </table>
+    </div>
+  </section>
 </div>
-
-<div class="aiscareer-section-title">{f:translate(key: 'analytics.conversion', extensionName: 'AisCareer')}</div>
-<div class="aiscareer-kpis">
-  <div class="aiscareer-kpi">
-    <h3>{f:translate(key: 'analytics.conversionListDetail', extensionName: 'AisCareer')}</h3>
-    <div class="value">{conversionListToDetail}</div>
-  </div>
-  <div class="aiscareer-kpi">
-    <h3>{f:translate(key: 'analytics.conversionDetailApp', extensionName: 'AisCareer')}</h3>
-    <div class="value">{conversionDetailToApplication}</div>
-  </div>
-  <div class="aiscareer-kpi">
-    <h3>{f:translate(key: 'analytics.conversionListApp', extensionName: 'AisCareer')}</h3>
-    <div class="value">{conversionListToApplication}</div>
-  </div>
-</div>
-
-<h2>{f:translate(key: 'analytics.topJobs', extensionName: 'AisCareer')}</h2>
-<table class="aiscareer-table">
-  <thead>
-    <tr>
-      <th>{f:translate(key: 'analytics.job', extensionName: 'AisCareer')}</th>
-      <th>{f:translate(key: 'analytics.applications', extensionName: 'AisCareer')}</th>
-    </tr>
-  </thead>
-  <tbody>
-    <f:for each="{topJobs}" as="row">
-      <tr>
-        <td>{row.job_title}</td>
-        <td>{row.applications}</td>
-      </tr>
-    </f:for>
-    <f:if condition="{topJobs -> f:count()} == 0">
-      <tr>
-        <td colspan="2">{f:translate(key: 'analytics.noData', extensionName: 'AisCareer')}</td>
-      </tr>
-    </f:if>
-  </tbody>
-</table>
-
-<h2>{f:translate(key: 'analytics.funnelByJob', extensionName: 'AisCareer')}</h2>
-<table class="aiscareer-table">
-  <thead>
-    <tr>
-      <th>{f:translate(key: 'analytics.job', extensionName: 'AisCareer')}</th>
-      <th>{f:translate(key: 'analytics.detailViews', extensionName: 'AisCareer')}</th>
-      <th>{f:translate(key: 'analytics.applications', extensionName: 'AisCareer')}</th>
-      <th>{f:translate(key: 'analytics.conversionDetailApp', extensionName: 'AisCareer')}</th>
-    </tr>
-  </thead>
-  <tbody>
-    <f:for each="{jobFunnel}" as="row">
-      <tr>
-        <td>{row.job_title}</td>
-        <td>{row.detail_views}</td>
-        <td>{row.applications}</td>
-        <td>{row.conversion}</td>
-      </tr>
-    </f:for>
-    <f:if condition="{jobFunnel -> f:count()} == 0">
-      <tr>
-        <td colspan="4">{f:translate(key: 'analytics.noData', extensionName: 'AisCareer')}</td>
-      </tr>
-    </f:if>
-  </tbody>
-</table>

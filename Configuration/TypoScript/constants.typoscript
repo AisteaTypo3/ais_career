@@ -22,6 +22,7 @@ plugin.tx_aiscareer {
     applicationSave = 1
     applicationDoubleOptInEnabled = 0
     applicationConfirmationEnabled = 1
+    applicationDraftExpiryDays = 7
     maxUploadSizeMB = 5
     maxTotalUploadSizeMB = 10
     allowedExtensions = pdf,png,jpg,jpeg
