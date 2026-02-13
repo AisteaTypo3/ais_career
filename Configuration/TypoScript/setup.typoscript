@@ -23,6 +23,11 @@ plugin.tx_aiscareer {
     applicationDoubleOptInEnabled = {$plugin.tx_aiscareer.settings.applicationDoubleOptInEnabled}
     applicationConfirmationEnabled = {$plugin.tx_aiscareer.settings.applicationConfirmationEnabled}
     applicationDraftExpiryDays = {$plugin.tx_aiscareer.settings.applicationDraftExpiryDays}
+    shareEnableCopy = {$plugin.tx_aiscareer.settings.shareEnableCopy}
+    shareEnableEmail = {$plugin.tx_aiscareer.settings.shareEnableEmail}
+    shareEnableLinkedin = {$plugin.tx_aiscareer.settings.shareEnableLinkedin}
+    shareEnableWhatsapp = {$plugin.tx_aiscareer.settings.shareEnableWhatsapp}
+    shareEnableX = {$plugin.tx_aiscareer.settings.shareEnableX}
     maxUploadSizeMB = {$plugin.tx_aiscareer.settings.maxUploadSizeMB}
     maxTotalUploadSizeMB = {$plugin.tx_aiscareer.settings.maxTotalUploadSizeMB}
     allowedExtensions = {$plugin.tx_aiscareer.settings.allowedExtensions}

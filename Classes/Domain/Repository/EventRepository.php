@@ -79,8 +79,50 @@ class EventRepository
      */
     public function findJobFunnelBetween(\DateTime $from, \DateTime $to): array
     {
+        return $this->findJobFunnelBetweenPaged($from, $to, 1000, 0);
+    }
+
+    public function countJobFunnelBetween(\DateTime $from, \DateTime $to): int
+    {
         $fromTs = (int)$from->format('U');
         $toTs = (int)$to->format('U');
+        $qb = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_aiscareer_event');
+        $qb->getRestrictions()->removeAll();
+
+        $row = $qb
+            ->selectLiteral('COUNT(DISTINCT e.job) AS cnt')
+            ->from('tx_aiscareer_event', 'e')
+            ->innerJoin(
+                'e',
+                'tx_aiscareer_domain_model_job',
+                'j',
+                $qb->expr()->eq('e.job', $qb->quoteIdentifier('j.uid'))
+            )
+            ->where(
+                $qb->expr()->eq('e.deleted', 0),
+                $qb->expr()->eq('j.deleted', 0),
+                $qb->expr()->eq('j.hidden', 0),
+                $qb->expr()->gt('e.job', 0),
+                $qb->expr()->in('e.event_type', $qb->createNamedParameter(['detail_view', 'application_submit'], ArrayParameterType::STRING)),
+                $qb->expr()->gte('e.created_at', $qb->createNamedParameter($fromTs, ParameterType::INTEGER)),
+                $qb->expr()->lte('e.created_at', $qb->createNamedParameter($toTs, ParameterType::INTEGER))
+            )
+            ->executeQuery()
+            ->fetchAssociative();
+
+        return (int)($row['cnt'] ?? 0);
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function findJobFunnelBetweenPaged(\DateTime $from, \DateTime $to, int $limit, int $offset): array
+    {
+        $fromTs = (int)$from->format('U');
+        $toTs = (int)$to->format('U');
+        $limit = max(1, $limit);
+        $offset = max(0, $offset);
         $qb = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('tx_aiscareer_event');
         $qb->getRestrictions()->removeAll();
@@ -107,6 +149,8 @@ class EventRepository
             ->groupBy('j.uid', 'j.title')
             ->orderBy('applications', 'DESC')
             ->addOrderBy('detail_views', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
             ->executeQuery()
             ->fetchAllAssociative();
     }
@@ -116,9 +160,53 @@ class EventRepository
      */
     public function findJobSharesBetween(\DateTime $from, \DateTime $to): array
     {
+        return $this->findJobSharesBetweenPaged($from, $to, 1000, 0);
+    }
+
+    public function countJobSharesBetween(\DateTime $from, \DateTime $to): int
+    {
         $fromTs = (int)$from->format('U');
         $toTs = (int)$to->format('U');
         $shareTypes = ['share_copy', 'share_email', 'share_linkedin', 'share_whatsapp', 'share_x'];
+
+        $qb = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_aiscareer_event');
+        $qb->getRestrictions()->removeAll();
+
+        $row = $qb
+            ->selectLiteral('COUNT(DISTINCT e.job) AS cnt')
+            ->from('tx_aiscareer_event', 'e')
+            ->innerJoin(
+                'e',
+                'tx_aiscareer_domain_model_job',
+                'j',
+                $qb->expr()->eq('e.job', $qb->quoteIdentifier('j.uid'))
+            )
+            ->where(
+                $qb->expr()->eq('e.deleted', 0),
+                $qb->expr()->eq('j.deleted', 0),
+                $qb->expr()->eq('j.hidden', 0),
+                $qb->expr()->gt('e.job', 0),
+                $qb->expr()->in('e.event_type', $qb->createNamedParameter($shareTypes, ArrayParameterType::STRING)),
+                $qb->expr()->gte('e.created_at', $qb->createNamedParameter($fromTs, ParameterType::INTEGER)),
+                $qb->expr()->lte('e.created_at', $qb->createNamedParameter($toTs, ParameterType::INTEGER))
+            )
+            ->executeQuery()
+            ->fetchAssociative();
+
+        return (int)($row['cnt'] ?? 0);
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function findJobSharesBetweenPaged(\DateTime $from, \DateTime $to, int $limit, int $offset): array
+    {
+        $fromTs = (int)$from->format('U');
+        $toTs = (int)$to->format('U');
+        $shareTypes = ['share_copy', 'share_email', 'share_linkedin', 'share_whatsapp', 'share_x'];
+        $limit = max(1, $limit);
+        $offset = max(0, $offset);
 
         $qb = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('tx_aiscareer_event');
@@ -152,6 +240,8 @@ class EventRepository
             ->orderBy('shares_total', 'DESC')
             ->addOrderBy('shares_linkedin', 'DESC')
             ->addOrderBy('shares_whatsapp', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
             ->executeQuery()
             ->fetchAllAssociative();
     }

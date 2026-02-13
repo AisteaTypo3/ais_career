@@ -222,6 +222,15 @@
       <trans-unit id="analytics.exportCsv">
         <source>Export CSV</source>
       </trans-unit>
+      <trans-unit id="analytics.pagination.prev">
+        <source>Prev</source>
+      </trans-unit>
+      <trans-unit id="analytics.pagination.next">
+        <source>Next</source>
+      </trans-unit>
+      <trans-unit id="analytics.pagination.page">
+        <source>Page</source>
+      </trans-unit>
       <trans-unit id="analytics.inRange">
         <source>In selected range</source>
       </trans-unit>

@@ -149,6 +149,51 @@
               <maxitems>1</maxitems>
             </config>
           </settings.contactDefaultImage>
+          <settings.shareEnableCopy>
+            <TCEforms>
+              <label>LLL:EXT:ais_career/Resources/Private/Language/locallang_flexforms.xlf:jobdetail.shareEnableCopy</label>
+            </TCEforms>
+            <config>
+              <type>check</type>
+              <default>1</default>
+            </config>
+          </settings.shareEnableCopy>
+          <settings.shareEnableEmail>
+            <TCEforms>
+              <label>LLL:EXT:ais_career/Resources/Private/Language/locallang_flexforms.xlf:jobdetail.shareEnableEmail</label>
+            </TCEforms>
+            <config>
+              <type>check</type>
+              <default>1</default>
+            </config>
+          </settings.shareEnableEmail>
+          <settings.shareEnableLinkedin>
+            <TCEforms>
+              <label>LLL:EXT:ais_career/Resources/Private/Language/locallang_flexforms.xlf:jobdetail.shareEnableLinkedin</label>
+            </TCEforms>
+            <config>
+              <type>check</type>
+              <default>1</default>
+            </config>
+          </settings.shareEnableLinkedin>
+          <settings.shareEnableWhatsapp>
+            <TCEforms>
+              <label>LLL:EXT:ais_career/Resources/Private/Language/locallang_flexforms.xlf:jobdetail.shareEnableWhatsapp</label>
+            </TCEforms>
+            <config>
+              <type>check</type>
+              <default>1</default>
+            </config>
+          </settings.shareEnableWhatsapp>
+          <settings.shareEnableX>
+            <TCEforms>
+              <label>LLL:EXT:ais_career/Resources/Private/Language/locallang_flexforms.xlf:jobdetail.shareEnableX</label>
+            </TCEforms>
+            <config>
+              <type>check</type>
+              <default>1</default>
+            </config>
+          </settings.shareEnableX>
         </el>
       </ROOT>
     </general>

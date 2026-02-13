@@ -944,6 +944,14 @@ class JobController extends ActionController
         $listPid = (int)($this->settings['listPid'] ?? 0);
         $jobPostingJsonLd = $this->buildJobPostingJsonLd($job);
         $contact = $this->resolveContactData($job);
+        $shareChannels = [
+            'copy' => $this->isShareChannelEnabled('shareEnableCopy', true),
+            'email' => $this->isShareChannelEnabled('shareEnableEmail', true),
+            'linkedin' => $this->isShareChannelEnabled('shareEnableLinkedin', true),
+            'whatsapp' => $this->isShareChannelEnabled('shareEnableWhatsapp', true),
+            'x' => $this->isShareChannelEnabled('shareEnableX', true),
+        ];
+        $hasShareActions = in_array(true, $shareChannels, true);
         $this->view->assignMultiple([
             'job' => $job,
             'application' => $application,
@@ -953,6 +961,8 @@ class JobController extends ActionController
             'formTimestamp' => (new \DateTime())->getTimestamp(),
             'jobPostingJsonLd' => $jobPostingJsonLd,
             'currentUrl' => $this->getCurrentRequestUrl(),
+            'shareChannels' => $shareChannels,
+            'hasShareActions' => $hasShareActions,
             'listPid' => $listPid,
             'settings' => $this->settings,
             'contact' => $contact,
@@ -1073,6 +1083,14 @@ class JobController extends ActionController
             return (string)$request->getUri();
         }
         return '';
+    }
+
+    private function isShareChannelEnabled(string $settingKey, bool $default): bool
+    {
+        if (!array_key_exists($settingKey, $this->settings)) {
+            return $default;
+        }
+        return !empty($this->settings[$settingKey]);
     }
 
     private function mapSalaryPeriodToUnitText(string $period): string

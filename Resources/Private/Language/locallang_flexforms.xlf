@@ -88,6 +88,21 @@
       <trans-unit id="jobdetail.contactDefaultImage">
         <source>Default contact image</source>
       </trans-unit>
+      <trans-unit id="jobdetail.shareEnableCopy">
+        <source>Share: Enable copy link</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.shareEnableEmail">
+        <source>Share: Enable email</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.shareEnableLinkedin">
+        <source>Share: Enable LinkedIn</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.shareEnableWhatsapp">
+        <source>Share: Enable WhatsApp</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.shareEnableX">
+        <source>Share: Enable X</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

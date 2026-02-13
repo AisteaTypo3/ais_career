@@ -490,14 +490,15 @@
 
   function bindShareActions() {
     var detail = document.querySelector('.aiscareer-detail');
-    var copyButton = document.querySelector('.aiscareer-share-copy');
-    if (!copyButton) {
+    var shareButtons = document.querySelectorAll('.aiscareer-share-icon-btn[data-share-channel]');
+    if (!shareButtons.length) {
       return;
     }
+    var copyButton = document.querySelector('.aiscareer-share-copy');
 
     var feedback = document.querySelector('.aiscareer-share-feedback');
     var trackUrl = detail ? (detail.getAttribute('data-share-track-url') || '') : '';
-    var shareUrl = copyButton.getAttribute('data-share-url') || '';
+    var shareUrl = copyButton ? (copyButton.getAttribute('data-share-url') || '') : '';
     if (!shareUrl) {
       shareUrl = detail ? (detail.getAttribute('data-current-url') || window.location.href) : window.location.href;
     }
@@ -562,7 +563,6 @@
       });
     }
 
-    var shareButtons = document.querySelectorAll('.aiscareer-share-icon-btn[data-share-channel]');
     shareButtons.forEach(function (el) {
       if (el.classList.contains('aiscareer-share-copy')) {
         return;
@@ -572,6 +572,10 @@
         trackShare(channel);
       });
     });
+
+    if (!copyButton) {
+      return;
+    }
 
     copyButton.addEventListener('click', function () {
       var copiedText = copyButton.getAttribute('data-copied-text') || 'Link copied.';

@@ -51,7 +51,43 @@ class ApplicationRepository extends Repository
      */
     public function findTopJobs(int $limit): array
     {
+        return $this->findTopJobsPage($limit, 0);
+    }
+
+    public function countTopJobs(): int
+    {
+        $qb = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_aiscareer_domain_model_application');
+        $qb->getRestrictions()->removeAll();
+
+        $rows = $qb
+            ->select('j.uid')
+            ->from('tx_aiscareer_domain_model_application', 'a')
+            ->innerJoin(
+                'a',
+                'tx_aiscareer_domain_model_job',
+                'j',
+                $qb->expr()->eq('a.job', $qb->quoteIdentifier('j.uid'))
+            )
+            ->where(
+                $qb->expr()->eq('a.deleted', 0),
+                $qb->expr()->eq('a.hidden', 0),
+                $qb->expr()->eq('j.deleted', 0),
+                $qb->expr()->eq('j.hidden', 0)
+            )
+            ->groupBy('j.uid')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        return count($rows);
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function findTopJobsPage(int $limit, int $offset): array
+    {
         $limit = max(1, $limit);
+        $offset = max(0, $offset);
         $qb = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_aiscareer_domain_model_application');
         $qb->getRestrictions()->removeAll();
 
@@ -74,6 +110,7 @@ class ApplicationRepository extends Repository
             ->groupBy('j.uid', 'j.title')
             ->orderBy('applications', 'DESC')
             ->setMaxResults($limit)
+            ->setFirstResult($offset)
             ->executeQuery()
             ->fetchAllAssociative();
     }

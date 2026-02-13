@@ -295,6 +295,18 @@
         <source>Export CSV</source>
         <target>CSV exportieren</target>
       </trans-unit>
+      <trans-unit id="analytics.pagination.prev">
+        <source>Prev</source>
+        <target>Zurück</target>
+      </trans-unit>
+      <trans-unit id="analytics.pagination.next">
+        <source>Next</source>
+        <target>Weiter</target>
+      </trans-unit>
+      <trans-unit id="analytics.pagination.page">
+        <source>Page</source>
+        <target>Seite</target>
+      </trans-unit>
       <trans-unit id="analytics.inRange">
         <source>In selected range</source>
         <target>Im ausgewählten Zeitraum</target>

@@ -23,6 +23,11 @@ plugin.tx_aiscareer {
     applicationDoubleOptInEnabled = 0
     applicationConfirmationEnabled = 1
     applicationDraftExpiryDays = 7
+    shareEnableCopy = 1
+    shareEnableEmail = 1
+    shareEnableLinkedin = 1
+    shareEnableWhatsapp = 1
+    shareEnableX = 1
     maxUploadSizeMB = 5
     maxTotalUploadSizeMB = 10
     allowedExtensions = pdf,png,jpg,jpeg

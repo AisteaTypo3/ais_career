@@ -129,6 +129,37 @@
     box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
     margin-bottom: 24px;
   }
+  .aiscareer-graph {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+    margin-bottom: 24px;
+  }
+  .aiscareer-graph-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 72px;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: #334155;
+  }
+  .aiscareer-graph-row:last-child {
+    margin-bottom: 0;
+  }
+  .aiscareer-graph-track {
+    height: 10px;
+    border-radius: 999px;
+    background: #e2e8f0;
+    overflow: hidden;
+  }
+  .aiscareer-graph-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #0ea5e9, #6366f1);
+  }
   .aiscareer-share-row {
     display: grid;
     grid-template-columns: 140px 1fr 64px;
@@ -187,6 +218,32 @@
     text-transform: uppercase;
     letter-spacing: 0.03em;
     font-weight: 600;
+  }
+  .aiscareer-pager {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .aiscareer-pager-text {
+    font-size: 12px;
+    color: #475569;
+  }
+  .aiscareer-pager-link {
+    display: inline-block;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: #0f172a;
+    text-decoration: none;
+    background: #fff;
+    font-weight: 600;
+  }
+  .aiscareer-pager-link:hover {
+    border-color: #94a3b8;
+    background: #f8fafc;
   }
 </style>
 
@@ -272,6 +329,17 @@
         <div class="value">{conversionListToApplication}</div>
       </div>
     </div>
+    <div class="aiscareer-graph">
+      <f:for each="{conversionGraph}" as="row">
+        <div class="aiscareer-graph-row">
+          <div>{row.label}</div>
+          <div class="aiscareer-graph-track">
+            <div class="aiscareer-graph-fill" style="width: {row.value}%"></div>
+          </div>
+          <div>{row.value}%</div>
+        </div>
+      </f:for>
+    </div>
   </section>
 
   <section class="aiscareer-tab-panel panel-traffic">
@@ -292,6 +360,17 @@
         <div class="value">{applicationSubmits}</div>
         <div class="sub">{f:translate(key: 'analytics.inRange', extensionName: 'AisCareer')}</div>
       </div>
+    </div>
+    <div class="aiscareer-graph">
+      <f:for each="{trafficGraph}" as="row">
+        <div class="aiscareer-graph-row">
+          <div>{row.label}</div>
+          <div class="aiscareer-graph-track">
+            <div class="aiscareer-graph-fill" style="width: {row.percent}%"></div>
+          </div>
+          <div>{row.value}</div>
+        </div>
+      </f:for>
     </div>
   </section>
 
@@ -356,6 +435,17 @@
           </f:if>
         </tbody>
       </table>
+      <div class="aiscareer-pager">
+        <f:if condition="{jobSharesPager.hasPrevious}">
+          <a class="aiscareer-pager-link" href="{jobSharesPagerUrls.previous}">{f:translate(key: 'analytics.pagination.prev', extensionName: 'AisCareer')}</a>
+        </f:if>
+        <span class="aiscareer-pager-text">
+          {f:translate(key: 'analytics.pagination.page', extensionName: 'AisCareer')} {jobSharesPager.currentPage}/{jobSharesPager.totalPages}
+        </span>
+        <f:if condition="{jobSharesPager.hasNext}">
+          <a class="aiscareer-pager-link" href="{jobSharesPagerUrls.next}">{f:translate(key: 'analytics.pagination.next', extensionName: 'AisCareer')}</a>
+        </f:if>
+      </div>
     </div>
   </section>
 
@@ -386,6 +476,17 @@
           </f:if>
         </tbody>
       </table>
+      <div class="aiscareer-pager">
+        <f:if condition="{topJobsPager.hasPrevious}">
+          <a class="aiscareer-pager-link" href="{topJobsPagerUrls.previous}">{f:translate(key: 'analytics.pagination.prev', extensionName: 'AisCareer')}</a>
+        </f:if>
+        <span class="aiscareer-pager-text">
+          {f:translate(key: 'analytics.pagination.page', extensionName: 'AisCareer')} {topJobsPager.currentPage}/{topJobsPager.totalPages}
+        </span>
+        <f:if condition="{topJobsPager.hasNext}">
+          <a class="aiscareer-pager-link" href="{topJobsPagerUrls.next}">{f:translate(key: 'analytics.pagination.next', extensionName: 'AisCareer')}</a>
+        </f:if>
+      </div>
     </div>
 
     <div class="aiscareer-table-wrap">
@@ -418,6 +519,17 @@
           </f:if>
         </tbody>
       </table>
+      <div class="aiscareer-pager">
+        <f:if condition="{jobFunnelPager.hasPrevious}">
+          <a class="aiscareer-pager-link" href="{jobFunnelPagerUrls.previous}">{f:translate(key: 'analytics.pagination.prev', extensionName: 'AisCareer')}</a>
+        </f:if>
+        <span class="aiscareer-pager-text">
+          {f:translate(key: 'analytics.pagination.page', extensionName: 'AisCareer')} {jobFunnelPager.currentPage}/{jobFunnelPager.totalPages}
+        </span>
+        <f:if condition="{jobFunnelPager.hasNext}">
+          <a class="aiscareer-pager-link" href="{jobFunnelPagerUrls.next}">{f:translate(key: 'analytics.pagination.next', extensionName: 'AisCareer')}</a>
+        </f:if>
+      </div>
     </div>
   </section>
 </div>

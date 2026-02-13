@@ -26,6 +26,7 @@ class AnalyticsController extends ActionController
         $moduleTemplate = $this->moduleTemplateFactory->create($GLOBALS['TYPO3_REQUEST']);
 
         $range = $this->resolveRange();
+        $queryParams = $this->getQueryParams();
         $listViews = $this->eventRepository->countByTypeBetween('list_view', $range['from'], $range['to']);
         $detailViews = $this->eventRepository->countByTypeBetween('detail_view', $range['from'], $range['to']);
         $applicationSubmits = $this->eventRepository->countByTypeBetween('application_submit', $range['from'], $range['to']);
@@ -43,13 +44,40 @@ class AnalyticsController extends ActionController
             $shareWhatsapp,
             $shareX
         );
-        $jobShares = $this->eventRepository->findJobSharesBetween($range['from'], $range['to']);
-        $jobFunnel = $this->formatJobFunnel($this->eventRepository->findJobFunnelBetween($range['from'], $range['to']));
-        $topJobs = $this->applicationRepository->findTopJobs(5);
+        $perPage = 12;
+        $topJobsCount = $this->applicationRepository->countTopJobs();
+        $jobFunnelCount = $this->eventRepository->countJobFunnelBetween($range['from'], $range['to']);
+        $jobSharesCount = $this->eventRepository->countJobSharesBetween($range['from'], $range['to']);
+
+        $topJobsPage = $this->resolvePageFromQuery($queryParams, 'topJobsPage');
+        $jobFunnelPage = $this->resolvePageFromQuery($queryParams, 'jobFunnelPage');
+        $jobSharesPage = $this->resolvePageFromQuery($queryParams, 'jobSharesPage');
+
+        $topJobsPageData = $this->buildPaginationData($topJobsCount, $perPage, $topJobsPage);
+        $jobFunnelPageData = $this->buildPaginationData($jobFunnelCount, $perPage, $jobFunnelPage);
+        $jobSharesPageData = $this->buildPaginationData($jobSharesCount, $perPage, $jobSharesPage);
+
+        $jobShares = $this->eventRepository->findJobSharesBetweenPaged(
+            $range['from'],
+            $range['to'],
+            $perPage,
+            $jobSharesPageData['offset']
+        );
+        $jobFunnel = $this->formatJobFunnel($this->eventRepository->findJobFunnelBetweenPaged(
+            $range['from'],
+            $range['to'],
+            $perPage,
+            $jobFunnelPageData['offset']
+        ));
+        $topJobs = $this->applicationRepository->findTopJobsPage($perPage, $topJobsPageData['offset']);
 
         $exportType = $this->resolveExportType();
         if ($exportType !== '') {
-            return $this->buildCsvResponse($exportType, $range['from'], $range['to'], $topJobs, $jobFunnel, $jobShares);
+            $allTopJobs = $this->applicationRepository->findTopJobsPage(max(1, $topJobsCount), 0);
+            $allJobFunnel = $this->formatJobFunnel($this->eventRepository->findJobFunnelBetweenPaged($range['from'], $range['to'], max(1, $jobFunnelCount), 0));
+            $allJobShares = $this->eventRepository->findJobSharesBetweenPaged($range['from'], $range['to'], max(1, $jobSharesCount), 0);
+
+            return $this->buildCsvResponse($exportType, $range['from'], $range['to'], $allTopJobs, $allJobFunnel, $allJobShares);
         }
 
         $totalJobs = $this->jobRepository->countAll();
@@ -78,9 +106,21 @@ class AnalyticsController extends ActionController
             'shareX' => $shareX,
             'shareBreakdown' => $shareBreakdown,
             'jobShares' => $jobShares,
+            'jobSharesPager' => $jobSharesPageData,
+            'jobFunnelPager' => $jobFunnelPageData,
+            'topJobsPager' => $topJobsPageData,
+            'jobSharesPagerUrls' => $this->buildPagerUrls('jobSharesPage', $jobSharesPageData),
+            'jobFunnelPagerUrls' => $this->buildPagerUrls('jobFunnelPage', $jobFunnelPageData),
+            'topJobsPagerUrls' => $this->buildPagerUrls('topJobsPage', $topJobsPageData),
             'conversionListToDetail' => $this->formatPercent($detailViews, $listViews),
             'conversionDetailToApplication' => $this->formatPercent($applicationSubmits, $detailViews),
             'conversionListToApplication' => $this->formatPercent($applicationSubmits, $listViews),
+            'trafficGraph' => $this->buildTrafficGraph($listViews, $detailViews, $applicationSubmits),
+            'conversionGraph' => [
+                ['key' => 'list_to_detail', 'label' => 'List -> Detail', 'value' => $this->percentValue($detailViews, $listViews)],
+                ['key' => 'detail_to_application', 'label' => 'Detail -> Application', 'value' => $this->percentValue($applicationSubmits, $detailViews)],
+                ['key' => 'list_to_application', 'label' => 'List -> Application', 'value' => $this->percentValue($applicationSubmits, $listViews)],
+            ],
             'period' => $range['period'],
             'fromDate' => $range['from']->format('Y-m-d'),
             'toDate' => $range['to']->format('Y-m-d'),
@@ -166,7 +206,7 @@ class AnalyticsController extends ActionController
     {
         $filtered = [];
         foreach ($params as $key => $value) {
-            if (in_array($key, ['period', 'from', 'to'], true)) {
+            if (in_array($key, ['period', 'from', 'to', 'export', 'topJobsPage', 'jobFunnelPage', 'jobSharesPage'], true)) {
                 continue;
             }
             if (is_scalar($value)) {
@@ -183,6 +223,14 @@ class AnalyticsController extends ActionController
         }
         $value = ($numerator / $denominator) * 100;
         return number_format($value, 1) . '%';
+    }
+
+    private function percentValue(int $numerator, int $denominator): float
+    {
+        if ($denominator <= 0) {
+            return 0.0;
+        }
+        return round(($numerator / $denominator) * 100, 1);
     }
 
     /**
@@ -294,6 +342,7 @@ class AnalyticsController extends ActionController
         $path = $request->getUri()->getPath();
         $params = (array)$request->getQueryParams();
         unset($params['export']);
+        unset($params['topJobsPage'], $params['jobFunnelPage'], $params['jobSharesPage']);
         $params['period'] = $period;
         $params['from'] = $from->format('Y-m-d');
         $params['to'] = $to->format('Y-m-d');
@@ -339,5 +388,89 @@ class AnalyticsController extends ActionController
         usort($rows, static fn (array $a, array $b): int => $b['count'] <=> $a['count']);
 
         return $rows;
+    }
+
+    /**
+     * @return array<int, array{key:string,label:string,value:int,percent:float}>
+     */
+    private function buildTrafficGraph(int $listViews, int $detailViews, int $applicationSubmits): array
+    {
+        $rows = [
+            ['key' => 'list', 'label' => 'List views', 'value' => $listViews, 'percent' => 0.0],
+            ['key' => 'detail', 'label' => 'Detail views', 'value' => $detailViews, 'percent' => 0.0],
+            ['key' => 'applications', 'label' => 'Applications', 'value' => $applicationSubmits, 'percent' => 0.0],
+        ];
+        $max = max($listViews, $detailViews, $applicationSubmits, 1);
+        foreach ($rows as $index => $row) {
+            $rows[$index]['percent'] = round(($row['value'] / $max) * 100, 1);
+        }
+        return $rows;
+    }
+
+    private function resolvePageFromQuery(array $queryParams, string $key): int
+    {
+        $value = $queryParams[$key] ?? 1;
+        return max(1, (int)$value);
+    }
+
+    /**
+     * @return array{currentPage:int,totalPages:int,offset:int,hasPrevious:bool,hasNext:bool,previousPage:int,nextPage:int}
+     */
+    private function buildPaginationData(int $totalItems, int $perPage, int $requestedPage): array
+    {
+        $perPage = max(1, $perPage);
+        $totalPages = max(1, (int)ceil($totalItems / $perPage));
+        $currentPage = min(max(1, $requestedPage), $totalPages);
+
+        return [
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages,
+            'offset' => ($currentPage - 1) * $perPage,
+            'hasPrevious' => $currentPage > 1,
+            'hasNext' => $currentPage < $totalPages,
+            'previousPage' => max(1, $currentPage - 1),
+            'nextPage' => min($totalPages, $currentPage + 1),
+        ];
+    }
+
+    /**
+     * @param array{currentPage:int,totalPages:int,offset:int,hasPrevious:bool,hasNext:bool,previousPage:int,nextPage:int} $pager
+     * @return array{previous:string,next:string}
+     */
+    private function buildPagerUrls(string $pageKey, array $pager): array
+    {
+        $previous = '';
+        $next = '';
+        if ($pager['hasPrevious']) {
+            $previous = $this->buildModuleUrlWithQuery([$pageKey => $pager['previousPage']]);
+        }
+        if ($pager['hasNext']) {
+            $next = $this->buildModuleUrlWithQuery([$pageKey => $pager['nextPage']]);
+        }
+
+        return [
+            'previous' => $previous,
+            'next' => $next,
+        ];
+    }
+
+    /**
+     * @param array<string, int|string> $overrides
+     */
+    private function buildModuleUrlWithQuery(array $overrides): string
+    {
+        $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if (!$request instanceof \Psr\Http\Message\ServerRequestInterface) {
+            return '';
+        }
+
+        $path = $request->getUri()->getPath();
+        $params = (array)$request->getQueryParams();
+        unset($params['export']);
+        foreach ($overrides as $key => $value) {
+            $params[$key] = $value;
+        }
+
+        return $path . '?' . http_build_query($params);
     }
 }
