@@ -19,7 +19,10 @@
   margin: 0 auto;
   padding: 48px 20px 64px;
 }
-
+/*do not remove next line*/
+.aiscareer-filter-form div:has(input[type="hidden"]) {
+  display: none;
+}
 .aiscareer .aiscareer-header {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -188,10 +191,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 14px 18px;
-}
-
-.aiscareer .aiscareer-filters form div:has(input[type="hidden"]){
-  display: none;
 }
 
 .aiscareer .aiscareer-filters label {
@@ -726,4 +725,235 @@
 
 .aiscareer-toast.is-error {
   background: #b91c1c;
+}
+
+.aiscareer .aiscareer-alert-linkbox {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #d6e2f5;
+  border-radius: 14px;
+  padding: 18px;
+  background: linear-gradient(135deg, #f8fbff 0%, #f1f7ff 100%);
+}
+
+.aiscareer .aiscareer-alert-linkbox h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+
+.aiscareer .aiscareer-alert-linkbox p {
+  margin: 0;
+  color: #475569;
+}
+
+.aiscareer .aiscareer-alert-linkbox__action .aiscareer-button {
+  white-space: nowrap;
+}
+
+.aiscareer .aiscareer-jobalert h3 {
+  margin: 0 0 14px;
+}
+
+@media (max-width: 640px) {
+  .aiscareer .aiscareer-alert-linkbox {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.aiscareer .aiscareer-consent-field {
+  margin-top: 8px;
+}
+
+.aiscareer .aiscareer-consent-label {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.4;
+}
+
+.aiscareer .aiscareer-consent-label input[type="checkbox"] {
+  appearance: checkbox !important;
+  -webkit-appearance: checkbox !important;
+  -moz-appearance: checkbox !important;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  margin-right: 0;
+  border: 1px solid #64748b !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  display: inline-block !important;
+  accent-color: #0a6ed1;
+}
+
+.aiscareer .aiscareer-consent-label input[type="checkbox"]::after {
+  content: none !important;
+  display: none !important;
+}
+
+.aiscareer .aiscareer-jobalert .aiscareer-form {
+  gap: 16px;
+}
+
+.aiscareer .aiscareer-jobalert-head {
+  margin-bottom: 8px;
+}
+
+.aiscareer .aiscareer-jobalert-head h3 {
+  margin: 0;
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+  letter-spacing: -0.02em;
+}
+
+.aiscareer .aiscareer-jobalert-head p {
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 0.98rem;
+}
+
+/* Job alert refined layout */
+.aiscareer .aiscareer-jobalert {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 28px;
+  border-radius: 26px;
+  border: 1px solid #dbe4f2;
+  background: radial-gradient(1200px 320px at 20% -10%, #edf4ff 0%, #ffffff 52%);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.09);
+}
+
+.aiscareer .aiscareer-jobalert label {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #536072;
+  margin-bottom: 7px;
+}
+
+.aiscareer .aiscareer-jobalert-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+}
+
+.aiscareer .aiscareer-jobalert-field,
+.aiscareer .aiscareer-jobalert-actions,
+.aiscareer .aiscareer-consent-field--alert {
+  min-width: 0;
+}
+
+.aiscareer .aiscareer-jobalert-field--full {
+  grid-column: 1 / -1;
+}
+
+.aiscareer .aiscareer-jobalert .aiscareer-input,
+.aiscareer .aiscareer-jobalert .aiscareer-select {
+  min-height: 48px;
+  border-radius: 14px;
+  border: 1px solid #cfd9e8;
+  background: #fff;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03);
+}
+
+.aiscareer .aiscareer-jobalert .aiscareer-input:focus,
+.aiscareer .aiscareer-jobalert .aiscareer-select:focus {
+  outline: none;
+  border-color: #7ba6ef;
+  box-shadow: 0 0 0 4px rgba(67, 120, 217, 0.14);
+}
+
+.aiscareer .aiscareer-jobalert-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.aiscareer .aiscareer-jobalert .aiscareer-button {
+  border-radius: 999px;
+  min-height: 48px;
+  padding: 0 24px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  background: linear-gradient(180deg, #2d8cff 0%, #0a6ed1 100%);
+  box-shadow: 0 12px 26px rgba(10, 110, 209, 0.28);
+}
+
+.aiscareer .aiscareer-jobalert .aiscareer-button:hover {
+  filter: brightness(1.04);
+}
+
+.aiscareer .aiscareer-consent-field--alert {
+  margin-top: 2px;
+}
+
+.aiscareer .aiscareer-consent-field--alert .aiscareer-consent-label {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 10px;
+  align-items: start;
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.aiscareer .aiscareer-consent-field--alert input[type="hidden"] {
+  display: none;
+}
+
+.aiscareer .aiscareer-consent-field--alert input[type="checkbox"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border-radius: 6px;
+  border: 1px solid #93a5bf !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  position: relative;
+}
+
+.aiscareer .aiscareer-consent-field--alert input[type="checkbox"]::after {
+  content: "" !important;
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 6px;
+  height: 11px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.15s ease;
+}
+
+.aiscareer .aiscareer-consent-field--alert input[type="checkbox"]:checked {
+  background: #0a6ed1 !important;
+  border-color: #0a6ed1 !important;
+}
+
+.aiscareer .aiscareer-consent-field--alert input[type="checkbox"]:checked::after {
+  transform: rotate(45deg) scale(1);
+}
+
+@media (max-width: 760px) {
+  .aiscareer .aiscareer-jobalert {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .aiscareer .aiscareer-jobalert-form {
+    grid-template-columns: 1fr;
+  }
+
+  .aiscareer .aiscareer-jobalert-actions {
+    justify-content: stretch;
+  }
+
+  .aiscareer .aiscareer-jobalert .aiscareer-button {
+    width: 100%;
+  }
 }

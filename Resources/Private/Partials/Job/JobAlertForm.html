@@ -1,0 +1,101 @@
+<div class="aiscareer-filters aiscareer-jobalert">
+  <div class="aiscareer-jobalert-head">
+    <h3><f:translate key="alert.title" extensionName="AisCareer" /></h3>
+    <p><f:translate key="alert.box.text" extensionName="AisCareer" /></p>
+  </div>
+
+  <f:if condition="{alertState} == 'pending'">
+    <div class="aiscareer-success"><f:translate key="success.alertPending" extensionName="AisCareer" /></div>
+  </f:if>
+  <f:if condition="{alertState} == 'confirmed'">
+    <div class="aiscareer-success"><f:translate key="success.alertConfirmed" extensionName="AisCareer" /></div>
+  </f:if>
+  <f:if condition="{alertState} == 'unsubscribed'">
+    <div class="aiscareer-success"><f:translate key="success.alertUnsubscribed" extensionName="AisCareer" /></div>
+  </f:if>
+  <f:if condition="{alertState} == 'exists'">
+    <div class="aiscareer-success"><f:translate key="success.alertExists" extensionName="AisCareer" /></div>
+  </f:if>
+  <f:if condition="{alertState} == 'invalid'">
+    <div class="aiscareer-field-error"><f:translate key="error.alertInvalid" extensionName="AisCareer" /></div>
+  </f:if>
+  <f:if condition="{alertState} == 'consent'">
+    <div class="aiscareer-field-error"><f:translate key="error.consentRequired" extensionName="AisCareer" /></div>
+  </f:if>
+  <f:if condition="{alertState} == 'bot'">
+    <div class="aiscareer-field-error"><f:translate key="error.botDetected" extensionName="AisCareer" /></div>
+  </f:if>
+  <f:if condition="{alertState} == 'rate'">
+    <div class="aiscareer-field-error"><f:translate key="error.rateLimited" extensionName="AisCareer" /></div>
+  </f:if>
+
+  <f:form action="subscribe" controller="Alert" method="post" pageUid="{formPagePid}" class="aiscareer-form aiscareer-jobalert-form" name="jobAlert" additionalAttributes="{novalidate: 'novalidate'}">
+    <div class="aiscareer-honeypot" aria-hidden="true">
+      <label for="aiscareer-alert-website">Website</label>
+      <f:form.textfield id="aiscareer-alert-website" name="antiBot[website]" value="" />
+    </div>
+    <f:form.hidden name="antiBot[ts]" value="{f:format.date(date: 'now', format: 'U')}" />
+
+    <div class="aiscareer-jobalert-field aiscareer-jobalert-field--full">
+      <label for="aiscareer-alert-email"><f:translate key="alert.email" extensionName="AisCareer" /></label>
+      <f:form.textfield id="aiscareer-alert-email" property="email" value="{jobAlert.email}" type="email" class="aiscareer-input" />
+    </div>
+
+    <f:if condition="{settings.filterCountry} && {filterOptions.countries -> f:count()} > 0">
+      <div class="aiscareer-jobalert-field">
+        <label for="aiscareer-alert-country"><f:translate key="filter.country" extensionName="AisCareer" /></label>
+        <f:form.select id="aiscareer-alert-country" property="country" class="aiscareer-select" value="{jobAlert.country}" options="{filterOptions.countries}" prependOptionLabel="{f:translate(key: 'filter.option.all', extensionName: 'AisCareer')}" prependOptionValue="" />
+      </div>
+    </f:if>
+
+    <f:if condition="{settings.filterDepartment} && {filterOptions.departments -> f:count()} > 0">
+      <div class="aiscareer-jobalert-field">
+        <label for="aiscareer-alert-department"><f:translate key="filter.department" extensionName="AisCareer" /></label>
+        <f:form.select id="aiscareer-alert-department" property="department" class="aiscareer-select" value="{jobAlert.department}" options="{filterOptions.departments}" prependOptionLabel="{f:translate(key: 'filter.option.all', extensionName: 'AisCareer')}" prependOptionValue="" />
+      </div>
+    </f:if>
+
+    <f:if condition="{settings.filterContractType} && {filterOptions.contractTypes -> f:count()} > 0">
+      <div class="aiscareer-jobalert-field">
+        <label for="aiscareer-alert-contract"><f:translate key="filter.contractType" extensionName="AisCareer" /></label>
+        <f:form.select id="aiscareer-alert-contract" property="contractType" class="aiscareer-select" value="{jobAlert.contractType}" options="{filterOptions.contractTypes}" prependOptionLabel="{f:translate(key: 'filter.option.all', extensionName: 'AisCareer')}" prependOptionValue="" />
+      </div>
+    </f:if>
+
+    <f:if condition="{settings.filterRemotePossible} && {filterOptions.remotePossibleAvailable}">
+      <div class="aiscareer-jobalert-field">
+        <label for="aiscareer-alert-remote"><f:translate key="filter.remote" extensionName="AisCareer" /></label>
+        <f:form.select id="aiscareer-alert-remote" property="remotePossible" class="aiscareer-select" value="{jobAlert.remotePossible}">
+          <f:form.select.option value=""><f:translate key="filter.option.any" extensionName="AisCareer" /></f:form.select.option>
+          <f:form.select.option value="0"><f:translate key="filter.option.onSite" extensionName="AisCareer" /></f:form.select.option>
+          <f:form.select.option value="1"><f:translate key="filter.option.remote" extensionName="AisCareer" /></f:form.select.option>
+        </f:form.select>
+      </div>
+    </f:if>
+
+    <f:if condition="{settings.filterCategory} && {filterOptions.categories -> f:count()} > 0">
+      <div class="aiscareer-jobalert-field">
+        <label for="aiscareer-alert-category"><f:translate key="filter.category" extensionName="AisCareer" /></label>
+        <f:form.select id="aiscareer-alert-category" property="category" class="aiscareer-select" value="{jobAlert.category}" options="{filterOptions.categories}" prependOptionLabel="{f:translate(key: 'filter.option.all', extensionName: 'AisCareer')}" prependOptionValue="" />
+      </div>
+    </f:if>
+
+    <div class="aiscareer-consent-field aiscareer-consent-field--alert aiscareer-jobalert-field--full">
+      <label for="aiscareer-alert-consent" class="aiscareer-consent-label">
+        <f:form.checkbox id="aiscareer-alert-consent" property="consentPrivacy" value="1" />
+        <span>
+          <f:translate key="alert.privacyConsent" extensionName="AisCareer" />
+          <f:if condition="{settings.privacyPageUid}">
+            (<f:link.page pageUid="{settings.privacyPageUid}" target="_blank"><f:translate key="form.privacyView" extensionName="AisCareer" /></f:link.page>)
+          </f:if>
+        </span>
+      </label>
+    </div>
+
+    <div class="aiscareer-jobalert-actions aiscareer-jobalert-field--full">
+      <button type="submit" class="aiscareer-button">
+        <f:translate key="alert.submit" extensionName="AisCareer" />
+      </button>
+    </div>
+  </f:form>
+</div>

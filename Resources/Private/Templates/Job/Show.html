@@ -101,6 +101,11 @@
             <div class="aiscareer-meta aiscareer-share-feedback" aria-live="polite"></div>
           </f:if>
         </div>
+        <f:if condition="{settings.jobAlertEnabled} && {settings.jobAlertPagePid}">
+          <div class="aiscareer-section">
+            <f:render partial="Job/JobAlertLinkBox" arguments="{jobAlertPagePid: settings.jobAlertPagePid}" />
+          </div>
+        </f:if>
 
         <f:if condition="{job.description}">
           <div class="aiscareer-section">

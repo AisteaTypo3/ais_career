@@ -47,6 +47,19 @@
               <default>1</default>
             </config>
           </settings.mapEnabled>
+          <settings.jobAlertPagePid>
+            <TCEforms>
+              <label>LLL:EXT:ais_career/Resources/Private/Language/locallang_flexforms.xlf:joblist.jobAlertPagePid</label>
+            </TCEforms>
+            <config>
+              <type>group</type>
+              <internal_type>db</internal_type>
+              <allowed>pages</allowed>
+              <size>1</size>
+              <maxitems>1</maxitems>
+              <minitems>0</minitems>
+            </config>
+          </settings.jobAlertPagePid>
         </el>
       </ROOT>
     </general>

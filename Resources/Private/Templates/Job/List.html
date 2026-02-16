@@ -11,6 +11,9 @@
         <f:if condition="{settings.enableFilters}">
           <f:render partial="Job/Filters" arguments="{filters: filters, filterOptions: filterOptions, settings: settings, listPid: listPid}" />
         </f:if>
+        <f:if condition="{settings.jobAlertEnabled} && {settings.jobAlertPagePid}">
+          <f:render partial="Job/JobAlertLinkBox" arguments="{jobAlertPagePid: settings.jobAlertPagePid}" />
+        </f:if>
         <div class="aiscareer-view-toggle" role="group" aria-label="View mode">
           <button type="button" class="aiscareer-toggle-button is-active" data-view="grid">
             <span class="aiscareer-toggle-icon grid" aria-hidden="true"></span>

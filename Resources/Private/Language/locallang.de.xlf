@@ -531,6 +531,58 @@
         <source>Reply directly to this email to contact the applicant.</source>
         <target>Antworten Sie direkt auf diese E-Mail, um die Bewerber:in zu kontaktieren.</target>
       </trans-unit>
+      <trans-unit id="alert.title">
+        <source>Job alert</source>
+        <target>Job-Alert</target>
+      </trans-unit>
+      <trans-unit id="alert.email">
+        <source>Email for alerts *</source>
+        <target>E-Mail für Alerts *</target>
+      </trans-unit>
+      <trans-unit id="alert.privacyConsent">
+        <source>I want to receive job alerts and accept the privacy policy</source>
+        <target>Ich möchte Job-Alerts erhalten und akzeptiere die Datenschutzerklärung</target>
+      </trans-unit>
+      <trans-unit id="alert.submit">
+        <source>Subscribe to job alert</source>
+        <target>Job-Alert abonnieren</target>
+      </trans-unit>
+      <trans-unit id="alert.box.title">
+        <source>Never miss a new job</source>
+        <target>Keine neue Stelle mehr verpassen</target>
+      </trans-unit>
+      <trans-unit id="alert.box.text">
+        <source>Get matching job openings by email with one click.</source>
+        <target>Erhalte passende Jobangebote per E-Mail mit nur einem Klick.</target>
+      </trans-unit>
+      <trans-unit id="alert.box.button">
+        <source>Create job alert</source>
+        <target>Job-Alert erstellen</target>
+      </trans-unit>
+      <trans-unit id="success.alertPending">
+        <source>Please check your email and confirm your job alert.</source>
+        <target>Bitte prüfen Sie Ihre E-Mails und bestätigen Sie Ihren Job-Alert.</target>
+      </trans-unit>
+      <trans-unit id="success.alertConfirmed">
+        <source>Your job alert is active now.</source>
+        <target>Ihr Job-Alert ist jetzt aktiv.</target>
+      </trans-unit>
+      <trans-unit id="success.alertUnsubscribed">
+        <source>You have been unsubscribed from this job alert.</source>
+        <target>Sie wurden von diesem Job-Alert abgemeldet.</target>
+      </trans-unit>
+      <trans-unit id="success.alertExists">
+        <source>This job alert is already active.</source>
+        <target>Dieser Job-Alert ist bereits aktiv.</target>
+      </trans-unit>
+      <trans-unit id="error.alertInvalid">
+        <source>The job alert request is invalid. Please try again.</source>
+        <target>Die Job-Alert-Anfrage ist ungültig. Bitte erneut versuchen.</target>
+      </trans-unit>
+      <trans-unit id="mail.alert.optin.subject">
+        <source>Please confirm your job alert subscription</source>
+        <target>Bitte bestätigen Sie Ihr Job-Alert-Abonnement</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

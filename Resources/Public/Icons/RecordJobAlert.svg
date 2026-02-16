@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Job Alert">
+  <rect x="10" y="8" width="44" height="48" rx="6" fill="#f5f7fa" stroke="#1d2a3a" stroke-width="2"/>
+  <path d="M18 21h28M18 29h19M18 37h15" stroke="#1d2a3a" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="47" cy="44" r="9" fill="#ffcf4a" stroke="#1d2a3a" stroke-width="2"/>
+  <path d="M47 39v5l3 2" stroke="#1d2a3a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

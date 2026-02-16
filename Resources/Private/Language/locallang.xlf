@@ -399,6 +399,45 @@
       <trans-unit id="mail.admin.footer">
         <source>Reply directly to this email to contact the applicant.</source>
       </trans-unit>
+      <trans-unit id="alert.title">
+        <source>Job alert</source>
+      </trans-unit>
+      <trans-unit id="alert.email">
+        <source>Email for alerts *</source>
+      </trans-unit>
+      <trans-unit id="alert.privacyConsent">
+        <source>I want to receive job alerts and accept the privacy policy</source>
+      </trans-unit>
+      <trans-unit id="alert.submit">
+        <source>Subscribe to job alert</source>
+      </trans-unit>
+      <trans-unit id="alert.box.title">
+        <source>Never miss a new job</source>
+      </trans-unit>
+      <trans-unit id="alert.box.text">
+        <source>Get matching job openings by email with one click.</source>
+      </trans-unit>
+      <trans-unit id="alert.box.button">
+        <source>Create job alert</source>
+      </trans-unit>
+      <trans-unit id="success.alertPending">
+        <source>Please check your email and confirm your job alert.</source>
+      </trans-unit>
+      <trans-unit id="success.alertConfirmed">
+        <source>Your job alert is active now.</source>
+      </trans-unit>
+      <trans-unit id="success.alertUnsubscribed">
+        <source>You have been unsubscribed from this job alert.</source>
+      </trans-unit>
+      <trans-unit id="success.alertExists">
+        <source>This job alert is already active.</source>
+      </trans-unit>
+      <trans-unit id="error.alertInvalid">
+        <source>The job alert request is invalid. Please try again.</source>
+      </trans-unit>
+      <trans-unit id="mail.alert.optin.subject">
+        <source>Please confirm your job alert subscription</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

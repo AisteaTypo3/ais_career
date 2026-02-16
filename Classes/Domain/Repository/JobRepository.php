@@ -182,4 +182,83 @@ class JobRepository extends Repository
 
         return array_values(array_unique(array_map(static fn (array $row): int => (int)$row['uid_local'], $rows)));
     }
+
+    /**
+     * @param array<string, mixed> $filters
+     * @return array<int, array<string, mixed>>
+     */
+    public function findActivePublishedSinceByFilters(array $filters, int $sinceTs, int $limit = 10): array
+    {
+        $limit = max(1, $limit);
+        $nowTs = (int)(new \DateTime())->format('U');
+
+        $qb = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_aiscareer_domain_model_job');
+        $qb->getRestrictions()->removeAll();
+
+        $qb
+            ->select('j.uid', 'j.title', 'j.slug', 'j.country', 'j.city', 'j.location_label')
+            ->from('tx_aiscareer_domain_model_job', 'j')
+            ->where(
+                $qb->expr()->eq('j.deleted', 0),
+                $qb->expr()->eq('j.hidden', 0),
+                $qb->expr()->eq('j.is_active', 1),
+                $qb->expr()->or(
+                    $qb->expr()->lte('j.published_from', $qb->createNamedParameter($nowTs, \PDO::PARAM_INT)),
+                    $qb->expr()->eq('j.published_from', 0)
+                ),
+                $qb->expr()->or(
+                    $qb->expr()->gte('j.published_to', $qb->createNamedParameter($nowTs, \PDO::PARAM_INT)),
+                    $qb->expr()->eq('j.published_to', 0)
+                ),
+                $qb->expr()->or(
+                    $qb->expr()->gt('j.published_from', $qb->createNamedParameter($sinceTs, \PDO::PARAM_INT)),
+                    $qb->expr()->and(
+                        $qb->expr()->eq('j.published_from', 0),
+                        $qb->expr()->gt('j.crdate', $qb->createNamedParameter($sinceTs, \PDO::PARAM_INT))
+                    )
+                )
+            );
+
+        $country = strtoupper(trim((string)($filters['country'] ?? '')));
+        if ($country !== '') {
+            $qb->andWhere($qb->expr()->eq('j.country', $qb->createNamedParameter($country)));
+        }
+
+        $department = trim((string)($filters['department'] ?? ''));
+        if ($department !== '') {
+            $qb->andWhere($qb->expr()->eq('j.department', $qb->createNamedParameter($department)));
+        }
+
+        $contractType = trim((string)($filters['contractType'] ?? ''));
+        if ($contractType !== '') {
+            $qb->andWhere($qb->expr()->eq('j.contract_type', $qb->createNamedParameter($contractType)));
+        }
+
+        if (array_key_exists('remotePossible', $filters) && (int)$filters['remotePossible'] >= 0) {
+            $qb->andWhere($qb->expr()->eq('j.remote_possible', $qb->createNamedParameter((int)$filters['remotePossible'], \PDO::PARAM_INT)));
+        }
+
+        $categoryUid = (int)($filters['category'] ?? 0);
+        if ($categoryUid > 0) {
+            $qb->innerJoin(
+                'j',
+                'sys_category_record_mm',
+                'mm',
+                $qb->expr()->and(
+                    $qb->expr()->eq('mm.uid_local', $qb->quoteIdentifier('j.uid')),
+                    $qb->expr()->eq('mm.uid_foreign', $qb->createNamedParameter($categoryUid, \PDO::PARAM_INT)),
+                    $qb->expr()->eq('mm.tablenames', $qb->createNamedParameter('tx_aiscareer_domain_model_job')),
+                    $qb->expr()->eq('mm.fieldname', $qb->createNamedParameter('categories'))
+                )
+            );
+        }
+
+        return $qb
+            ->orderBy('j.published_from', 'DESC')
+            ->addOrderBy('j.crdate', 'DESC')
+            ->setMaxResults($limit)
+            ->executeQuery()
+            ->fetchAllAssociative();
+    }
 }

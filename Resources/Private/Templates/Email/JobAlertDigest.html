@@ -1,0 +1,44 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+  <body style="margin:0;padding:0;background:#f6f7fb;font-family:Arial,Helvetica,sans-serif;color:#111827;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f6f7fb;padding:32px 12px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="640" cellspacing="0" cellpadding="0" style="background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 18px 40px rgba(15,23,42,0.08);">
+            <tr>
+              <td style="background:#0b84ff;padding:24px 28px;color:#fff;">
+                <div style="font-size:18px;letter-spacing:0.04em;text-transform:uppercase;opacity:0.9;">Job Alert</div>
+                <div style="font-size:26px;font-weight:700;margin-top:6px;">New matching jobs</div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:28px;">
+                <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#374151;">
+                  We found <strong>{jobs -> f:count()}</strong> new job(s) that match your alert.
+                </p>
+
+                <f:for each="{jobs}" as="job">
+                  <div style="border:1px solid #e5e7eb;border-radius:16px;padding:14px 16px;background:#ffffff;margin-bottom:10px;">
+                    <div style="font-size:16px;font-weight:700;color:#111827;">{job.title}</div>
+                    <div style="margin-top:4px;color:#6b7280;font-size:14px;">{job.location}</div>
+                    <f:if condition="{job.url}">
+                      <div style="margin-top:8px;"><a href="{job.url}" style="color:#0b84ff;text-decoration:none;font-weight:600;">View job</a></div>
+                    </f:if>
+                  </div>
+                </f:for>
+
+                <div style="margin-top:18px;">
+                  <a href="{browseUrl}" style="display:inline-block;background:#0b84ff;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:999px;font-weight:600;">Browse all jobs</a>
+                </div>
+
+                <p style="margin:16px 0 0;font-size:13px;color:#6b7280;line-height:1.6;">
+                  If you no longer want these emails,
+                  <a href="{unsubscribeUrl}" style="color:#0b84ff;">unsubscribe here</a>.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

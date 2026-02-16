@@ -61,7 +61,7 @@
   }
 
   function bindFilterForm() {
-    var form = document.querySelector('.aiscareer-filters form');
+    var form = document.querySelector('.aiscareer-filter-form');
     if (!form) {
       return;
     }

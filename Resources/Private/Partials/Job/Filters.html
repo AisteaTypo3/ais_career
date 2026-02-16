@@ -1,5 +1,5 @@
 <div class="aiscareer-filters">
-  <f:form action="list" method="post" pageUid="{listPid}">
+  <f:form action="list" method="post" pageUid="{listPid}" class="aiscareer-filter-form">
     <f:if condition="{settings.filterCountry} && {filterOptions.countries -> f:count()} > 0">
       <div>
         <label for="aiscareer-country"><f:translate key="filter.country" extensionName="AisCareer" /></label>

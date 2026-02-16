@@ -16,6 +16,17 @@ plugin.tx_aiscareer {
     filterCategory = 1
     mapEnabled = 1
 
+    jobAlertEnabled = 1
+    jobAlertPagePid = 0
+    jobAlertStoragePid = 0
+    jobAlertFromEmail = no-reply@example.com
+    jobAlertFromName = AIS Career
+    jobAlertRateLimit = 0
+    jobAlertRateWindowSeconds = 3600
+    jobAlertRequireHeaders = 0
+    jobAlertBotMinSeconds = 0
+    jobAlertBotMaxSeconds = 86400
+
     applicationEnabled = 1
     applicationToEmail = hr@example.com
     applicationFromEmail = no-reply@example.com

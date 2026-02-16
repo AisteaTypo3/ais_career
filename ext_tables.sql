@@ -21,6 +21,8 @@ CREATE TABLE tx_aiscareer_domain_model_job (
   employment_start int(11) unsigned NOT NULL DEFAULT 0,
   published_from int(11) unsigned NOT NULL DEFAULT 0,
   published_to int(11) unsigned NOT NULL DEFAULT 0,
+  trigger_job_alert_now tinyint(1) NOT NULL DEFAULT 0,
+  alert_triggered_at int(11) unsigned NOT NULL DEFAULT 0,
   is_active tinyint(1) NOT NULL DEFAULT 1,
   contact_email varchar(255) NOT NULL DEFAULT '',
   contact_name varchar(255) NOT NULL DEFAULT '',
@@ -84,4 +86,34 @@ CREATE TABLE tx_aiscareer_event (
   KEY event_type (event_type),
   KEY job (job),
   KEY created_at (created_at)
+);
+
+CREATE TABLE tx_aiscareer_domain_model_jobalert (
+  uid int(11) unsigned NOT NULL auto_increment,
+  pid int(11) unsigned NOT NULL DEFAULT 0,
+  email varchar(255) NOT NULL DEFAULT '',
+  country varchar(16) NOT NULL DEFAULT '',
+  department varchar(255) NOT NULL DEFAULT '',
+  contract_type varchar(255) NOT NULL DEFAULT '',
+  category int(11) unsigned NOT NULL DEFAULT 0,
+  remote_possible tinyint(2) NOT NULL DEFAULT -1,
+  consent_privacy tinyint(1) NOT NULL DEFAULT 0,
+  source_url varchar(1024) NOT NULL DEFAULT '',
+  created_at int(11) unsigned NOT NULL DEFAULT 0,
+  double_opt_in_token varchar(128) NOT NULL DEFAULT '',
+  double_opt_in_confirmed_at int(11) unsigned NOT NULL DEFAULT 0,
+  unsubscribe_token varchar(128) NOT NULL DEFAULT '',
+  unsubscribed_at int(11) unsigned NOT NULL DEFAULT 0,
+  last_sent_at int(11) unsigned NOT NULL DEFAULT 0,
+  hidden tinyint(1) NOT NULL DEFAULT 0,
+  deleted tinyint(1) NOT NULL DEFAULT 0,
+  tstamp int(11) unsigned NOT NULL DEFAULT 0,
+  crdate int(11) unsigned NOT NULL DEFAULT 0,
+  cruser_id int(11) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (uid),
+  KEY parent (pid),
+  KEY email (email),
+  KEY doi_token (double_opt_in_token),
+  KEY unsub_token (unsubscribe_token),
+  KEY sent_state (double_opt_in_confirmed_at, unsubscribed_at, last_sent_at)
 );

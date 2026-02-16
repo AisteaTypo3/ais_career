@@ -78,6 +78,12 @@
       <trans-unit id="tx_aiscareer_domain_model_job.published_to">
         <source>Published to</source>
       </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.trigger_job_alert_now">
+        <source>Trigger job alert now</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_job.alert_triggered_at">
+        <source>Alert triggered at</source>
+      </trans-unit>
       <trans-unit id="tx_aiscareer_domain_model_job.is_active">
         <source>Active</source>
       </trans-unit>
@@ -144,6 +150,51 @@
       </trans-unit>
       <trans-unit id="tx_aiscareer_domain_model_application.double_opt_in_token">
         <source>Double opt-in token</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_jobalert">
+        <source>Job alert</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_jobalert.email">
+        <source>Email</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_jobalert.country">
+        <source>Country (ISO-2)</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_jobalert.department">
+        <source>Department</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_jobalert.contract_type">
+        <source>Contract type</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_jobalert.category">
+        <source>Category</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_jobalert.remote_possible">
+        <source>Remote</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_jobalert.consent_privacy">
+        <source>Consent privacy</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_jobalert.source_url">
+        <source>Source URL</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_jobalert.created_at">
+        <source>Created at</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_jobalert.double_opt_in_token">
+        <source>Double opt-in token</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_jobalert.double_opt_in_confirmed_at">
+        <source>Double opt-in confirmed at</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_jobalert.unsubscribe_token">
+        <source>Unsubscribe token</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_jobalert.unsubscribed_at">
+        <source>Unsubscribed at</source>
+      </trans-unit>
+      <trans-unit id="tx_aiscareer_domain_model_jobalert.last_sent_at">
+        <source>Last sent at</source>
       </trans-unit>
     </body>
   </file>

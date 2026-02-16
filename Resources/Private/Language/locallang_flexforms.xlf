@@ -21,6 +21,9 @@
       <trans-unit id="joblist.mapEnabled">
         <source>Enable world map</source>
       </trans-unit>
+      <trans-unit id="joblist.jobAlertPagePid">
+        <source>Job alert page</source>
+      </trans-unit>
       <trans-unit id="joblist.enableFilters">
         <source>Enable filters</source>
       </trans-unit>
@@ -102,6 +105,42 @@
       </trans-unit>
       <trans-unit id="jobdetail.shareEnableX">
         <source>Share: Enable X</source>
+      </trans-unit>
+      <trans-unit id="jobdetail.jobAlertPagePid">
+        <source>Job alert page</source>
+      </trans-unit>
+      <trans-unit id="jobalert.sheetGeneral">
+        <source>General</source>
+      </trans-unit>
+      <trans-unit id="jobalert.listPid">
+        <source>Job list page</source>
+      </trans-unit>
+      <trans-unit id="jobalert.jobAlertStoragePid">
+        <source>Storage page for subscribers</source>
+      </trans-unit>
+      <trans-unit id="jobalert.privacyPageUid">
+        <source>Privacy page</source>
+      </trans-unit>
+      <trans-unit id="jobalert.jobAlertFromEmail">
+        <source>Sender email</source>
+      </trans-unit>
+      <trans-unit id="jobalert.jobAlertFromName">
+        <source>Sender name</source>
+      </trans-unit>
+      <trans-unit id="jobalert.jobAlertRateLimit">
+        <source>Rate limit (requests per window)</source>
+      </trans-unit>
+      <trans-unit id="jobalert.jobAlertRateWindowSeconds">
+        <source>Rate limit window (seconds)</source>
+      </trans-unit>
+      <trans-unit id="jobalert.jobAlertRequireHeaders">
+        <source>Require browser headers</source>
+      </trans-unit>
+      <trans-unit id="jobalert.jobAlertBotMinSeconds">
+        <source>Min form age (seconds)</source>
+      </trans-unit>
+      <trans-unit id="jobalert.jobAlertBotMaxSeconds">
+        <source>Max form age (seconds)</source>
       </trans-unit>
     </body>
   </file>

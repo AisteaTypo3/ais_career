@@ -31,7 +31,7 @@ return [
             'showitem' => '
                 --div--;General, sys_language_uid, l10n_parent, l10n_source, title, reference, slug, is_active, categories,
                 --div--;Location, country, city, location_label, department, contract_type, salary_min, salary_max, salary_currency, salary_period, remote_possible,
-                --div--;Publishing, employment_start, published_from, published_to,
+                --div--;Publishing, employment_start, published_from, published_to, trigger_job_alert_now, alert_triggered_at,
                 --div--;Content, description, responsibilities, qualifications, benefits,
                 --div--;Media, attachments,
                 --div--;Contact, contact_name, contact_title, contact_phone, contact_public_email, contact_email, contact_image,
@@ -303,6 +303,26 @@ return [
                 'dbType' => 'int',
                 'format' => 'datetime',
                 'default' => 0,
+            ],
+        ],
+        'trigger_job_alert_now' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.trigger_job_alert_now',
+            'config' => [
+                'type' => 'check',
+                'renderType' => 'checkboxToggle',
+                'default' => 0,
+            ],
+        ],
+        'alert_triggered_at' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:ais_career/Resources/Private/Language/locallang_db.xlf:tx_aiscareer_domain_model_job.alert_triggered_at',
+            'config' => [
+                'type' => 'datetime',
+                'dbType' => 'int',
+                'format' => 'datetime',
+                'default' => 0,
+                'readOnly' => true,
             ],
         ],
         'is_active' => [

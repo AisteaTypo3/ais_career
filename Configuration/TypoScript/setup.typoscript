@@ -15,6 +15,16 @@ plugin.tx_aiscareer {
     filterRemotePossible = {$plugin.tx_aiscareer.settings.filterRemotePossible}
     filterCategory = {$plugin.tx_aiscareer.settings.filterCategory}
     mapEnabled = {$plugin.tx_aiscareer.settings.mapEnabled}
+    jobAlertEnabled = {$plugin.tx_aiscareer.settings.jobAlertEnabled}
+    jobAlertPagePid = {$plugin.tx_aiscareer.settings.jobAlertPagePid}
+    jobAlertStoragePid = {$plugin.tx_aiscareer.settings.jobAlertStoragePid}
+    jobAlertFromEmail = {$plugin.tx_aiscareer.settings.jobAlertFromEmail}
+    jobAlertFromName = {$plugin.tx_aiscareer.settings.jobAlertFromName}
+    jobAlertRateLimit = {$plugin.tx_aiscareer.settings.jobAlertRateLimit}
+    jobAlertRateWindowSeconds = {$plugin.tx_aiscareer.settings.jobAlertRateWindowSeconds}
+    jobAlertRequireHeaders = {$plugin.tx_aiscareer.settings.jobAlertRequireHeaders}
+    jobAlertBotMinSeconds = {$plugin.tx_aiscareer.settings.jobAlertBotMinSeconds}
+    jobAlertBotMaxSeconds = {$plugin.tx_aiscareer.settings.jobAlertBotMaxSeconds}
 
     applicationEnabled = {$plugin.tx_aiscareer.settings.applicationEnabled}
     applicationToEmail = {$plugin.tx_aiscareer.settings.applicationToEmail}

@@ -20,14 +20,11 @@ call_user_func(static function (): void {
         'AIS Career: Job Detail',
         'aiscareer-plugin-detail'
     );
-
-    ExtensionManagementUtility::addPiFlexFormValue(
-        'aiscareer_joblist',
-        'FILE:EXT:ais_career/Configuration/FlexForms/JobList.xml'
-    );
-    ExtensionManagementUtility::addPiFlexFormValue(
-        'aiscareer_jobdetail',
-        'FILE:EXT:ais_career/Configuration/FlexForms/JobDetail.xml'
+    ExtensionUtility::registerPlugin(
+        'AisCareer',
+        'JobAlert',
+        'AIS Career: Job Alert',
+        'aiscareer-plugin-list'
     );
 
     ExtensionManagementUtility::addStaticFile(

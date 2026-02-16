@@ -80,11 +80,21 @@ class JobController extends ActionController
         $availableCountries = array_values(array_unique(array_map('strtoupper', array_keys($filterOptions['countries']))));
         $detailPid = (int)($settings['detailPid'] ?? 0);
         $listPid = (int)($settings['listPid'] ?? 0);
+        $alertState = $this->request->hasArgument('alertState') ? (string)$this->request->getArgument('alertState') : '';
+        $jobAlert = [
+            'country' => (string)($filters['country'] ?? ''),
+            'department' => (string)($filters['department'] ?? ''),
+            'contractType' => (string)($filters['contractType'] ?? ''),
+            'remotePossible' => array_key_exists('remotePossible', $filters) ? (string)$filters['remotePossible'] : '',
+            'category' => (string)($filters['category'] ?? ''),
+        ];
 
         $this->view->assign('jobs', $paginator->getPaginatedItems());
         $this->view->assign('paginator', $paginator);
         $this->view->assign('pagination', $pagination);
         $this->view->assign('filters', $filters);
+        $this->view->assign('jobAlert', $jobAlert);
+        $this->view->assign('alertState', $alertState);
         $this->view->assign('filterOptions', $filterOptions);
         $this->view->assign('availableCountries', $availableCountries);
         $this->view->assign('detailPid', $detailPid);

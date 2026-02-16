@@ -10,6 +10,15 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 defined('TYPO3') || die();
 
 call_user_func(static function (): void {
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_aiscareer_jobalert[action]';
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_aiscareer_jobalert[controller]';
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_aiscareer_jobalert[token]';
+
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] =
+        \Aistea\AisCareer\Hooks\JobDataHandlerHook::class;
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Core\DataHandling\DataHandler::class]['processDatamapClass'][] =
+        \Aistea\AisCareer\Hooks\JobDataHandlerHook::class;
+
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['aiscareer_rate'] ??= [
         'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
         'backend' => \TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend::class,
@@ -36,6 +45,17 @@ call_user_func(static function (): void {
         ],
         [
             Aistea\AisCareer\Controller\JobController::class => 'apply,confirm,shareEvent',
+        ]
+    );
+
+    ExtensionUtility::configurePlugin(
+        'AisCareer',
+        'JobAlert',
+        [
+            Aistea\AisCareer\Controller\AlertController::class => 'form,subscribe,confirm,unsubscribe',
+        ],
+        [
+            Aistea\AisCareer\Controller\AlertController::class => 'subscribe,confirm,unsubscribe',
         ]
     );
 
@@ -69,5 +89,10 @@ call_user_func(static function (): void {
         'aiscareer-module-analytics',
         SvgIconProvider::class,
         ['source' => 'EXT:ais_career/Resources/Public/Icons/ModuleAnalytics.svg']
+    );
+    $iconRegistry->registerIcon(
+        'aiscareer-record-jobalert',
+        SvgIconProvider::class,
+        ['source' => 'EXT:ais_career/Resources/Public/Icons/RecordJobAlert.svg']
     );
 });
